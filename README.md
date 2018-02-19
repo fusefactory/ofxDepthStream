@@ -59,3 +59,12 @@ Current version: 0.0.0
 [Client] connect to server
 [Server] sends frame-packages (4-byte header + payload) at configured interval (30fps by default, depth image stream by default)
 [Client] receives packages
+
+## Comm protocol; multi stream
+
+[Server] waiting for clients to connect (default port: 4444)
+[Client] connect to server
+[Client] <CMD_GET_STREAM> <STREAM_IDENTIFIER> <RECEIVE_PORT_NUMBER:int>
+[Client] listens on PORT_NUMBER
+[Server] connects to client's address and given port number and starts sending frames at a specific interval
+[Client] sends <CMD_CLOSE> byte through the incoming stream connection to stop the stream
