@@ -26,20 +26,27 @@ class ofApp : public ofBaseApp{
   private: // attributes
     std::string perseeHost = "127.0.0.1"; //"192.168.1.172";
     ofxOrbbecPersee::Client client;
+    ofxOrbbecPersee::DepthStreamRef depthStreamRef;
 };
 
 void ofApp::setup() {
   // use all default options (port 4444, only depth stream enabled, 30fps), only specify the Persee's IP
   client.setup(perseeHost);
+  depthStreamRef = client.createDepthStream(); // 640x480 by default
 }
 
 void ofApp::update() {
-  client.update();
+  // client.update();
+  depthStreamRef->update();
 }
 
 void ofApp::draw() {
   ofBackground(0);
-  client.getDepthStream().getTexture().draw(0, 0);
+
+  auto tex = depthStreamRef->getTexture();
+
+  if(tex.isAllocated())
+    tex.draw(0, 0);
 }
 
 //========================================================================

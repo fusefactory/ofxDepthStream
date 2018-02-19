@@ -4,6 +4,8 @@
 #include <memory>
 // OF
 #include "ofMain.h"
+// local
+#include "persee/Receiver.h"
 
 namespace ofxOrbbecPersee {
 
@@ -19,11 +21,15 @@ namespace ofxOrbbecPersee {
 
     public: // methods
       ImageStream() : pixFront(&pix1), pixBack(&pix2){}
+      ~ImageStream() { this->destroy(); }
 
       void setup(int width, int height, ofImageType fmt);
+      virtual void update() {};
       void destroy();
 
       const ofTexture& getTexture() const { return tex; }
+
+      void setReceiver(persee::ReceiverRef recvr) { this->receiverRef = recvr; }
 
     protected:
 
@@ -34,5 +40,6 @@ namespace ofxOrbbecPersee {
     protected: // attributes
       ofTexture tex;
       ofPixels pix1, pix2, *pixFront, *pixBack;
+      persee::ReceiverRef receiverRef=nullptr;
   };
 }

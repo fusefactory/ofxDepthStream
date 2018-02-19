@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdlib.h>
 #include <string>
 #include <thread>
 #include <iostream>
@@ -9,7 +10,14 @@
 #include <arpa/inet.h> //inet_addr
 
 namespace persee {
+  class Receiver;
+  typedef std::shared_ptr<Receiver> ReceiverRef;
+
   class Receiver {
+
+    public:
+      typedef std::function<void(Receiver& receiver)> CommFunc;
+      typedef std::function<void(Receiver& receiver)> IdleFunc;
 
     public:
       Receiver(){}
@@ -21,12 +29,22 @@ namespace persee {
       ~Receiver();
 
       void start(std::string host, int port);
+      void stop() { bRunning = false; }
+
       char* getData() { return (char*)(buffer + 4); }
       int getSize() const { return lastPackageSize; }
       bool hasNew() const { return bHasNew; }
       void reset(){ bHasNew = false; }
 
       void setConnectAttemptInterval(unsigned int interval) { connectAttemptInterval = interval; }
+      void setCommFunc(CommFunc func) { this->commFunc = func; }
+      void setIdleFunc(IdleFunc func) { this->idleFunc = func; }
+
+      bool receive(size_t size);
+      bool receive(char* buffer, size_t size);
+      bool send_data(const void* data, size_t size);
+
+      int readInt(const void* from);
 
     protected:
 
@@ -39,9 +57,7 @@ namespace persee {
       bool connectToServer(std::string address, int port);
       void disconnectFromServer();
 
-      bool receive(size_t size);
-      bool receive(char* buffer, size_t size);
-      bool send_data(std::string data);
+      // bool send_data(std::string data);
 
     private:
       std::thread* thread;
@@ -61,5 +77,8 @@ namespace persee {
       int lastPackageSize=0;
 
       unsigned int connectAttemptInterval = 3000;
+
+      CommFunc commFunc=nullptr;
+      IdleFunc idleFunc=nullptr;
   };
 }

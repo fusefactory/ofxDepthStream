@@ -6,7 +6,7 @@ INC_DIRS = \
 	../../Include \
 	../Common
 
-SRC_FILES = src/*.cpp
+SRC_FILES = src/*.cpp ../../src/persee/*.cpp
 
 USED_LIBS += OpenNI2 pthread z
 

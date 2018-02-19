@@ -1,6 +1,6 @@
 #pragma once
 
-#include "persee/Receiver.h"
+
 #include "persee/Inflater.h"
 #include "ImageStream.h"
 #include "DepthStream.h"
@@ -19,23 +19,37 @@ namespace ofxOrbbecPersee {
         Options& setHost(const std::string& host) { this->host = host; return *this; }
       };
 
+      typedef std::function<void(persee::Receiver&)> QueuedRequestFunc;
+
     public:
+
       void setup(const std::string &host) {
         this->setup(Options().setHost(host));
       }
 
       void setup(const Options& options);
-      void update();
+      // void update();
 
-      DepthStream& getDepthStream() {
-        if(!this->depthStreamRef)
-          this->depthStreamRef = std::make_shared<DepthStream>();
-        return *this->depthStreamRef;
-      }
+      // DepthStream& getDepthStream() {
+      //   if(!this->depthStreamRef)
+      //     this->depthStreamRef = std::make_shared<DepthStream>();
+      //   return *this->depthStreamRef;
+      // }
+
+      DepthStreamRef createDepthStream();
+
+    protected:
+      void performQueuedRequest(QueuedRequestFunc func);
+      void processRequestQueue();
+      void processRequestQueueItem(QueuedRequestFunc func);
 
     private:
-      persee::Receiver receiver;
+      Options opts;
       persee::Inflater inflater;
-      DepthStreamRef depthStreamRef = nullptr;
+      persee::ReceiverRef receiverRef=nullptr;
+      std::vector<QueuedRequestFunc> requestQueue;
+      bool bProcessingRequestQueue=false;
+
+      // DepthStreamRef depthStreamRef = nullptr;
   };
 }

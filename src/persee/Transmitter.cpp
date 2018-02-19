@@ -32,30 +32,60 @@ Transmitter::~Transmitter() {
   }
 }
 
-bool Transmitter::transmit(char* data, size_t size) {
-  std::string ss(data, size);
-  // std::cout << "should transmit " << size << " bytes on port " << port << ": " << ss << std::endl;
-
+bool Transmitter::transmitRaw(const char* data, size_t size) {
   if (!bConnected) {
     // std::cout << "no client, didn't sent " << size << " bytes." << std::endl;
     return false;
   }
 
+  // content
+  auto n = write(newsockfd,data,size);
+
+  if (n < 0) {
+    error("ERROR writing data to socket");
+    return false;
+  }
+
+  // std::cout << "sent " << size << " bytes." << std::endl;
+  return true;
+}
+
+bool Transmitter::transmitInt(int value){
+  if (!bConnected) {
+    return false;
+  }
+
   // transmittion-header; 4-byte package length
-  char header[4];
-  header[0] = (char)((size >> 24) & 0x0ff);
-  header[1] = (char)((size >> 16) & 0x0ff);
-  header[2] = (char)((size >> 8) & 0x0ff);
-  header[3] = (char)(size & 0x0ff);
-  auto n = write(newsockfd,header,4);
+  char buffer[4];
+  buffer[0] = (char)((value >> 24) & 0x0ff);
+  buffer[1] = (char)((value >> 16) & 0x0ff);
+  buffer[2] = (char)((value >> 8) & 0x0ff);
+  buffer[3] = (char)(value & 0x0ff);
+  auto n = write(newsockfd,buffer,4);
 
   if (n < 0) {
     error("ERROR writing package-header to socket");
     return false;
   }
 
+  return true;
+}
+
+bool Transmitter::transmitFrame(const char* data, size_t size) {
+
+  if (!bConnected) {
+    // std::cout << "no client, didn't sent " << size << " bytes." << std::endl;
+    return false;
+  }
+
+  // transmittion-header; 4-byte package lengtht
+  if (!this->transmitInt(size)) {
+    error("ERROR writing package-header to socket");
+    return false;
+  }
+
   // content
-  n = write(newsockfd,data,size);
+  auto n = write(newsockfd,data,size);
 
   if (n < 0) {
     error("ERROR writing package content to socket");
@@ -96,7 +126,12 @@ void Transmitter::serverThread() {
   int n;
 
   while(bRunning) {
-    if(this->start()) {
+    if(!this->start()) {
+      if(this->bindFailedHandler) this->bindFailedHandler(*this);
+    } else {
+      this->bBound = true;
+      if(this->boundHandler) this->boundHandler(*this);
+
       clilen = sizeof(cli_addr);
 
       newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
@@ -107,8 +142,13 @@ void Transmitter::serverThread() {
         std::cout << "client connected" << std::endl;
 
         while(bRunning){
-          n=recv(newsockfd,packet,MAXPACKETSIZE-1,0);
+          n=recv(newsockfd,packet,1,0);
           if(n==0) break;
+
+          if(n==1 && this->firstByteHandler) {
+            this->firstByteHandler(*this, packet[0]);
+          }
+
           Sleep(100);
           // msg[n]=0;
           //send(newsockfd,msg,n,0);
@@ -123,6 +163,7 @@ void Transmitter::serverThread() {
     }
 
     close(sockfd);
+    this->bBound = false;
     Sleep(1000);
   }
 }

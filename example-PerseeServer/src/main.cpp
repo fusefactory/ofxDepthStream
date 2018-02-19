@@ -22,10 +22,11 @@
 #include <stdio.h>
 #include <time.h>
 #include <iostream>
+#include <vector>
 #include <chrono>
 
 // stdlib
-#include<netdb.h> //hostent
+#include <netdb.h> //hostent
 #include <functional>
 #include <math.h>
 #include "zlib.h"
@@ -34,6 +35,7 @@
 #include "../../src/persee/Formatter.h"
 #include "../../src/persee/Compressor.h"
 #include "../../src/persee/Transmitter.h"
+#include "../../src/persee/protocol.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -119,13 +121,26 @@ using namespace persee;
   }
 #endif
 
+typedef std::function<void(const void*,int)> StreamOutput;
+
+std::shared_ptr<Transmitter> createTransmitter(int startPort) {
+  auto transmitter = std::make_shared<Transmitter>(startPort);
+
+  transmitter->setBindFailedHandler([](Transmitter& t){
+    // try next port
+    t.setPort(t.getPort()+1);
+  });
+
+  return transmitter;
+}
+
 int main(int argc, char** argv) {
   // configurables
   bool bResendFrames = false;
   bool bTimed = true;
   float frameDiffTime = 1.0f/1.5f * 1000.0f; // fps
   unsigned int sleepTime = 5; // ms
-  int httpPort = 4444;
+  int httpPort = argc > 1 ? atoi(argv[1]) : 4444;
 
   // attributes
   steady_clock::time_point lastFrameTime = steady_clock::now();
@@ -136,7 +151,52 @@ int main(int argc, char** argv) {
   SimpleFrameListener listener;
   Formatter formatter;
   auto compressor = std::make_shared<Compressor>();
-  Transmitter transmitter(httpPort);
+
+  // Transmitter transmitter(httpPort);
+  std::vector<std::shared_ptr<Transmitter>> transmitters;
+  int lastPort = httpPort; // for every new connection we'll start a new transmitter at a new port
+  std::vector<StreamOutput> depthStreamOutputs;
+  std::vector<StreamOutput> colorStreamOutputs;
+
+  bool bKeepGoing = true;
+
+
+  Transmitter newConnectionTransmitter(httpPort);
+  newConnectionTransmitter.setFirstByteHandler(
+    [&transmitters, &lastPort, &depthStreamOutputs, &colorStreamOutputs](Transmitter& t, char byte){
+
+    // remember this method is executed on the newConnectionTransmitter's listener thread
+
+    switch(byte) {
+      case CMD_GET_DEPTH_STREAM: {
+        auto transmitter = createTransmitter(lastPort+1);
+
+        if(!transmitter){
+          char response = CMD_ERROR;
+          t.transmitRaw((const char*)&response, 1);
+          return;
+        }
+
+        transmitter->whenBound([
+          &t, &transmitters, &lastPort, &depthStreamOutputs, transmitter](Transmitter& newtransmitter){
+          // save our new transmitter
+          transmitters.push_back(transmitter);
+          // update lastPort for creation of next transmitter
+          lastPort = transmitter->getPort();
+          // add "output" func to our depthStreamOutputs list, which sends the data to this new transmitter
+          depthStreamOutputs.push_back([transmitter](const void* data, int size){
+            transmitter->transmitFrame((const char*)data, size);
+          });
+
+          // respond with OK-byte and the port number (4-byte integer)
+          char response = CMD_OK;
+          t.transmitRaw((const char*)&response, 1);
+          t.transmitInt(transmitter->getPort());
+          std::cout << "Started new Depth stream on port: " << transmitter->getPort() << std::endl;
+        });
+      }
+    }
+  });
 
   // Formatter
 
@@ -153,8 +213,8 @@ int main(int argc, char** argv) {
   #endif
 
   // main loop; send frames
-  while (!wasKeyboardHit())
-  {
+  while (bKeepGoing) {
+
     steady_clock::time_point t = steady_clock::now();
 
     // time to send new frame?
@@ -164,15 +224,15 @@ int main(int argc, char** argv) {
       formatter.process(depth);
 
       if(formatter.getData() && compressor->compress(formatter.getData(), formatter.getSize())) {
-        if(transmitter.transmit(compressor->getData(), compressor->getSize())) {
-          std::cout << "sent compressed " << formatter.getSize() << "-byte frame in " << compressor->getSize() << "-byte package" << std::endl;
-        } else {
-          if (transmitter.hasClient()) {
-            std::cout << "FAILED to send compressed " << formatter.getSize() << "-byte frame in " << compressor->getSize() << "-byte package" << std::endl;
-          } else {
-            std::cout << "No receiver for compressed " << formatter.getSize() << "-byte frame in " << compressor->getSize() << "-byte package" << std::endl;
-          }
-        }
+        // if(transmitter.transmitFrame(compressor->getData(), compressor->getSize())) {
+        //   std::cout << "sent compressed " << formatter.getSize() << "-byte frame in " << compressor->getSize() << "-byte package" << std::endl;
+        // } else {
+        //   if (transmitter.hasClient()) {
+        //     std::cout << "FAILED to send compressed " << formatter.getSize() << "-byte frame in " << compressor->getSize() << "-byte package" << std::endl;
+        //   } else {
+        //     std::cout << "No receiver for compressed " << formatter.getSize() << "-byte frame in " << compressor->getSize() << "-byte package" << std::endl;
+        //   }
+        // }
       } else {
         std::cout << "FAILED to compress " << formatter.getSize() << "-byte frame" << std::endl;
       }
@@ -182,6 +242,9 @@ int main(int argc, char** argv) {
     }
 
     Sleep(sleepTime);
+
+    if(wasKeyboardHit())
+      bKeepGoing = false;
   }
 
   #ifdef OPENNI_AVAILABLE

@@ -13,6 +13,8 @@ namespace ofxOrbbecPersee {
 
     public:
       void setup(int width, int height);
-      void update(const void* data, size_t size);
+
+    protected:
+      void updatePixels(const void* data, size_t size);
   };
 }
