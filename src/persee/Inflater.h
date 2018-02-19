@@ -18,6 +18,9 @@ namespace persee {
       void growTo(size_t to);
       char *decompress(char *compressedBytes, unsigned int length);
 
+      std::ostream& cout() { return std::cout << "[persee::Inflater] "; }
+      std::ostream& cerr() { return std::cerr << "[persee::Inflater] "; }
+
     private:
       char* decompressed=NULL;
       size_t currentBufferSize=0;

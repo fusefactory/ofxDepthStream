@@ -21,10 +21,10 @@ using namespace persee;
 
 Receiver::~Receiver() {
   if(this->thread) {
-    std::cout << "stopping client thread";
+    // this->cout() << "stopping client thread...";
     bRunning = false;
     thread->join();
-    std::cout << "client thread done";
+    // this->cout() << " done" << std::endl;
     delete thread;
   }
 }
@@ -47,7 +47,7 @@ void Receiver::threadFunc() {
     while(bConnected) {
       // std::string s=".";
       // this->send_data(s);
-      // std::cout << "Waiting to receive...";
+      // this->cout() << "Waiting to receive...";
 
       // get 4-byte header
       if(this->receive(4)) {
@@ -56,12 +56,12 @@ void Receiver::threadFunc() {
         int b2 = (int)(0x0ff & buffer[2]);
         int b3 = (int)(0x0ff & buffer[3]);
         int total = ((b0 << 24) | (b1 << 16) | (b2 << 8) | b3);
-        // std::cout << "got header for " << total << " bytes" << std::endl;
+        // this->cout() << "got header for " << total << " bytes" << std::endl;
         int alreadyGot = this->recvSize - 4;
 
         // get X-byte package
         if(this->receive(this->buffer + 4 + alreadyGot, total - alreadyGot)) {
-          // std::cout << "received: " << total << " byte-package" << std::endl;
+          // this->cout() << "received: " << total << " byte-package" << std::endl;
           this->bHasNew = true;
           this->lastPackageSize = total;
         } else {
@@ -72,8 +72,12 @@ void Receiver::threadFunc() {
       }
     }
 
-    bConnected = false;
-    std::cout << "disconnected" << std::endl;
+
+    if(bConnected) {
+      this->cout() << "disconnected from " << this->host << ":" << this->port << std::endl;
+      bConnected = false;
+    }
+
     this->disconnectFromServer();
 
     Sleep(1000);
@@ -91,7 +95,7 @@ bool Receiver::connectToServer(std::string address, int port) {
       error("Could not create socket");
   }
 
-  std::cout<<"Socket created\n";
+  // std::cout<<"Socket created\n";
   // }
   // else    {   /* OK , nothing */  }
 
@@ -138,11 +142,12 @@ bool Receiver::connectToServer(std::string address, int port) {
   //Connect to remote server
   if (connect(sock , (struct sockaddr *)&server , sizeof(server)) < 0)
   {
-      perror("connect failed. Error");
+      // perror("connect failed. Error");
+      this->cout() << "Failed to connect to " << address << ":" << port << std::endl;
       return false;
   }
 
-  std::cout<<"Connected\n";
+  this->cout() << "connected to " << address << ":" << port << std::endl;
   return true;
 }
 
@@ -169,7 +174,7 @@ bool Receiver::receive(char* buffer, size_t size) {
     int packageSize = recv(sock, buffer+amount, size-amount, 0);
 
     if(packageSize <= 0) {
-      perror("recv failed");
+      // perror("recv failed");
       return false;
     }
 
@@ -181,7 +186,7 @@ bool Receiver::receive(char* buffer, size_t size) {
 }
 
 bool Receiver::send_data(std::string data) {
-    std::cout << "Sending data...";
+    this->cout() << "Sending data...";
     //Send some data
     if( send(sock , data.c_str() , strlen( data.c_str() ) , 0) < 0)
     {

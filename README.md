@@ -52,3 +52,10 @@ Current version: 0.0.0
 * version 0.1.0
  * Receive RGB and Depth image stream
  * Remote control streaming options
+
+## Comm protocol; most basic
+
+[Server] waiting for clients to connect (default port: 4444)
+[Client] connect to server
+[Server] sends frame-packages (4-byte header + payload) at configured interval (30fps by default, depth image stream by default)
+[Client] receives packages

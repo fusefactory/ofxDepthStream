@@ -32,18 +32,18 @@ void Inflater::growTo(size_t to) {
   destroy();
   decompressed = tmp;
   currentBufferSize = to;
-  std::cout << "grown to " << currentBufferSize << " bytes" << std::endl;
+  this->cout() << "grown to " << currentBufferSize << " bytes" << std::endl;
 }
 
 char *Inflater::decompress(char *compressedBytes, unsigned int length) {
     if (length == 0) {
-        std::cout << "length = 0, nothing to decompress" << std::endl;
+        this->cout() << "length = 0, nothing to decompress" << std::endl;
         return NULL;
     }
 
     // destroy();
     if (!decompressed) {
-      std::cout << "allocating first-time inflation buffer" << std::endl;
+      this->cout() << "allocating first-time inflation buffer" << std::endl;
       decompressed = (char *) calloc(sizeof(char), BUF_SIZE);
       currentBufferSize = BUF_SIZE;
     }
@@ -58,7 +58,7 @@ char *Inflater::decompress(char *compressedBytes, unsigned int length) {
     bool done = false ;
 
     if (inflateInit2(&strm, MAX_WBITS) != Z_OK) {
-        std::cout << "inflator init failed" << std::endl;
+        this->cout() << "inflator init failed" << std::endl;
         return NULL;
     }
 
@@ -75,20 +75,20 @@ char *Inflater::decompress(char *compressedBytes, unsigned int length) {
         int err = ::inflate (& strm, Z_SYNC_FLUSH);
         if (err == Z_STREAM_END) {
           done = true;
-          // std::cout << "inflated packet to: " << strm.total_out << " bytes" << std::endl;
+          // this->cout() << "inflated packet to: " << strm.total_out << " bytes" << std::endl;
         }
         else if (err != Z_OK)  {
-          std::cout << "inflation error" << std::endl;
+          this->cout() << "inflation error" << std::endl;
           break;
         }
     }
 
     if (inflateEnd (& strm) != Z_OK) {
-        std::cout << "inflate end with non-OK result";
+        this->cerr() << "inflate end with non-OK result" << std::endl;
         return NULL;
     }
 
-    // std::cout << "inflated to total: " << strm.total_out << " bytes" << std::endl;
+    // this->cout() << "inflated to total: " << strm.total_out << " bytes" << std::endl;
     inflateSize = strm.total_out;
     return decompressed;
 }

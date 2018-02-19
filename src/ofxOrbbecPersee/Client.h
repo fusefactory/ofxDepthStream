@@ -3,6 +3,7 @@
 #include "persee/Receiver.h"
 #include "persee/Inflater.h"
 #include "ImageStream.h"
+#include "DepthStream.h"
 
 namespace ofxOrbbecPersee {
   class Client {
@@ -10,14 +11,12 @@ namespace ofxOrbbecPersee {
 
       struct Options {
         static const int DEFAULT_PORT = 4444;
-        std::string host;
-        int port;
+        // static const std::string DEFAULT_HOST = "192.168.1.172";
 
-        // Options(const std::string& host) : host(host), port(DEFAULT_PORT){}
-        Options& setHost(const std::string& host) {
-          this->host = host;
-          return *this;
-        }
+        std::string host;
+        int port = DEFAULT_PORT;
+
+        Options& setHost(const std::string& host) { this->host = host; return *this; }
       };
 
     public:
@@ -26,16 +25,17 @@ namespace ofxOrbbecPersee {
       }
 
       void setup(const Options& options);
+      void update();
 
-      ImageStream& getDepthStream() {
+      DepthStream& getDepthStream() {
         if(!this->depthStreamRef)
-          this->depthStreamRef = std::make_shared<ImageStream>();
+          this->depthStreamRef = std::make_shared<DepthStream>();
         return *this->depthStreamRef;
       }
 
     private:
       persee::Receiver receiver;
       persee::Inflater inflater;
-      ImageStreamRef depthStreamRef = nullptr;
+      DepthStreamRef depthStreamRef = nullptr;
   };
 }

@@ -26,7 +26,12 @@ namespace persee {
       bool hasNew() const { return bHasNew; }
       void reset(){ bHasNew = false; }
 
+      void setConnectAttemptInterval(unsigned int interval) { connectAttemptInterval = interval; }
+
     protected:
+
+      std::ostream& cout() { return std::cout << "[persee::Receiver] "; }
+      std::ostream& cerr() { return std::cerr << "[persee::Receiver] "; }
       void error(const char *msg);
 
       void threadFunc();
@@ -51,8 +56,10 @@ namespace persee {
 
       static const int BUF_SIZE = (1024*1024*4);
       char buffer[BUF_SIZE];
-      int bufferSize=0;
+      // int bufferSize=0;
       int recvSize=0;
       int lastPackageSize=0;
+
+      unsigned int connectAttemptInterval = 3000;
   };
 }

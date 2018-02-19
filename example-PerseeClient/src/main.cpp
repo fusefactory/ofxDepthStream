@@ -34,11 +34,12 @@ void ofApp::setup() {
 }
 
 void ofApp::update() {
+  client.update();
 }
 
 void ofApp::draw() {
   ofBackground(0);
-  client.getDepthStream().draw();
+  client.getDepthStream().getTexture().draw(0, 0);
 }
 
 //========================================================================
