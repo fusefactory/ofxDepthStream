@@ -39,7 +39,7 @@ bool Transmitter::transmitRaw(const char* data, size_t size) {
   }
 
   // content
-  this->cout() << "Sending raw data: " << *data << std::endl;
+  // this->cout() << "Sending raw data: " << *data << std::endl;
   auto n = send(newsockfd, data, size, 0);
 
   if (n < 0) {
@@ -158,6 +158,7 @@ void Transmitter::serverThread() {
 
         this->cout() << "client disconnected from port " << this->port << std::endl;
         bConnected = false;
+        if(this->disconnectHandler) this->disconnectHandler(*this);
       }
 
       close(newsockfd);
@@ -165,6 +166,7 @@ void Transmitter::serverThread() {
 
     close(sockfd);
     this->bBound = false;
+    if(this->unboundHandler) this->unboundHandler(*this);
     Sleep(1000);
   }
 }

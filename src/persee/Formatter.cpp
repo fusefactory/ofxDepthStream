@@ -43,8 +43,12 @@ void Formatter::process(VideoStream& stream) {
 // Dummy implementation which provides a
 void Formatter::process(VideoStream& stream) {
   this->size = BUF_SIZE;
-  for(int i=0; i<size; i++)
-    this->data[i] = (sinf(i*0.1f) + 1.0f) / 2.0f * ((1 << 15)-1);
+  for(int i=0; i<size; i+=2){
+    int v = (sinf(i*0.1f) + 1.0f) / 2.0f * ((1 << 15)-1);
+
+    this->data[i+1] = (v & 0xff) << 8;
+    this->data[i] = (v & 0xff);
+  }
 }
 
 #endif

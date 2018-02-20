@@ -59,20 +59,6 @@ using namespace persee;
       bool bHasNew = false;
   };
 
-#else
-
-  typedef int VideoStream;
-
-  // dummy placeholder which always has a new frame for us
-  class SimpleFrameListener {
-    public:
-      bool hasNew() const { return true; }
-      void reset() {  }
-  };
-
-#endif
-
-#ifdef OPENNI_AVAILABLE
   std::shared_ptr<Device> getDevice() {
     Status rc = OpenNI::initialize();
 
@@ -126,7 +112,20 @@ using namespace persee;
 
     return stream;
   }
+
+#else
+
+  typedef int VideoStream;
+
+  // dummy placeholder which always has a new frame for us
+  class SimpleFrameListener {
+    public:
+      bool hasNew() const { return true; }
+      void reset() {  }
+  };
+
 #endif
+
 
 typedef std::function<void(const void*,int)> StreamOutput;
 
@@ -162,23 +161,25 @@ int main(int argc, char** argv) {
   auto compressor = std::make_shared<Compressor>();
 
   // Transmitter transmitter(httpPort);
-  std::vector<std::shared_ptr<Transmitter>> transmitters;
+  std::vector<std::shared_ptr<Transmitter>> depthStreamTransmitters;
+  std::vector<std::shared_ptr<Transmitter>> colorStreamTransmitters;
+
   int lastPort = httpPort; // for every new connection we'll start a new transmitter at a new port
-  std::vector<StreamOutput> depthStreamOutputs;
-  std::vector<StreamOutput> colorStreamOutputs;
+
+
 
   bool bKeepGoing = true;
 
 
   Transmitter newConnectionTransmitter(httpPort);
   newConnectionTransmitter.setFirstByteHandler(
-    [&transmitters, &lastPort, &depthStreamOutputs, &colorStreamOutputs](Transmitter& t, char byte){
+    [&lastPort, &depthStreamTransmitters, &colorStreamTransmitters](Transmitter& t, char byte){
 
     // remember this method is executed on the newConnectionTransmitter's listener thread
 
     switch(byte) {
       case CMD_GET_DEPTH_STREAM: {
-        std::cout << "Got CMD_GET_DEPTH_STREAM" << std::endl;
+        // std::cout << "Got CMD_GET_DEPTH_STREAM" << std::endl;
 
         auto transmitter = createTransmitter(lastPort+1);
 
@@ -190,22 +191,35 @@ int main(int argc, char** argv) {
         }
 
         transmitter->whenBound([
-          &t, &transmitters, &lastPort, &depthStreamOutputs, transmitter](Transmitter& newtransmitter){
-          std::cout << "new depth-stream transmitter started" << std::endl;
+          &t, &lastPort, &depthStreamTransmitters, transmitter](Transmitter& newtransmitter){
+          // std::cout << "new depth-stream transmitter started" << std::endl;
           // save our new transmitter
-          transmitters.push_back(transmitter);
+          depthStreamTransmitters.push_back(transmitter);
           // update lastPort for creation of next transmitter
           lastPort = transmitter->getPort();
-          // add "output" func to our depthStreamOutputs list, which sends the data to this new transmitter
-          depthStreamOutputs.push_back([transmitter](const void* data, int size){
-            transmitter->transmitFrame((const char*)data, size);
-          });
 
           // respond with OK-byte and the port number (4-byte integer)
           char response = CMD_OK;
           t.transmitRaw((const char*)&response, 1);
           t.transmitInt(transmitter->getPort());
           std::cout << "Started new Depth stream on port: " << transmitter->getPort() << std::endl;
+
+          transmitter->whenUnbound([&depthStreamTransmitters, transmitter](Transmitter& tt){
+            // don't reconnect
+            tt.setBoundHandler(nullptr);
+            tt.stop();
+            // std::cout << "Transmitter unbound from port: " << transmitter->getPort() << std::endl;
+
+            for(auto it=depthStreamTransmitters.begin(); it != depthStreamTransmitters.end(); it++) {
+              if(*it == transmitter) {
+                // std::cout << "removed transmitter from depth stream list" << std::endl;
+                depthStreamTransmitters.erase(it);
+                break;
+              }
+            }
+
+            std::cout << "Cleaned up transmitter from port " << transmitter->getPort() << std::endl;
+          });
         });
       }
     }
@@ -237,18 +251,9 @@ int main(int argc, char** argv) {
       formatter.process(*depth);
 
       if(formatter.getData() && compressor->compress(formatter.getData(), formatter.getSize())) {
-        for(auto output : depthStreamOutputs) {
-          output(compressor->getData(), compressor->getSize());
+        for(auto t : depthStreamTransmitters) {
+          t->transmitFrame((const char*)compressor->getData(), compressor->getSize());
         }
-        // if(transmitter.transmitFrame(compressor->getData(), compressor->getSize())) {
-        //   std::cout << "sent compressed " << formatter.getSize() << "-byte frame in " << compressor->getSize() << "-byte package" << std::endl;
-        // } else {
-        //   if (transmitter.hasClient()) {
-        //     std::cout << "FAILED to send compressed " << formatter.getSize() << "-byte frame in " << compressor->getSize() << "-byte package" << std::endl;
-        //   } else {
-        //     std::cout << "No receiver for compressed " << formatter.getSize() << "-byte frame in " << compressor->getSize() << "-byte package" << std::endl;
-        //   }
-        // }
       } else {
         std::cout << "FAILED to compress " << formatter.getSize() << "-byte frame" << std::endl;
       }

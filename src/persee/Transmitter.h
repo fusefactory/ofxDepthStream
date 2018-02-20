@@ -20,6 +20,8 @@ namespace persee {
       Transmitter(int port);
       ~Transmitter();
 
+      void stop(){ bRunning = false; }
+
       int getPort() const { return port; }
       void setPort(int newport) { port = newport; }
 
@@ -35,6 +37,9 @@ namespace persee {
       void setFirstByteHandler(ByteHandler func) { this->firstByteHandler = func; }
       void setBindFailedHandler(BindFailedHandler func) { bindFailedHandler = func; }
       void setBoundHandler(BoundHandler func){ boundHandler = func; }
+      void setUnboundHandler(TransmitterHandler func) { unboundHandler = func; }
+      void setDisconnectHandler(TransmitterHandler func) { this->disconnectHandler = func; }
+
       void whenBound(BoundHandler func){
         if(bBound) {
           func(*this);
@@ -42,6 +47,23 @@ namespace persee {
         }
 
         this->setBoundHandler(func);
+      }
+
+      void whenUnbound(TransmitterHandler func){
+        if(!bBound) {
+          func(*this);
+          return;
+        }
+
+        this->setUnboundHandler(func);
+      }
+
+      void whenDisconnected(TransmitterHandler func) {
+        if(this->bConnected) {
+          this->setDisconnectHandler(func);
+        } else {
+          func(*this);
+        }
       }
 
     protected:
@@ -75,5 +97,7 @@ namespace persee {
       ByteHandler firstByteHandler = nullptr;
       BindFailedHandler bindFailedHandler = nullptr;
       BoundHandler boundHandler = nullptr;
+      TransmitterHandler disconnectHandler=nullptr;
+      TransmitterHandler unboundHandler=nullptr;
   };
 }
