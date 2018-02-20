@@ -172,7 +172,6 @@ bool Receiver::receive(char* buffer, size_t size) {
   // }
 
   size_t amount=0;
-
   while(amount < size) {
     int packageSize = recv(sock, buffer+amount, size-amount, 0);
 

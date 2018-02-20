@@ -1,6 +1,9 @@
 #pragma once
 
 namespace persee {
+  class Inflater;
+  typedef std::shared_ptr<Inflater> InflaterRef;
+
   class Inflater {
     public:
       ~Inflater(){

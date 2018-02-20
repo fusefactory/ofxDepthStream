@@ -73,11 +73,10 @@ using namespace persee;
 #endif
 
 #ifdef OPENNI_AVAILABLE
-  int setup(Device& device, VideoStream& depth) {
+  std::shared_ptr<Device> getDevice() {
     Status rc = OpenNI::initialize();
 
-    if (rc != STATUS_OK)
-    {
+    if (rc != STATUS_OK) {
       printf("Initialize failed\n%s\n", OpenNI::getExtendedError());
       return 1;
     }
@@ -95,29 +94,37 @@ using namespace persee;
     //   printf("Device \"%s\" already connected\n", deviceList[i].getUri());
     // }
 
-
-    rc = device.open(ANY_DEVICE);
-    if (rc != STATUS_OK)
-    {
+    auto device = std::make_shared<Device>();
+    rc = device->open(ANY_DEVICE);
+    if (rc != STATUS_OK) {
       printf("Couldn't open device\n%s\n", OpenNI::getExtendedError());
-      return 2;
+      return nullptr;
     }
 
-    if (device.getSensorInfo(SENSOR_DEPTH) != NULL)
-    {
-      rc = depth.create(device, SENSOR_DEPTH);
-      if (rc != STATUS_OK)
-      {
-        printf("Couldn't create depth stream\n%s\n", OpenNI::getExtendedError());
-      }
-    }
-    rc = depth.start();
+    rc = depth->start();
     if (rc != STATUS_OK)
     {
       printf("Couldn't start the depth stream\n%s\n", OpenNI::getExtendedError());
+      return nullptr;
     }
 
-    return 0;
+    return device;
+  }
+
+  std::shared_ptr<VideoStream> getDepthStream(Device& device) {
+    auto stream = std::make_shared<VideoStream>();
+
+    if (device.getSensorInfo(SENSOR_DEPTH) != NULL)
+    {
+      rc = stream->create(device, SENSOR_DEPTH);
+      if (rc != STATUS_OK)
+      {
+        printf("Couldn't create depth stream\n%s\n", OpenNI::getExtendedError());
+        return nullptr;
+      }
+    }
+
+    return stream;
   }
 #endif
 
@@ -144,10 +151,12 @@ int main(int argc, char** argv) {
 
   // attributes
   steady_clock::time_point lastFrameTime = steady_clock::now();
+  std::shared_ptr<VideoStream> depth, color;
   #ifdef OPENNI_AVAILABLE
-  Device device;
+  std::shared_ptr<Device> device = getDevice();
+  depth = getDepthStream(*device);
   #endif
-  VideoStream depth;
+
   SimpleFrameListener listener;
   Formatter formatter;
   auto compressor = std::make_shared<Compressor>();
@@ -169,9 +178,12 @@ int main(int argc, char** argv) {
 
     switch(byte) {
       case CMD_GET_DEPTH_STREAM: {
+        std::cout << "Got CMD_GET_DEPTH_STREAM" << std::endl;
+
         auto transmitter = createTransmitter(lastPort+1);
 
         if(!transmitter){
+          std::cerr << "Failed to create depth-stream transmitter" << std::endl;
           char response = CMD_ERROR;
           t.transmitRaw((const char*)&response, 1);
           return;
@@ -179,6 +191,7 @@ int main(int argc, char** argv) {
 
         transmitter->whenBound([
           &t, &transmitters, &lastPort, &depthStreamOutputs, transmitter](Transmitter& newtransmitter){
+          std::cout << "new depth-stream transmitter started" << std::endl;
           // save our new transmitter
           transmitters.push_back(transmitter);
           // update lastPort for creation of next transmitter
@@ -208,7 +221,7 @@ int main(int argc, char** argv) {
       return result;
 
     // Register to new frame
-    depth.addNewFrameListener(&listener);
+    depth->addNewFrameListener(&listener);
   }
   #endif
 
@@ -221,9 +234,12 @@ int main(int argc, char** argv) {
     if (  (!bTimed || std::chrono::duration_cast<std::chrono::milliseconds>(t - lastFrameTime).count() >= frameDiffTime)
     // do we have data to send?
       &&  (listener.hasNew() || bResendFrames)) {
-      formatter.process(depth);
+      formatter.process(*depth);
 
       if(formatter.getData() && compressor->compress(formatter.getData(), formatter.getSize())) {
+        for(auto output : depthStreamOutputs) {
+          output(compressor->getData(), compressor->getSize());
+        }
         // if(transmitter.transmitFrame(compressor->getData(), compressor->getSize())) {
         //   std::cout << "sent compressed " << formatter.getSize() << "-byte frame in " << compressor->getSize() << "-byte package" << std::endl;
         // } else {
@@ -249,9 +265,9 @@ int main(int argc, char** argv) {
 
   #ifdef OPENNI_AVAILABLE
   { // cleanup
-    depth.stop();
-    depth.destroy();
-    device.close();
+    depth->stop();
+    depth->destroy();
+    device->close();
     OpenNI::shutdown();
   }
   #endif

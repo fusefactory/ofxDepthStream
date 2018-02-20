@@ -24,29 +24,30 @@ Transmitter::Transmitter(int port) : port(port) {
 
 Transmitter::~Transmitter() {
   if(this->thread) {
-    std::cout << "stopping server thread";
+    this->cout() << "stopping server thread";
     bRunning = false;
     thread->join();
-    std::cout << "server thread done";
+    this->cout() << "server thread done";
     delete thread;
   }
 }
 
 bool Transmitter::transmitRaw(const char* data, size_t size) {
   if (!bConnected) {
-    // std::cout << "no client, didn't sent " << size << " bytes." << std::endl;
+    // this->cout() << "no client, didn't sent " << size << " bytes." << std::endl;
     return false;
   }
 
   // content
-  auto n = write(newsockfd,data,size);
+  this->cout() << "Sending raw data: " << *data << std::endl;
+  auto n = send(newsockfd, data, size, 0);
 
   if (n < 0) {
     error("ERROR writing data to socket");
     return false;
   }
 
-  // std::cout << "sent " << size << " bytes." << std::endl;
+  // this->cout() << "sent " << size << " bytes." << std::endl;
   return true;
 }
 
@@ -74,7 +75,7 @@ bool Transmitter::transmitInt(int value){
 bool Transmitter::transmitFrame(const char* data, size_t size) {
 
   if (!bConnected) {
-    // std::cout << "no client, didn't sent " << size << " bytes." << std::endl;
+    // this->cout() << "no client, didn't sent " << size << " bytes." << std::endl;
     return false;
   }
 
@@ -92,7 +93,7 @@ bool Transmitter::transmitFrame(const char* data, size_t size) {
     return false;
   }
 
-  // std::cout << "sent " << size << " bytes." << std::endl;
+  // this->cout() << "sent " << size << " bytes." << std::endl;
   return true;
 }
 
@@ -139,7 +140,7 @@ void Transmitter::serverThread() {
            error("ERROR on accept");
       } else {
         bConnected = true;
-        std::cout << "client connected" << std::endl;
+        this->cout() << "client connected to port " << this->port << std::endl;
 
         while(bRunning){
           n=recv(newsockfd,packet,1,0);
@@ -155,7 +156,7 @@ void Transmitter::serverThread() {
           // Message = string(msg);
         }
 
-        std::cout << "client disconnected" << std::endl;
+        this->cout() << "client disconnected from port " << this->port << std::endl;
         bConnected = false;
       }
 

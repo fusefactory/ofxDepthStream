@@ -1,7 +1,5 @@
 #pragma once
 
-
-#include "persee/Inflater.h"
 #include "ImageStream.h"
 #include "DepthStream.h"
 
@@ -45,7 +43,6 @@ namespace ofxOrbbecPersee {
 
     private:
       Options opts;
-      persee::Inflater inflater;
       persee::ReceiverRef receiverRef=nullptr;
       std::vector<QueuedRequestFunc> requestQueue;
       bool bProcessingRequestQueue=false;

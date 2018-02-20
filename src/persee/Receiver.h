@@ -31,8 +31,10 @@ namespace persee {
       void start(std::string host, int port);
       void stop() { bRunning = false; }
 
-      char* getData() { return (char*)(buffer + 4); }
+      char* getFrameData() { return (char*)(buffer + 4); }
+      char* getData() { return (char*)buffer; }
       int getSize() const { return lastPackageSize; }
+      int getLastRecvSize(){ return recvSize; }
       bool hasNew() const { return bHasNew; }
       void reset(){ bHasNew = false; }
 

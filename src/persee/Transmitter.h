@@ -46,6 +46,9 @@ namespace persee {
 
     protected:
 
+      std::ostream& cout() { return std::cout << "[persee::Transmitter] "; }
+      std::ostream& cerr() { return std::cerr << "[persee::Transmitter] "; }
+
       void error(const char *msg) {
         perror(msg);
       }

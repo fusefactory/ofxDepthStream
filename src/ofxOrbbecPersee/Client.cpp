@@ -20,22 +20,32 @@ void Client::setup(const Client::Options& options) {
 
 DepthStreamRef Client::createDepthStream() {
   auto stream = std::make_shared<DepthStream>();
+  stream->setup();
 
   // The persee server has one new-incoming-connections port, so we queue any requests
   this->performQueuedRequest([this, stream](Receiver& recvr){
     // request depth stream
     char cmd = persee::CMD_GET_DEPTH_STREAM;
     if(recvr.send_data(&cmd, 1)) {
+      // read response
       if(recvr.receive(1)) {
         // request granted?
-        if(*recvr.getData() == persee::CMD_OK) {
+        if(recvr.getData()[0] == persee::CMD_OK) {
+          // read port number from response
           if(recvr.receive(4)) {
             // create receiver on the returned port
             int streamPort = recvr.readInt(recvr.getData());
             auto r = std::make_shared<Receiver>(this->opts.host, streamPort);
             stream->setReceiver(r);
+            ofLogNotice() << "started receiver on " << this->opts.host << ":" << streamPort << std::endl;
+          } else {
+            ofLogWarning() << "Request for depth stream failed; could not get port-number after OK";
           }
+        } else {
+          ofLogWarning() << "Request for depth stream failed; get non-OK response: " << recvr.getData()[0] << "(" << (int)recvr.getData()[0] << "," << (int)recvr.getData()[1] << ")";
         }
+      } else {
+        ofLogWarning() << "Request for depth stream failed; no response";
       }
     }
 
@@ -49,6 +59,7 @@ DepthStreamRef Client::createDepthStream() {
 
 void Client::performQueuedRequest(QueuedRequestFunc func) {
   requestQueue.push_back(func);
+  this->processRequestQueue();
 }
 
 void Client::processRequestQueue(){
