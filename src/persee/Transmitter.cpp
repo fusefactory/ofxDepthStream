@@ -24,10 +24,10 @@ Transmitter::Transmitter(int port) : port(port) {
 
 Transmitter::~Transmitter() {
   if(this->thread) {
-    this->cout() << "stopping server thread";
+    this->cout() << "stopping server thread" << this->port << std::endl;
     bRunning = false;
     thread->join();
-    this->cout() << "server thread done";
+    this->cout() << "server thread for port " << this->port << " stopped" << std::endl;
     delete thread;
   }
 }
