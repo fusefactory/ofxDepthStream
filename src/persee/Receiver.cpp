@@ -71,6 +71,8 @@ void Receiver::threadFunc() {
           break;
         }
       }
+
+      Sleep(1000);
     }
 
 

@@ -98,7 +98,7 @@ bool Transmitter::transmitFrame(const char* data, size_t size) {
 }
 
 
-bool Transmitter::start() {
+bool Transmitter::bindServer() {
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
   int option=1;
@@ -120,53 +120,65 @@ bool Transmitter::start() {
    }
 
   listen(sockfd, 5);
+  this->bBound = true;
   return true;
 }
 
 void Transmitter::serverThread() {
   int n;
+  clilen = sizeof(cli_addr);
 
   while(bRunning) {
-    if(!this->start()) {
-      if(this->bindFailedHandler) this->bindFailedHandler(*this);
-    } else {
-      this->bBound = true;
-      if(this->boundHandler) this->boundHandler(*this);
 
-      clilen = sizeof(cli_addr);
-
-      newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
-      if (newsockfd < 0) {
-           error("ERROR on accept");
-      } else {
-        bConnected = true;
-        this->cout() << "client connected to port " << this->port << std::endl;
-
-        while(bRunning){
-          n=recv(newsockfd,packet,1,0);
-          if(n==0) break;
-
-          if(n==1 && this->firstByteHandler) {
-            this->firstByteHandler(*this, packet[0]);
-          }
-
-          Sleep(100);
-          // msg[n]=0;
-          //send(newsockfd,msg,n,0);
-          // Message = string(msg);
-        }
-
-        this->cout() << "client disconnected from port " << this->port << std::endl;
-        bConnected = false;
-        if(this->disconnectHandler) this->disconnectHandler(*this);
+    // bind
+    if(!bBound) {
+      if(!this->bindServer()) {
+        if(this->bindFailedHandler) this->bindFailedHandler(*this);
+        continue;
       }
 
-      close(newsockfd);
+      if(this->boundHandler) this->boundHandler(*this);
     }
 
-    close(sockfd);
-    this->bBound = false;
-    if(this->unboundHandler) this->unboundHandler(*this);
-    Sleep(1000);
-  }
+    // receive client connection
+    newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
+
+    if (newsockfd < 0) {
+      error("ERROR on accept");
+      continue;
+    }
+
+    bConnected = true;
+    this->cout() << "client connected to port " << this->port << std::endl;
+
+    while(bRunning){
+      this->cout() << "waiting for client message" << std::endl;
+
+      n=recv(newsockfd,packet,1,0);
+      if(n==0){
+        this->cout() << "client disconnected message" << std::endl;
+        break;
+      }
+
+      if(n==1 && this->firstByteHandler) {
+        this->firstByteHandler(*this, packet[0]);
+      }
+
+      Sleep(100);
+      // msg[n]=0;
+      //send(newsockfd,msg,n,0);
+      // Message = string(msg);
+    }
+
+    this->cout() << "client disconnected from port " << this->port << std::endl;
+    bConnected = false;
+    if(this->disconnectHandler) this->disconnectHandler(*this);
+
+    close(newsockfd);
+  } // while running
+
+  // close(sockfd);
+  // this->bBound = false;
+  // if(this->unboundHandler) this->unboundHandler(*this);
+  // Sleep(1000);
 }

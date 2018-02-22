@@ -29,7 +29,7 @@ class ofApp : public ofBaseApp{
     int perseePort = 4444; // default
     ofxOrbbecPersee::Client client;
     ofxOrbbecPersee::DepthStreamRef depthStreamRef;
-    ofxOrbbecPersee::ColorStreamRef colorStreamRef;
+    // ofxOrbbecPersee::ColorStreamRef colorStreamRef;
 };
 
 ofApp::ofApp(int argc, char** argv) {
@@ -42,12 +42,12 @@ void ofApp::setup() {
   // use all default options (port 4444, only depth stream enabled, 30fps), only specify the Persee's IP
   client.setup(perseeHost, perseePort);
   depthStreamRef = client.createDepthStream(); // 640x480 by default
-  colorStreamRef = client.createColorStream(); // 1280x720 by default
+  // colorStreamRef = client.createColorStream(); // 1280x720 by default
 }
 
 void ofApp::update() {
   depthStreamRef->update();
-  colorStreamRef->update();
+  // colorStreamRef->update();
 }
 
 void ofApp::draw() {
@@ -59,11 +59,11 @@ void ofApp::draw() {
     tex.draw(0, 0);
   }
 
-  auto tex2 = colorStreamRef->getTexture();
-
-  if(tex2.isAllocated()) {
-    tex2.draw(650, 0, tex2.getWidth(), tex2.getHeight());
-  }
+  // auto tex2 = colorStreamRef->getTexture();
+  //
+  // if(tex2.isAllocated()) {
+  //   tex2.draw(650, 0, tex2.getWidth(), tex2.getHeight());
+  // }
 }
 
 //========================================================================

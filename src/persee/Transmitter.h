@@ -75,7 +75,7 @@ namespace persee {
         perror(msg);
       }
 
-      bool start();
+      bool bindServer();
       void serverThread();
 
     private:

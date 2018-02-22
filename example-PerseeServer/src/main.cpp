@@ -193,6 +193,7 @@ int main(int argc, char** argv) {
 
   bool bKeepGoing = true;
 
+  std::cout << "starting new connection listener on port " << httpPort << std::endl;
 
   Transmitter newConnectionTransmitter(httpPort);
   newConnectionTransmitter.setFirstByteHandler(
@@ -340,10 +341,11 @@ int main(int argc, char** argv) {
 
     Sleep(sleepTime);
 
-    if(wasKeyboardHit())
-      bKeepGoing = false;
+    // if(wasKeyboardHit())
+    //   bKeepGoing = false;
   }
 
+  std::cout << "cleaning up..." << std::endl;
   #ifdef OPENNI_AVAILABLE
   { // cleanup
     depth->stop();
