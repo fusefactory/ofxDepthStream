@@ -22,7 +22,8 @@ using namespace persee;
 Receiver::~Receiver() {
   if(this->thread) {
     // this->cout() << "stopping client thread...";
-    this->stopAndWait();
+    bRunning = false;
+    thread->join();
     // this->cout() << " done" << std::endl;
     delete thread;
   }
@@ -31,7 +32,6 @@ Receiver::~Receiver() {
 void Receiver::start(std::string host, int port) {
   this->host = host;
   this->port = port;
-  this->bRunning = true;
   // start thread
   this->thread = new std::thread(std::bind(&Receiver::threadFunc, this));
 }
@@ -45,12 +45,6 @@ void Receiver::threadFunc() {
   while (bRunning) {
     bConnected = this->connectToServer(this->host, this->port);
 
-    if(this->commFunc) {
-      this->commFunc(*this);
-      break;
-    }
-
-    // default frame receiving behaviour
     while(bConnected && bRunning) {
       // std::string s=".";
       // this->send_data(s);
@@ -79,19 +73,14 @@ void Receiver::threadFunc() {
       }
     }
 
-    // if(bConnected) {
-    //   this->cout() << "disconnected from " << this->host << ":" << this->port << std::endl;
-    //   bConnected = false;
-    //   this->disconnectFromServer();
-    // }
 
-    if(bRunning) Sleep(1000);
-  }
+    if(bConnected) {
+      this->cout() << "disconnected from " << this->host << ":" << this->port << std::endl;
+      bConnected = false;
+    }
 
-  if(bConnected) {
-    this->cout() << "disconnected from " << this->host << ":" << this->port << std::endl;
-    bConnected = false;
     this->disconnectFromServer();
+    if(bRunning) Sleep(1000);
   }
 
   if(this->idleFunc)
@@ -202,7 +191,7 @@ bool Receiver::send_data(const void* data, size_t size) {
   // this->cout() << "Sending data...";
   //Send some data
   if(send(sock, data, size, 0) < 0) {
-      // perror("[persee::Receiver::Send failed: ");
+      perror("[persee::Receiver::Send failed: ");
       return false;
   }
 

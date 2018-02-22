@@ -30,14 +30,6 @@ namespace persee {
 
       void start(std::string host, int port);
       void stop() { bRunning = false; }
-      void stopAndWait(){
-        if(thread){
-          bRunning = false;
-          thread->join();
-        }
-      }
-
-      bool isThreadRunning() { return this->thread && this->thread->joinable(); }
 
       char* getFrameData() { return (char*)(buffer + 4); }
       char* getData() { return (char*)buffer; }
@@ -80,7 +72,7 @@ namespace persee {
       int port;
       struct sockaddr_in server;
 
-      static const int BUF_SIZE = (1280*720*3+4); // non-dynamic; max frame size
+      static const int BUF_SIZE = (1024*1024*4);
       char buffer[BUF_SIZE];
       // int bufferSize=0;
       int recvSize=0;
