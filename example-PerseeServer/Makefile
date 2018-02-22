@@ -3,7 +3,7 @@ include CommonDefs.mak
 BIN_DIR = Bin
 
 INC_DIRS = \
-	../../Include \
+	../lib
 	../Common
 
 SRC_FILES = src/*.cpp ../../src/persee/*.cpp
