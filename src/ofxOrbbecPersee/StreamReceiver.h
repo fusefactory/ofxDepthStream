@@ -6,8 +6,6 @@
 #include "ofMain.h"
 // ofxaddons
 #include "ofxTCPClient.h"
-// 3rd party libs
-#include "cpp-httplib/httplib.h"
 // local livs
 #include "ImageStream.h"
 #include "persee/Receiver.h"
