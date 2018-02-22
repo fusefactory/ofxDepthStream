@@ -7,3 +7,4 @@ meta:
 
 common:
 	# ADDON_DEPENDENCIES += ofxJSON ## OPTIONAL, features enabled with OFXCMS_JSON macro
+	ADDON_INCLUDES += lib

@@ -12,12 +12,10 @@ namespace ofxOrbbecPersee {
       static const int FRAME_SIZE_1280x720x24BIT = (1280*720*3);
 
     public:
-
       void setup(){ this->setup(1280, 720); };
       void setup(int width, int height);
-      void update() override;
 
     protected:
-      void updatePixels(const void* data, size_t size);
+      virtual void updatePixels(const void* data, size_t size);
   };
 }

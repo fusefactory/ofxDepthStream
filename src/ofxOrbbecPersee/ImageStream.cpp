@@ -14,3 +14,14 @@ void ImageStream::destroy() {
   pix1.clear();
   pix2.clear();
 }
+
+void ImageStream::update() {
+  // update all our addons
+  for(auto addon : addons)
+    addon->update();
+
+  if(offeredData)
+    this->updatePixels(offeredData, offeredSize);
+
+  offeredData = NULL;
+}

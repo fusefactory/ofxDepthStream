@@ -4,9 +4,6 @@
 #include <memory>
 // OF
 #include "ofMain.h"
-// local
-#include "persee/Receiver.h"
-#include "persee/Inflater.h"
 
 namespace ofxOrbbecPersee {
 
@@ -16,8 +13,19 @@ namespace ofxOrbbecPersee {
   class ImageStream {
     public: // types & consts
 
-      struct Options {
+      class Addon {
+      public:
+        Addon(ImageStream* imagestream) : imgstream(imagestream){}
+        ~Addon(){ destroy(); }
+        virtual void update(){};
 
+      protected:
+        virtual void setup(){}
+        virtual void destroy(){};
+
+        ImageStream* getImageStream(){ return imgstream; }
+      private:
+        ImageStream* imgstream;
       };
 
     public: // methods
@@ -25,20 +33,23 @@ namespace ofxOrbbecPersee {
       ~ImageStream() { this->destroy(); }
 
       void setup(int width, int height, ofImageType fmt);
-      virtual void update() {};
-      void destroy();
+      virtual void update();
 
+      void destroy();
       const ofTexture& getTexture() const { return tex; }
 
-      void setReceiver(persee::ReceiverRef recvr) { this->receiverRef = recvr; }
+      void offerData(void* data, size_t size) {
+        offeredData = data;
+        offeredSize = size;
+      }
 
-      persee::InflaterRef getInflater() {
-        if(!this->inflaterRef)
-          this->inflaterRef = std::make_shared<persee::Inflater>();
-        return this->inflaterRef;
+      void addAddon(std::shared_ptr<Addon> newaddon) {
+        addons.push_back(newaddon);
       }
 
     protected:
+
+      virtual void updatePixels(const void* data, size_t size){};
 
       void swap() {
         std::swap(this->pixFront, this->pixBack);
@@ -47,7 +58,9 @@ namespace ofxOrbbecPersee {
     protected: // attributes
       ofTexture tex;
       ofPixels pix1, pix2, *pixFront, *pixBack;
-      persee::ReceiverRef receiverRef=nullptr;
-      persee::InflaterRef inflaterRef=nullptr;
+
+      void* offeredData=NULL;
+      size_t offeredSize=0;
+      std::vector<std::shared_ptr<Addon>> addons;
   };
 }

@@ -50,6 +50,7 @@ void Receiver::threadFunc() {
       break;
     }
 
+    // default frame receiving behaviour
     while(bConnected && bRunning) {
       // std::string s=".";
       // this->send_data(s);

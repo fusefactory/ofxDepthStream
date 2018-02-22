@@ -7,6 +7,7 @@
 class ofApp : public ofBaseApp{
 
   public: // methods
+    ofApp(int argc, char** argv);
     void setup() override;
     void update() override;
     void draw() override;
@@ -25,23 +26,28 @@ class ofApp : public ofBaseApp{
 
   private: // attributes
     std::string perseeHost = "127.0.0.1"; //"192.168.1.172";
+    int perseePort = 4444; // default
     ofxOrbbecPersee::Client client;
     ofxOrbbecPersee::DepthStreamRef depthStreamRef;
     ofxOrbbecPersee::ColorStreamRef colorStreamRef;
 };
 
+ofApp::ofApp(int argc, char** argv) {
+  if(argc > 1) perseeHost = argv[1];
+  if(argc > 2) perseePort = std::atoi(argv[2]);
+}
+
 void ofApp::setup() {
   ofSetWindowShape(1280,480);
   // use all default options (port 4444, only depth stream enabled, 30fps), only specify the Persee's IP
-  client.setup(perseeHost);
+  client.setup(perseeHost, perseePort);
   depthStreamRef = client.createDepthStream(); // 640x480 by default
   colorStreamRef = client.createColorStream(); // 1280x720 by default
 }
 
 void ofApp::update() {
-  // client.update();
   depthStreamRef->update();
-  // colorStreamRef->update();
+  colorStreamRef->update();
 }
 
 void ofApp::draw() {
@@ -56,13 +62,13 @@ void ofApp::draw() {
   auto tex2 = colorStreamRef->getTexture();
 
   if(tex2.isAllocated()) {
-    tex2.draw(650, 0, tex2.getWidth()/2, tex2.getHeight()/2);
+    tex2.draw(650, 0, tex2.getWidth(), tex2.getHeight());
   }
 }
 
 //========================================================================
 
-int main( ){
+int main(int argc, char** argv){
   ofSetupOpenGL(800, 600, OF_WINDOW);
-  ofRunApp(new ofApp());
+  ofRunApp(new ofApp(argc, argv));
 }

@@ -154,6 +154,7 @@ class MainApp {
     float frameDiffTime = 1.0f/1.5f * 1000.0f; // fps
     unsigned int sleepTime = 5; // ms
     int httpPort;
+    std::thread* httpThread=NULL;
 
     // attributes
     steady_clock::time_point lastFrameTime;
@@ -182,20 +183,12 @@ class MainApp {
         std::shared_ptr<Device> device = getDevice();
       #endif
 
-      httpServer.get("/stream/depth", [](const httplib::Request& req, httplib::Response& res) {
-        // res.set_content("Hello World!", "text/plain");
-      });
-
-      httpServer.get("/stream/color", [&](const httplib::Request& req, httplib::Response& res) {
-        this->onColorStreamRequest(res);
-        // auto numbers = req.matches[1];
-        // res.set_content(numbers, "text/plain");
-      });
-
-      httpServer.listen("localhost", httpPort);
-
       lastFrameTime = steady_clock::now();
       lastPort = httpPort;
+
+      this->httpThread = new std::thread(std::bind(&MainApp::httpThreadMethod, this));
+
+      startDepthStream();
     }
 
     ~MainApp() {
@@ -303,7 +296,8 @@ class MainApp {
     }
 
     void onColorStreamRequest(httplib::Response& res) {
-      auto transmitter = std::make_shared<Transmitter>(startPort);
+      std::cout << "onColorStreamRequest, trying port: " << (lastPort+1) << std::endl;
+      auto transmitter = std::make_shared<Transmitter>(lastPort + 1);
 
       // when bind fails; retry with new port
       transmitter->setBindFailedHandler([](Transmitter& t){
@@ -330,7 +324,7 @@ class MainApp {
         lastPort = transmitter->getPort();
 
         // respond with OK-byte and the port number (4-byte integer)
-        res.set_content(std::to_string(CMD_OK)+std::to_string(transmitter->getPort()), "text/plain");
+        res.set_content(std::to_string(transmitter->getPort()), "text/plain");
         // char response = CMD_OK;
         // t.transmitRaw((const char*)&response, 1);
         // t.transmitInt(transmitter->getPort());
@@ -357,6 +351,21 @@ class MainApp {
           std::cout << "Cleaned up color-stream transmitter from port " << transmitter->getPort() << std::endl;
         });
       });
+    }
+
+    void httpThreadMethod() {
+      httpServer.get("/stream/depth", [](const httplib::Request& req, httplib::Response& res) {
+        // res.set_content("Hello World!", "text/plain");
+      });
+
+      httpServer.get("/stream/color", [&](const httplib::Request& req, httplib::Response& res) {
+        this->onColorStreamRequest(res);
+        // auto numbers = req.matches[1];
+        // res.set_content(numbers, "text/plain");
+      });
+
+      std::cout << "Starting http server on port " << httpPort << std::endl;
+      httpServer.listen("localhost", httpPort);
     }
 };
 
