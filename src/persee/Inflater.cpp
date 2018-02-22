@@ -79,6 +79,7 @@ char *Inflater::decompress(char *compressedBytes, unsigned int length) {
         }
         else if (err != Z_OK)  {
           this->cout() << "inflation error" << std::endl;
+          perror("perror");
           return NULL;
           // break;
         }

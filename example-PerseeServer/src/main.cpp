@@ -189,114 +189,115 @@ int main(int argc, char** argv) {
 
   int lastPort = httpPort; // for every new connection we'll start a new transmitter at a new port
 
-
+  depthStreamTransmitters.push_back(std::make_shared<Transmitter>(4445));
+  colorStreamTransmitters.push_back(std::make_shared<Transmitter>(4446));
 
   bool bKeepGoing = true;
 
-  std::cout << "starting new connection listener on port " << httpPort << std::endl;
-
-  Transmitter newConnectionTransmitter(httpPort);
-  newConnectionTransmitter.setFirstByteHandler(
-    [&lastPort, &depthStreamTransmitters, &colorStreamTransmitters](Transmitter& t, char byte){
-
-    // remember this method is executed on the newConnectionTransmitter's listener thread
-
-    switch(byte) {
-      case CMD_GET_DEPTH_STREAM: {
-        // std::cout << "Got CMD_GET_DEPTH_STREAM" << std::endl;
-
-        auto transmitter = createTransmitter(lastPort+1);
-
-        if(!transmitter){
-          std::cerr << "Failed to create depth-stream transmitter" << std::endl;
-          char response = CMD_ERROR;
-          t.transmitRaw((const char*)&response, 1);
-          return;
-        }
-
-        transmitter->whenBound([
-          &t, &lastPort, &depthStreamTransmitters, transmitter](Transmitter& newtransmitter){
-          // std::cout << "new depth-stream transmitter started" << std::endl;
-          // save our new transmitter
-          depthStreamTransmitters.push_back(transmitter);
-          // update lastPort for creation of next transmitter
-          lastPort = transmitter->getPort();
-
-          // respond with OK-byte and the port number (4-byte integer)
-          char response = CMD_OK;
-          t.transmitRaw((const char*)&response, 1);
-          t.transmitInt(transmitter->getPort());
-          std::cout << "Started new Depth stream on port: " << transmitter->getPort() << std::endl;
-
-          transmitter->whenUnbound([&depthStreamTransmitters, transmitter](Transmitter& tt){
-            // don't reconnect
-            tt.setBoundHandler(nullptr);
-            tt.stop();
-            // std::cout << "Transmitter unbound from port: " << transmitter->getPort() << std::endl;
-
-            for(auto it=depthStreamTransmitters.begin(); it != depthStreamTransmitters.end(); it++) {
-              if(*it == transmitter) {
-                // std::cout << "removed transmitter from depth stream list" << std::endl;
-                depthStreamTransmitters.erase(it);
-                break;
-              }
-            }
-
-            std::cout << "Cleaned up depth-stream transmitter from port " << transmitter->getPort() << std::endl;
-          });
-        });
-
-        return;
-      }
-
-      case CMD_GET_COLOR_STREAM: {
-        // std::cout << "Got CMD_GET_DEPTH_STREAM" << std::endl;
-
-        auto transmitter = createTransmitter(lastPort+1);
-
-        if(!transmitter){
-          std::cerr << "Failed to create color-stream transmitter" << std::endl;
-          char response = CMD_ERROR;
-          t.transmitRaw((const char*)&response, 1);
-          return;
-        }
-
-        transmitter->whenBound([
-          &t, &lastPort, &colorStreamTransmitters, transmitter](Transmitter& newtransmitter){
-          // std::cout << "new depth-stream transmitter started" << std::endl;
-          // save our new transmitter
-          colorStreamTransmitters.push_back(transmitter);
-          // update lastPort for creation of next transmitter
-          lastPort = transmitter->getPort();
-
-          // respond with OK-byte and the port number (4-byte integer)
-          char response = CMD_OK;
-          t.transmitRaw((const char*)&response, 1);
-          t.transmitInt(transmitter->getPort());
-          std::cout << "Started new Color stream on port: " << transmitter->getPort() << std::endl;
-
-          transmitter->whenUnbound([&colorStreamTransmitters, transmitter](Transmitter& tt){
-            // don't reconnect
-            tt.setBoundHandler(nullptr);
-            tt.stop();
-            // std::cout << "Transmitter unbound from port: " << transmitter->getPort() << std::endl;
-
-            for(auto it=colorStreamTransmitters.begin(); it != colorStreamTransmitters.end(); it++) {
-              if(*it == transmitter) {
-                // std::cout << "removed transmitter from depth stream list" << std::endl;
-                colorStreamTransmitters.erase(it);
-                break;
-              }
-            }
-
-            std::cout << "Cleaned up color-stream transmitter from port " << transmitter->getPort() << std::endl;
-          });
-        });
-
-        return;
-      }
-    }
-  });
+  // std::cout << "starting new connection listener on port " << httpPort << std::endl;
+  //
+  // Transmitter newConnectionTransmitter(httpPort);
+  // newConnectionTransmitter.setFirstByteHandler(
+  //   [&lastPort, &depthStreamTransmitters, &colorStreamTransmitters](Transmitter& t, char byte){
+  //
+  //   // remember this method is executed on the newConnectionTransmitter's listener thread
+  //
+  //   switch(byte) {
+  //     case CMD_GET_DEPTH_STREAM: {
+  //       // std::cout << "Got CMD_GET_DEPTH_STREAM" << std::endl;
+  //
+  //       auto transmitter = createTransmitter(lastPort+1);
+  //
+  //       if(!transmitter){
+  //         std::cerr << "Failed to create depth-stream transmitter" << std::endl;
+  //         char response = CMD_ERROR;
+  //         t.transmitRaw((const char*)&response, 1);
+  //         return;
+  //       }
+  //
+  //       transmitter->whenBound([
+  //         &t, &lastPort, &depthStreamTransmitters, transmitter](Transmitter& newtransmitter){
+  //         // std::cout << "new depth-stream transmitter started" << std::endl;
+  //         // save our new transmitter
+  //         depthStreamTransmitters.push_back(transmitter);
+  //         // update lastPort for creation of next transmitter
+  //         lastPort = transmitter->getPort();
+  //
+  //         // respond with OK-byte and the port number (4-byte integer)
+  //         char response = CMD_OK;
+  //         t.transmitRaw((const char*)&response, 1);
+  //         t.transmitInt(transmitter->getPort());
+  //         std::cout << "Started new Depth stream on port: " << transmitter->getPort() << std::endl;
+  //
+  //         transmitter->whenUnbound([&depthStreamTransmitters, transmitter](Transmitter& tt){
+  //           // don't reconnect
+  //           tt.setBoundHandler(nullptr);
+  //           tt.stop();
+  //           // std::cout << "Transmitter unbound from port: " << transmitter->getPort() << std::endl;
+  //
+  //           for(auto it=depthStreamTransmitters.begin(); it != depthStreamTransmitters.end(); it++) {
+  //             if(*it == transmitter) {
+  //               // std::cout << "removed transmitter from depth stream list" << std::endl;
+  //               depthStreamTransmitters.erase(it);
+  //               break;
+  //             }
+  //           }
+  //
+  //           std::cout << "Cleaned up depth-stream transmitter from port " << transmitter->getPort() << std::endl;
+  //         });
+  //       });
+  //
+  //       return;
+  //     }
+  //
+  //     case CMD_GET_COLOR_STREAM: {
+  //       // std::cout << "Got CMD_GET_DEPTH_STREAM" << std::endl;
+  //
+  //       auto transmitter = createTransmitter(lastPort+1);
+  //
+  //       if(!transmitter){
+  //         std::cerr << "Failed to create color-stream transmitter" << std::endl;
+  //         char response = CMD_ERROR;
+  //         t.transmitRaw((const char*)&response, 1);
+  //         return;
+  //       }
+  //
+  //       transmitter->whenBound([
+  //         &t, &lastPort, &colorStreamTransmitters, transmitter](Transmitter& newtransmitter){
+  //         // std::cout << "new depth-stream transmitter started" << std::endl;
+  //         // save our new transmitter
+  //         colorStreamTransmitters.push_back(transmitter);
+  //         // update lastPort for creation of next transmitter
+  //         lastPort = transmitter->getPort();
+  //
+  //         // respond with OK-byte and the port number (4-byte integer)
+  //         char response = CMD_OK;
+  //         t.transmitRaw((const char*)&response, 1);
+  //         t.transmitInt(transmitter->getPort());
+  //         std::cout << "Started new Color stream on port: " << transmitter->getPort() << std::endl;
+  //
+  //         transmitter->whenUnbound([&colorStreamTransmitters, transmitter](Transmitter& tt){
+  //           // don't reconnect
+  //           tt.setBoundHandler(nullptr);
+  //           tt.stop();
+  //           // std::cout << "Transmitter unbound from port: " << transmitter->getPort() << std::endl;
+  //
+  //           for(auto it=colorStreamTransmitters.begin(); it != colorStreamTransmitters.end(); it++) {
+  //             if(*it == transmitter) {
+  //               // std::cout << "removed transmitter from depth stream list" << std::endl;
+  //               colorStreamTransmitters.erase(it);
+  //               break;
+  //             }
+  //           }
+  //
+  //           std::cout << "Cleaned up color-stream transmitter from port " << transmitter->getPort() << std::endl;
+  //         });
+  //       });
+  //
+  //       return;
+  //     }
+  //   }
+  // });
 
   // main loop; send frames
   while (bKeepGoing) {
@@ -312,7 +313,7 @@ int main(int argc, char** argv) {
         if(formatter.getData() && compressor->compress(formatter.getData(), formatter.getSize())) {
           for(auto t : depthStreamTransmitters) {
             t->transmitFrame((const char*)compressor->getData(), compressor->getSize());
-            std::cout << "sent " << compressor->getSize() << "-byte depth frame" << std::endl;
+            // std::cout << "sent " << compressor->getSize() << "-byte depth frame" << std::endl;
           }
         } else {
           std::cout << "FAILED to compress " << formatter.getSize() << "-byte frame" << std::endl;
@@ -327,7 +328,7 @@ int main(int argc, char** argv) {
         if(formatter.getData() && compressor->compress(formatter.getData(), formatter.getSize())) {
           for(auto t : colorStreamTransmitters) {
             t->transmitFrame((const char*)compressor->getData(), compressor->getSize());
-            std::cout << "sent " << compressor->getSize() << "-byte color frame" << std::endl;
+            // std::cout << "sent " << compressor->getSize() << "-byte color frame" << std::endl;
           }
         } else {
           std::cout << "FAILED to compress " << formatter.getSize() << "-byte frame" << std::endl;
