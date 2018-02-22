@@ -1,22 +1,14 @@
 // OF
 #include "ofMain.h"
 // local
+#include "persee/protocol.h"
 #include "Client.h"
 #include "StreamReceiver.h"
 
 
 using namespace ofxOrbbecPersee;
 using namespace persee;
-//
-// void Client::setup(const Client::Options& options) {
-//   // receiver.start(options.host, options.port);
-//   // ofLogWarning() << "failed to connect to persee at: " << options.host << ":" << options.port << std::endl;
-//
-//   // // TODO check options for custom format and/or if depthstream is enabled at all
-//   // this->depthStreamRef = std::make_shared<DepthStream>();
-//   // this->depthStreamRef->setup(640, 480);
-//   this->opts = options;
-// }
+
 
 // bool Client::requestStreamComms(Receiver& recvr, char cmd, ImageStreamRef stream){
 //   // request depth stream
@@ -58,7 +50,7 @@ DepthStreamRef Client::createDepthStream() {
   auto stream = std::make_shared<DepthStream>();
   stream->setup();
 
-  auto streamReceiver = std::make_shared<StreamReceiver>(stream.get(), opts.host, opts.port, "/stream/depth");
+  auto streamReceiver = std::make_shared<StreamReceiver>(stream.get(), opts.host, opts.port, persee::CMD_GET_DEPTH_STREAM);
   stream->addAddon(streamReceiver);
 
   streamReceiver->start();
@@ -69,7 +61,7 @@ ColorStreamRef Client::createColorStream() {
   auto stream = std::make_shared<ColorStream>();
   stream->setup();
 
-  auto streamReceiver = std::make_shared<StreamReceiver>(stream.get(), opts.host, opts.port, "/stream/color");
+  auto streamReceiver = std::make_shared<StreamReceiver>(stream.get(), opts.host, opts.port, persee::CMD_GET_COLOR_STREAM);
   stream->addAddon(streamReceiver);
 
   streamReceiver->start();

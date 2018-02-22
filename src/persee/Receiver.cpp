@@ -79,11 +79,11 @@ void Receiver::threadFunc() {
       }
     }
 
-    if(bConnected) {
-      this->cout() << "disconnected from " << this->host << ":" << this->port << std::endl;
-      bConnected = false;
-      this->disconnectFromServer();
-    }
+    // if(bConnected) {
+    //   this->cout() << "disconnected from " << this->host << ":" << this->port << std::endl;
+    //   bConnected = false;
+    //   this->disconnectFromServer();
+    // }
 
     if(bRunning) Sleep(1000);
   }
@@ -202,7 +202,7 @@ bool Receiver::send_data(const void* data, size_t size) {
   // this->cout() << "Sending data...";
   //Send some data
   if(send(sock, data, size, 0) < 0) {
-      perror("[persee::Receiver::Send failed: ");
+      // perror("[persee::Receiver::Send failed: ");
       return false;
   }
 

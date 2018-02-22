@@ -74,7 +74,6 @@ namespace persee {
       bool bRunning=true;
       bool bConnected=false;
       bool bHasNew=false;
-      bool bRestartAfterStop=false;
 
       int sock=-1;
       std::string host;
