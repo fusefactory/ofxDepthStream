@@ -152,7 +152,7 @@ void Transmitter::serverThread() {
     this->cout() << "client connected to port " << this->port << std::endl;
 
     while(bRunning){
-      this->cout() << "waiting for client message" << std::endl;
+      // this->cout() << "waiting for client message" << std::endl;
 
       n=recv(newsockfd,packet,1,0);
       if(n==0){

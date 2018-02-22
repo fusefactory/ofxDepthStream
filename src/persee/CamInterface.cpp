@@ -1,12 +1,12 @@
 #include <iostream>
 #include <math.h>
-#include "Formatter.h"
+#include "CamInterface.h"
 
 using namespace openni;
 using namespace persee;
 
 #ifdef OPENNI_AVAILABLE
-void Formatter::process(VideoStream& stream) {
+void Formatter::process(openni::VideoStream& stream) {
   VideoFrameRef frame;
   stream.readFrame(&frame);
 
@@ -41,7 +41,7 @@ void Formatter::process(VideoStream& stream) {
 #else
 
 // Dummy implementation which provides a
-void Formatter::process(VideoStream& stream) {
+void Formatter::process(openni::VideoStream& stream) {
   this->size = BUF_SIZE;
   for(int i=0; i<size; i+=2){
     int v = (sinf(i*0.1f) + 1.0f) / 2.0f * ((1 << 15)-1);
