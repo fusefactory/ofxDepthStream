@@ -22,8 +22,7 @@ using namespace persee;
 Receiver::~Receiver() {
   if(this->thread) {
     // this->cout() << "stopping client thread...";
-    bRunning = false;
-    thread->join();
+    this->stopAndWait();
     // this->cout() << " done" << std::endl;
     delete thread;
   }
@@ -32,6 +31,7 @@ Receiver::~Receiver() {
 void Receiver::start(std::string host, int port) {
   this->host = host;
   this->port = port;
+  this->bRunning = true;
   // start thread
   this->thread = new std::thread(std::bind(&Receiver::threadFunc, this));
 }
@@ -44,6 +44,11 @@ void Receiver::error(const char *msg) {
 void Receiver::threadFunc() {
   while (bRunning) {
     bConnected = this->connectToServer(this->host, this->port);
+
+    if(this->commFunc) {
+      this->commFunc(*this);
+      break;
+    }
 
     while(bConnected && bRunning) {
       // std::string s=".";
@@ -73,14 +78,19 @@ void Receiver::threadFunc() {
       }
     }
 
-
     if(bConnected) {
       this->cout() << "disconnected from " << this->host << ":" << this->port << std::endl;
       bConnected = false;
+      this->disconnectFromServer();
     }
 
-    this->disconnectFromServer();
     if(bRunning) Sleep(1000);
+  }
+
+  if(bConnected) {
+    this->cout() << "disconnected from " << this->host << ":" << this->port << std::endl;
+    bConnected = false;
+    this->disconnectFromServer();
   }
 
   if(this->idleFunc)

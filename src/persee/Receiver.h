@@ -30,6 +30,14 @@ namespace persee {
 
       void start(std::string host, int port);
       void stop() { bRunning = false; }
+      void stopAndWait(){
+        if(thread){
+          bRunning = false;
+          thread->join();
+        }
+      }
+
+      bool isThreadRunning() { return this->thread && this->thread->joinable(); }
 
       char* getFrameData() { return (char*)(buffer + 4); }
       char* getData() { return (char*)buffer; }
@@ -66,6 +74,7 @@ namespace persee {
       bool bRunning=true;
       bool bConnected=false;
       bool bHasNew=false;
+      bool bRestartAfterStop=false;
 
       int sock=-1;
       std::string host;

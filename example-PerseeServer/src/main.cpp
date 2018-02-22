@@ -113,6 +113,22 @@ using namespace persee;
     return stream;
   }
 
+  std::shared_ptr<VideoStream> getColorStream(Device& device) {
+    auto stream = std::make_shared<VideoStream>();
+
+    if (device.getSensorInfo(SENSOR_COLOR) != NULL)
+    {
+      rc = stream->create(device, SENSOR_COLOR);
+      if (rc != STATUS_OK)
+      {
+        printf("Couldn't create color stream\n%s\n", OpenNI::getExtendedError());
+        return nullptr;
+      }
+    }
+
+    return stream;
+  }
+
 #else
 
   typedef int VideoStream;
@@ -151,14 +167,21 @@ int main(int argc, char** argv) {
   // attributes
   steady_clock::time_point lastFrameTime = steady_clock::now();
   std::shared_ptr<VideoStream> depth, color;
-  #ifdef OPENNI_AVAILABLE
-  std::shared_ptr<Device> device = getDevice();
-  depth = getDepthStream(*device);
-  #endif
-
-  SimpleFrameListener listener;
+  SimpleFrameListener depthListener;
+  SimpleFrameListener colorListener;
   Formatter formatter;
   auto compressor = std::make_shared<Compressor>();
+
+  #ifdef OPENNI_AVAILABLE
+    std::shared_ptr<Device> device = getDevice();
+    depth = getDepthStream(*device);
+    if(depth)
+      depth->addNewFrameListener(&depthListener);
+    color = getColorStream(*device);
+    if(color)
+      color->addNewFrameListener(&colorListener);
+  #endif
+
 
   // Transmitter transmitter(httpPort);
   std::vector<std::shared_ptr<Transmitter>> depthStreamTransmitters;
@@ -218,26 +241,61 @@ int main(int argc, char** argv) {
               }
             }
 
-            std::cout << "Cleaned up transmitter from port " << transmitter->getPort() << std::endl;
+            std::cout << "Cleaned up depth-stream transmitter from port " << transmitter->getPort() << std::endl;
           });
         });
+
+        return;
+      }
+
+      case CMD_GET_COLOR_STREAM: {
+        // std::cout << "Got CMD_GET_DEPTH_STREAM" << std::endl;
+
+        auto transmitter = createTransmitter(lastPort+1);
+
+        if(!transmitter){
+          std::cerr << "Failed to create color-stream transmitter" << std::endl;
+          char response = CMD_ERROR;
+          t.transmitRaw((const char*)&response, 1);
+          return;
+        }
+
+        transmitter->whenBound([
+          &t, &lastPort, &colorStreamTransmitters, transmitter](Transmitter& newtransmitter){
+          // std::cout << "new depth-stream transmitter started" << std::endl;
+          // save our new transmitter
+          colorStreamTransmitters.push_back(transmitter);
+          // update lastPort for creation of next transmitter
+          lastPort = transmitter->getPort();
+
+          // respond with OK-byte and the port number (4-byte integer)
+          char response = CMD_OK;
+          t.transmitRaw((const char*)&response, 1);
+          t.transmitInt(transmitter->getPort());
+          std::cout << "Started new Color stream on port: " << transmitter->getPort() << std::endl;
+
+          transmitter->whenUnbound([&colorStreamTransmitters, transmitter](Transmitter& tt){
+            // don't reconnect
+            tt.setBoundHandler(nullptr);
+            tt.stop();
+            // std::cout << "Transmitter unbound from port: " << transmitter->getPort() << std::endl;
+
+            for(auto it=colorStreamTransmitters.begin(); it != colorStreamTransmitters.end(); it++) {
+              if(*it == transmitter) {
+                // std::cout << "removed transmitter from depth stream list" << std::endl;
+                colorStreamTransmitters.erase(it);
+                break;
+              }
+            }
+
+            std::cout << "Cleaned up color-stream transmitter from port " << transmitter->getPort() << std::endl;
+          });
+        });
+
+        return;
       }
     }
   });
-
-  // Formatter
-
-  #ifdef OPENNI_AVAILABLE
-  { // setup
-    int result = setup(device, depth);
-
-    if (result != 0)
-      return result;
-
-    // Register to new frame
-    depth->addNewFrameListener(&listener);
-  }
-  #endif
 
   // main loop; send frames
   while (bKeepGoing) {
@@ -245,20 +303,38 @@ int main(int argc, char** argv) {
     steady_clock::time_point t = steady_clock::now();
 
     // time to send new frame?
-    if (  (!bTimed || std::chrono::duration_cast<std::chrono::milliseconds>(t - lastFrameTime).count() >= frameDiffTime)
+    if ( (!bTimed || std::chrono::duration_cast<std::chrono::milliseconds>(t - lastFrameTime).count() >= frameDiffTime) ) {
     // do we have data to send?
-      &&  (listener.hasNew() || bResendFrames)) {
-      formatter.process(*depth);
+      if(depthListener.hasNew() || bResendFrames) {
+        formatter.process(*depth);
 
-      if(formatter.getData() && compressor->compress(formatter.getData(), formatter.getSize())) {
-        for(auto t : depthStreamTransmitters) {
-          t->transmitFrame((const char*)compressor->getData(), compressor->getSize());
+        if(formatter.getData() && compressor->compress(formatter.getData(), formatter.getSize())) {
+          for(auto t : depthStreamTransmitters) {
+            t->transmitFrame((const char*)compressor->getData(), compressor->getSize());
+            std::cout << "sent " << compressor->getSize() << "-byte depth frame" << std::endl;
+          }
+        } else {
+          std::cout << "FAILED to compress " << formatter.getSize() << "-byte frame" << std::endl;
         }
-      } else {
-        std::cout << "FAILED to compress " << formatter.getSize() << "-byte frame" << std::endl;
+
+        depthListener.reset();
       }
 
-      listener.reset();
+      if(colorListener.hasNew() || bResendFrames) {
+        formatter.process(*depth);
+
+        if(formatter.getData() && compressor->compress(formatter.getData(), formatter.getSize())) {
+          for(auto t : colorStreamTransmitters) {
+            t->transmitFrame((const char*)compressor->getData(), compressor->getSize());
+            std::cout << "sent " << compressor->getSize() << "-byte color frame" << std::endl;
+          }
+        } else {
+          std::cout << "FAILED to compress " << formatter.getSize() << "-byte frame" << std::endl;
+        }
+
+        colorListener.reset();
+      }
+
       lastFrameTime = t;
     }
 
