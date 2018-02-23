@@ -136,11 +136,12 @@ void Formatter::process(openni::VideoStream& stream) {
 
 VideoStreamRef CamInterface::getReadyStream(){
   #ifdef OPENNI_AVAILABLE
-  openni::VideoStream* streams[] = {depth.get(), color.get()};
+  openni::VideoStream* streams[] = {depth->getStream().get(), color->getStream().get()};
 
+  int readyStream = -1;
   Status rc = OpenNI::waitForAnyStream(streams, 2, &readyStream, SAMPLE_READ_WAIT_TIMEOUT);
   if (rc != STATUS_OK) {
-    std::cerr << "Wait failed! " << OpenNI::getExtendedError() < std::endl;
+    std::cerr << "Wait failed! " << OpenNI::getExtendedError() << std::endl;
     return nullptr;
   }
 
@@ -155,7 +156,7 @@ VideoStreamRef CamInterface::getReadyStream(){
     return color;
     break;
   default:
-    std:cerr << "Unxpected stream" << std::endl;
+    std::cerr << "Unxpected stream" << std::endl;
   }
 
   return nullptr;

@@ -75,6 +75,7 @@ namespace persee {
       void update(){ formatter.process(*streamRef); }
       const char* getData(){ return (char*)formatter.getData(); }
       int getSize(){ return formatter.getSize(); }
+      std::shared_ptr<openni::VideoStream> getStream(){ return streamRef; }
 
       void stop(){
         #ifdef OPENNI_AVAILABLE
@@ -152,6 +153,7 @@ namespace persee {
         std::shared_ptr<openni::VideoStream> getColorStream(openni::Device& device);
 
         std::shared_ptr<openni::Device> device;
+        static const int SAMPLE_READ_WAIT_TIMEOUT = 2000;
       #else
         bool flipFlop=false;
       #endif

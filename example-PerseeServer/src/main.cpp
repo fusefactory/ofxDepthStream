@@ -36,7 +36,7 @@ using namespace persee;
 
 int main(int argc, char** argv) {
   // configurables
-  bool bResendFrames = false;
+  // bool bResendFrames = false;
   float frameDiffTime = 1.0f/1.5f * 1000.0f; // fps
   unsigned int sleepTime = 5; // ms
   int depthPort = argc > 1 ? atoi(argv[1]) : 4445;

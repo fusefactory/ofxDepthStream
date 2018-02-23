@@ -25,7 +25,7 @@ class ofApp : public ofBaseApp{
     // void gotMessage(ofMessage msg);
 
   private: // attributes
-    std::string perseeHost = "127.0.0.1"; //"192.168.1.226";
+    std::string perseeHost = "192.168.1.226"; // "127.0.0.1"; //
     int perseePort = 4444; // default
     ofxOrbbecPersee::Client client;
     ofxOrbbecPersee::DepthStreamRef depthStreamRef;
