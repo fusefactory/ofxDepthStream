@@ -1,0 +1,3 @@
+ofxUnitTests
+ofxOrbbecPersee
+ofxNetwork
