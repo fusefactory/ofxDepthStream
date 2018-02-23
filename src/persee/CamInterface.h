@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <iostream>
 #include "config.h"
 
 #ifdef OPENNI_AVAILABLE
@@ -65,7 +66,7 @@ namespace persee {
     public:
       VideoStream(std::shared_ptr<openni::VideoStream> streamRef) : streamRef(streamRef){
         #ifdef OPENNI_AVAILABLE
-        streamRef->addNewFrameListener(&listener);
+        // streamRef->addNewFrameListener(&listener);
         #endif
       }
 
@@ -102,10 +103,17 @@ namespace persee {
 
     public:
 
+      CamInterface() {
+        color = createColorStream();
+        depth = createDepthStream();
+      }
+
       VideoStreamRef createDepthStream() {
         #ifdef OPENNI_AVAILABLE
           if(!device) device = getDevice();
           auto s = getDepthStream(*device);
+          if(!s)
+            std::cerr << "failed to initialize depth stream" << std::endl;
           return std::make_shared<VideoStream>(s);
         #else
           return std::make_shared<VideoStream>(std::make_shared<openni::VideoStream>());
@@ -116,6 +124,9 @@ namespace persee {
         #ifdef OPENNI_AVAILABLE
           if(!device) device = getDevice();
           auto s = getColorStream(*device);
+          if(!s)
+            std::cerr << "failed to initialize color stream" << std::endl;
+
           return std::make_shared<VideoStream>(s);
         #else
           return std::make_shared<VideoStream>(std::make_shared<openni::VideoStream>());
@@ -129,6 +140,10 @@ namespace persee {
         #endif
       }
 
+      VideoStreamRef getReadyStream();
+      VideoStreamRef getDepthStream(){ return depth; }
+      VideoStreamRef getColorStream(){ return color; }
+
     private:
 
       #ifdef OPENNI_AVAILABLE
@@ -137,6 +152,10 @@ namespace persee {
         std::shared_ptr<openni::VideoStream> getColorStream(openni::Device& device);
 
         std::shared_ptr<openni::Device> device;
+      #else
+        bool flipFlop=false;
       #endif
+
+      VideoStreamRef depth, color;
   };
 }
