@@ -19,16 +19,16 @@ namespace persee {
   class Formatter {
     public:
       void process(openni::VideoStream& stream);
-      const char* getData() const { return data; }
+      const unsigned char* getData() const { return data; }
       int getSize(){ return size; }
 
     private:
 
       #ifdef OPENNI_AVAILABLE
-        const char* data = NULL;
+        const unsigned char* data = NULL;
       #else
         static const size_t BUF_SIZE = 640*480*2;
-        char data[BUF_SIZE];
+        unsigned char data[BUF_SIZE];
       #endif
       unsigned int size=0;
   };
@@ -73,7 +73,7 @@ namespace persee {
       bool hasNew() const { return listener.hasNew(); };
       void reset(){ listener.reset(); }
       void update(){ formatter.process(*streamRef); }
-      const char* getData(){ return (char*)formatter.getData(); }
+      const unsigned char* getData(){ return (unsigned char*)formatter.getData(); }
       int getSize(){ return formatter.getSize(); }
       std::shared_ptr<openni::VideoStream> getStream(){ return streamRef; }
 

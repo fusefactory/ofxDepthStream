@@ -37,10 +37,12 @@ using namespace persee;
 int main(int argc, char** argv) {
   // configurables
   // bool bResendFrames = false;
-  float frameDiffTime = 1.0f/1.5f * 1000.0f; // fps
+
   unsigned int sleepTime = 5; // ms
   int depthPort = argc > 1 ? atoi(argv[1]) : 4445;
   int colorPort = argc > 2 ? atoi(argv[2]) : 4446;
+  int fps = argc > 3 ? atoi(argv[3]) : 12;
+  float frameDiffTime = 1.0f/(float)fps * 1000.0f; // fps
 
   // attributes
   steady_clock::time_point lastFrameTime = steady_clock::now();

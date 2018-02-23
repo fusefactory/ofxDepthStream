@@ -7,8 +7,16 @@ void DepthStream::setup(int width, int height) {
 }
 
 void DepthStream::updatePixels(const void* data, size_t size) {
+  size_t half = size >> 1;
+  unsigned char converted[half];
+
+  for(int i=0; i<half; i++) {
+    converted[i] = ((
+      ((const unsigned char*)data)[i*2] + ((const unsigned char*)data)[i*2+1]) >> 1);
+  }
+
   // TODO check is size matches with allocated buffer size?!
-  pixBack->setFromPixels((const unsigned char *)data, pixBack->getWidth(), pixBack->getHeight(), OF_IMAGE_GRAYSCALE);
+  pixBack->setFromPixels((const unsigned char *)converted, pixBack->getWidth(), pixBack->getHeight(), OF_IMAGE_GRAYSCALE);
 
   // should the following happen here?
   tex.loadData(*pixBack);
