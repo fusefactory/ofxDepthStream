@@ -78,7 +78,7 @@ int main(int argc, char** argv) {
         depth->update();
         if(compressor->compress(depth->getData(), depth->getSize())) {
           for(auto t : depthStreamTransmitters) {
-            if(t->transmitFrame((const char*)compressor->getData(), compressor->getSize())){
+            if(t->transmit((const char*)compressor->getData(), compressor->getSize())){
               std::cout << "sent " << compressor->getSize() << "-byte depth frame" << std::endl;
             }
           }
@@ -93,7 +93,7 @@ int main(int argc, char** argv) {
 
         if(compressor->compress(color->getData(), color->getSize())) {
           for(auto t : colorStreamTransmitters) {
-            t->transmitFrame((const char*)compressor->getData(), compressor->getSize());
+            t->transmit((const char*)compressor->getData(), compressor->getSize());
             // std::cout << "sent " << compressor->getSize() << "-byte color frame" << std::endl;
           }
         } else {

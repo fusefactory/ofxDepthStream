@@ -42,37 +42,37 @@ void Receiver::error(const char *msg) {
 }
 
 void Receiver::threadFunc() {
+  // connect/reconnect loop
   while (bRunning) {
     bConnected = this->connectToServer(this->host, this->port);
 
-    while(bConnected && bRunning) {
+    // receiver loop
+    while(bRunning && bConnected) {
       // std::string s=".";
       // this->send_data(s);
       // this->cout() << "Waiting to receive...";
 
       // get 4-byte header
-      if(this->commFunc) {
-        this->commFunc(*this);
-      } else { // default comms; read frame; TODO refactor to specialized Receiver class
-        if(this->receive(4)) {
-          int total = this->readInt((const void*)buffer);
-          // this->cout() << "got header for " << total << " bytes" << std::endl;
-          int alreadyGot = this->recvSize - 4;
+      if(this->receive(4)) {
+        int b0 = (int)(0x0ff & buffer[0]);
+        int b1 = (int)(0x0ff & buffer[1]);
+        int b2 = (int)(0x0ff & buffer[2]);
+        int b3 = (int)(0x0ff & buffer[3]);
+        int total = ((b0 << 24) | (b1 << 16) | (b2 << 8) | b3);
+        this->cout() << "got header for " << total << " bytes" << std::endl;
+        int alreadyGot = this->recvSize - 4;
 
-          // get X-byte package
-          if(this->receive(this->buffer + 4 + alreadyGot, total - alreadyGot)) {
-            // this->cout() << "received: " << total << " byte-package" << std::endl;
-            this->bHasNew = true;
-            this->lastPackageSize = total;
-          } else {
-            break;
-          }
+        // get X-byte package
+        if(this->receive(this->buffer + 4 + alreadyGot, total - alreadyGot)) {
+          // this->cout() << "received: " << total << " byte-package" << std::endl;
+          this->bHasNew = true;
+          this->lastPackageSize = total;
         } else {
           break;
         }
+      } else {
+        break;
       }
-
-      Sleep(1000);
     }
 
 
@@ -82,11 +82,9 @@ void Receiver::threadFunc() {
     }
 
     this->disconnectFromServer();
-    if(bRunning) Sleep(1000);
-  }
 
-  if(this->idleFunc)
-    this->idleFunc(*this);
+    Sleep(1000);
+  }
 }
 
 bool Receiver::connectToServer(std::string address, int port) {
@@ -174,6 +172,7 @@ bool Receiver::receive(char* buffer, size_t size) {
   // }
 
   size_t amount=0;
+
   while(amount < size) {
     int packageSize = recv(sock, buffer+amount, size-amount, 0);
 
@@ -189,26 +188,15 @@ bool Receiver::receive(char* buffer, size_t size) {
   return true;
 }
 
-bool Receiver::send_data(const void* data, size_t size) {
-  // this->cout() << "Sending data...";
-  //Send some data
-  if(send(sock, data, size, 0) < 0) {
-      perror("[persee::Receiver::Send failed: ");
-      return false;
-  }
+bool Receiver::send_data(std::string data) {
+    this->cout() << "Sending data...";
+    //Send some data
+    if( send(sock , data.c_str() , strlen( data.c_str() ) , 0) < 0)
+    {
+        perror("Send failed : ");
+        return false;
+    }
+    std::cout<<"Sent\n";
 
-  // std::cout<<"Sent\n";
-  return true;
-}
-
-// bool Receiver::send_data(std::string data) {
-//   return this->send_data(data.c_str() , strlen( data.c_str());
-// }
-
-int Receiver::readInt(const void* from){
-  int b0 = (int)(0x0ff & ((char*)from)[0]);
-  int b1 = (int)(0x0ff & ((char*)from)[1]);
-  int b2 = (int)(0x0ff & ((char*)from)[2]);
-  int b3 = (int)(0x0ff & ((char*)from)[3]);
-  return ((b0 << 24) | (b1 << 16) | (b2 << 8) | b3);
+    return true;
 }
