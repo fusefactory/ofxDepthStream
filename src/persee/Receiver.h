@@ -28,6 +28,7 @@ namespace persee {
       void reset(){ bHasNew = false; }
 
       void setConnectAttemptInterval(unsigned int interval) { connectAttemptInterval = interval; }
+      void setVerbose(bool v){ bVerbose=v; }
 
     protected:
 
@@ -43,12 +44,14 @@ namespace persee {
       bool receive(char* buffer, size_t size);
       bool send_data(std::string data);
 
+
     private:
       std::thread* thread=NULL;
       bool bRunning=true;
       bool bConnected=false;
       bool bHasNew=false;
       int cycleSleep=10;
+      bool bVerbose=false;
 
       int sock=-1;
       std::string host;

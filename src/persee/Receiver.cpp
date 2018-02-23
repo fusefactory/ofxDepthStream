@@ -69,7 +69,7 @@ void Receiver::threadFunc() {
         int b2 = (int)(0x0ff & buffer[2]);
         int b3 = (int)(0x0ff & buffer[3]);
         int total = ((b0 << 24) | (b1 << 16) | (b2 << 8) | b3);
-        this->cout() << "got header for " << total << " bytes" << std::endl;
+        if(bVerbose) this->cout() << "got header for " << total << " bytes" << std::endl;
         int alreadyGot = this->recvSize - 4;
 
         // get X-byte package

@@ -4,7 +4,7 @@
 
 using namespace persee;
 
-bool Compressor::compress(const char* data, size_t size) {
+bool Compressor::compress(const unsigned char* data, size_t size) {
   // memcpy(buffer, data, size);
   if(data){
     this->size = size;

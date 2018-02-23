@@ -25,8 +25,6 @@ namespace ofxOrbbecPersee {
       }
 
       void stop() {
-        // TODO
-        ofLogNotice() << "Stream receiver stom";
         receiver.stop();
       }
 

@@ -98,7 +98,7 @@ void Formatter::process(openni::VideoStream& stream) {
     case PIXEL_FORMAT_DEPTH_100_UM: {
       pixelSize = sizeof(DepthPixel);
       this->size = pixelCount * pixelSize;
-      this->data = (const char*)frame.getData();
+      this->data = (const unsigned char*)frame.getData();
       // memcpy(buffer, frame.getData(), this->size);
       // std::cout << "formatter: found " << this->size << " depth bytes" << std::endl;
       break;
@@ -107,7 +107,7 @@ void Formatter::process(openni::VideoStream& stream) {
     case PIXEL_FORMAT_RGB888: {
       pixelSize = sizeof(RGB888Pixel);
       this->size = pixelCount * pixelSize;
-      this->data = (const char*)frame.getData();
+      this->data = (const unsigned char*)frame.getData();
       // memcpy(buffer, frame.getData(), this->size);
       // std::cout << "formatter: found " << this->size << " color bytes" << std::endl;
       break;
