@@ -78,8 +78,9 @@ int main(int argc, char** argv) {
         depth->update();
         if(compressor->compress(depth->getData(), depth->getSize())) {
           for(auto t : depthStreamTransmitters) {
-            t->transmitFrame((const char*)compressor->getData(), compressor->getSize());
-            // std::cout << "sent " << compressor->getSize() << "-byte depth frame" << std::endl;
+            if(t->transmitFrame((const char*)compressor->getData(), compressor->getSize())){
+              std::cout << "sent " << compressor->getSize() << "-byte depth frame" << std::endl;
+            }
           }
         } else {
           std::cout << "FAILED to compress " << depth->getSize() << "-byte frame" << std::endl;

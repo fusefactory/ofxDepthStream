@@ -149,7 +149,7 @@ namespace ofxOrbbecPersee {
 
             // read header (4-byte body-length integer)
             if(recvInt(headerSize) && headerSize > 0){
-              // ofLogNotice() << "Got Header size: " << headerSize;
+              ofLogNotice() << "Got Header size: " << headerSize;
 
               // data
               char tmpBuf[headerSize];

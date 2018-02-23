@@ -89,10 +89,7 @@ namespace persee {
       bool bConnected=false;
       bool bBound=false;
       struct hostent *he;
-      int sockfd, newsockfd, portno;
-      socklen_t clilen;
-      char buffer[256];
-      struct sockaddr_in serv_addr, cli_addr;
+      int sockfd, newsockfd;
 
       ByteHandler firstByteHandler = nullptr;
       BindFailedHandler bindFailedHandler = nullptr;

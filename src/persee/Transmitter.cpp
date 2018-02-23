@@ -52,53 +52,22 @@ bool Transmitter::transmitRaw(const char* data, size_t size) {
 }
 
 bool Transmitter::transmitInt(int value){
-  if (!bConnected) {
-    return false;
-  }
-
   // transmittion-header; 4-byte package length
   char buffer[4];
   buffer[0] = (char)((value >> 24) & 0x0ff);
   buffer[1] = (char)((value >> 16) & 0x0ff);
   buffer[2] = (char)((value >> 8) & 0x0ff);
   buffer[3] = (char)(value & 0x0ff);
-  auto n = write(newsockfd,buffer,4);
-
-  if (n < 0) {
-    error("ERROR writing package-header to socket");
-    return false;
-  }
-
-  return true;
+  return this->transmitRaw(buffer, 4);
 }
 
 bool Transmitter::transmitFrame(const char* data, size_t size) {
-
-  if (!bConnected) {
-    // this->cout() << "no client, didn't sent " << size << " bytes." << std::endl;
-    return false;
-  }
-
-  // transmittion-header; 4-byte package lengtht
-  if (!this->transmitInt(size)) {
-    error("ERROR writing package-header to socket");
-    return false;
-  }
-
-  // content
-  auto n = write(newsockfd,data,size);
-
-  if (n < 0) {
-    error("ERROR writing package content to socket");
-    return false;
-  }
-
-  // this->cout() << "sent " << size << " bytes." << std::endl;
-  return true;
+  return transmitInt(size) && transmitRaw(data, size);
 }
 
 
 bool Transmitter::bindServer() {
+  struct sockaddr_in serv_addr;
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
   int option=1;
@@ -110,10 +79,9 @@ bool Transmitter::bindServer() {
    }
 
   bzero((char *) &serv_addr, sizeof(serv_addr));
-  portno = this->port;//atoi(argv[1]);
   serv_addr.sin_family = AF_INET;
   serv_addr.sin_addr.s_addr = INADDR_ANY;
-  serv_addr.sin_port = htons(portno);
+  serv_addr.sin_port = htons(this->port);
   if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
      error("ERROR on binding");
      return false;
@@ -126,7 +94,8 @@ bool Transmitter::bindServer() {
 
 void Transmitter::serverThread() {
   int n;
-  clilen = sizeof(cli_addr);
+  struct sockaddr_in cli_addr;
+  socklen_t clilen = sizeof(cli_addr);
 
   while(bRunning) {
 
