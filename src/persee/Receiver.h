@@ -21,6 +21,7 @@ namespace persee {
       ~Receiver();
 
       void start(std::string host, int port);
+      void stop(bool wait=false);
       char* getData() { return (char*)(buffer + 4); }
       int getSize() const { return lastPackageSize; }
       bool hasNew() const { return bHasNew; }
@@ -37,17 +38,17 @@ namespace persee {
       void threadFunc();
 
       bool connectToServer(std::string address, int port);
-      void disconnectFromServer();
-
+      void disconnect();
       bool receive(size_t size);
       bool receive(char* buffer, size_t size);
       bool send_data(std::string data);
 
     private:
-      std::thread* thread;
+      std::thread* thread=NULL;
       bool bRunning=true;
       bool bConnected=false;
       bool bHasNew=false;
+      int cycleSleep=10;
 
       int sock=-1;
       std::string host;
@@ -60,6 +61,6 @@ namespace persee {
       int recvSize=0;
       int lastPackageSize=0;
 
-      unsigned int connectAttemptInterval = 3000;
+      unsigned int connectAttemptInterval = 5000;
   };
 }

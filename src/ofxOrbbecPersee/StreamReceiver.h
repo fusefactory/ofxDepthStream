@@ -26,7 +26,8 @@ namespace ofxOrbbecPersee {
 
       void stop() {
         // TODO
-        ofLogWarning() << "stop not implemented yet";
+        ofLogNotice() << "Stream receiver stom";
+        receiver.stop();
       }
 
       virtual void update() {
@@ -56,7 +57,7 @@ namespace ofxOrbbecPersee {
     protected:
 
       virtual void destroy(){
-        stop();
+        this->stop();
       };
 
     private:

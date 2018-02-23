@@ -20,20 +20,32 @@
 using namespace persee;
 
 Receiver::~Receiver() {
-  if(this->thread) {
-    // this->cout() << "stopping client thread...";
-    bRunning = false;
-    thread->join();
-    // this->cout() << " done" << std::endl;
-    delete thread;
-  }
+  this->stop(true);
 }
 
 void Receiver::start(std::string host, int port) {
+  this->stop(true); // calling start while running will cause restart
   this->host = host;
   this->port = port;
+  bRunning = true;
   // start thread
   this->thread = new std::thread(std::bind(&Receiver::threadFunc, this));
+}
+
+void Receiver::stop(bool wait){
+  // this->cout() << "stopping client thread...";
+  bRunning = false;
+  if(bConnected)
+    this->disconnect();
+
+  if(wait) {
+    if(this->thread) {
+      thread->join();
+      // this->cout() << " done" << std::endl;
+      delete thread;
+      thread=NULL;
+    }
+  }
 }
 
 void Receiver::error(const char *msg) {
@@ -44,14 +56,12 @@ void Receiver::error(const char *msg) {
 void Receiver::threadFunc() {
   // connect/reconnect loop
   while (bRunning) {
-    bConnected = this->connectToServer(this->host, this->port);
+    if(!bConnected) {
+      if(!this->connectToServer(this->host, this->port))
+        Sleep(connectAttemptInterval);
+    }
 
-    // receiver loop
-    while(bRunning && bConnected) {
-      // std::string s=".";
-      // this->send_data(s);
-      // this->cout() << "Waiting to receive...";
-
+    if(bConnected) {
       // get 4-byte header
       if(this->receive(4)) {
         int b0 = (int)(0x0ff & buffer[0]);
@@ -67,23 +77,11 @@ void Receiver::threadFunc() {
           // this->cout() << "received: " << total << " byte-package" << std::endl;
           this->bHasNew = true;
           this->lastPackageSize = total;
-        } else {
-          break;
         }
-      } else {
-        break;
       }
     }
 
-
-    if(bConnected) {
-      this->cout() << "disconnected from " << this->host << ":" << this->port << std::endl;
-      bConnected = false;
-    }
-
-    this->disconnectFromServer();
-
-    Sleep(1000);
+    Sleep(cycleSleep);
   }
 }
 
@@ -151,15 +149,26 @@ bool Receiver::connectToServer(std::string address, int port) {
   }
 
   this->cout() << "connected to " << address << ":" << port << std::endl;
+  bConnected=true;
   return true;
 }
 
-void Receiver::disconnectFromServer() {
+void Receiver::disconnect(){
   close(sock);
+
+  if(bConnected) {
+    bConnected=false;
+    this->cout() << "disconnected from " << this->host << ":" << this->port << std::endl;
+  }
 }
 
 bool Receiver::receive(size_t size){
-  return this->receive(this->buffer, std::min((int)size, (int)BUF_SIZE));
+  if(size > BUF_SIZE) {
+    std::cerr << "Requested recveive-size larger than buffer" << std::endl;
+    return false;
+  }
+
+  return this->receive(this->buffer, size);
 }
 
 bool Receiver::receive(char* buffer, size_t size) {
@@ -176,10 +185,16 @@ bool Receiver::receive(char* buffer, size_t size) {
   while(amount < size) {
     int packageSize = recv(sock, buffer+amount, size-amount, 0);
 
-    if(packageSize <= 0) {
-      // perror("recv failed");
+    if(packageSize < 0) {
+      // this->disconnect();
       return false;
     }
+
+    // if(packageSize <= 0) {
+    //
+    //   // perror("recv failed");
+    //   return false;
+    // }
 
     amount += packageSize;
   }
