@@ -24,6 +24,10 @@ namespace persee {
 
       ~Receiver();
 
+      void start(){
+        this->start(host, port);
+      }
+
       void start(std::string host, int port);
       void stop(bool wait=false);
       char* getData() { return (char*)(buffer + 4); }

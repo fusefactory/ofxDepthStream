@@ -12,9 +12,21 @@ class Recorder {
     }
 
     void start() {
-      outfile = new std::ofstream("recording.txt",std::ofstream::binary);
+      int i=0;
+
+      while(true){
+        std::ifstream ifile("recording"+ofToString(i)+".txt");
+        if(ifile){
+          i++;
+        } else {
+          break;
+        }
+      }
+
+      outfile = new std::ofstream("recording"+ofToString(i)+".txt",std::ofstream::binary);
+
       startTime = ofGetElapsedTimeMillis();
-      std:cout << "started recording" << std::endl;
+      std::cout << "started recording" << std::endl;
     }
 
     void stop() {
@@ -22,7 +34,7 @@ class Recorder {
         outfile->close();
         delete outfile;
         outfile=NULL;
-        std:cout << "stopped recording" << std::endl;
+        std::cout << "stopped recording" << std::endl;
       }
     }
 
@@ -46,6 +58,81 @@ class Recorder {
     size_t frameCount=0;
 };
 
+class Playback {
+
+  public:
+
+    typedef std::function<void(void*, size_t)> FrameCallback;
+
+  public:
+
+    struct Frame {
+      static const size_t BUF_SIZE=(1280*720*3);
+      char buffer[BUF_SIZE];
+      uint32_t size, time;
+    };
+
+    void start() {
+      infile = new std::ifstream("recording.txt", std::ofstream::binary);
+      startTime = ofGetElapsedTimeMillis();
+      std:cout << "started playback" << std::endl;
+      bPlaying=true;
+      this->update();
+    }
+
+    void stop() {
+      bPlaying=false;
+    }
+
+    bool update(FrameCallback inlineCallback=nullptr) {
+      if(!nextFrame){
+        nextFrame=readFrame();
+
+        if(!nextFrame){
+          bPlaying=false;
+          return false;
+        }
+      }
+
+      if(nextFrame) {
+        auto t = ofGetElapsedTimeMillis() - startTime;
+
+        if(t > nextFrame->time) {
+          if(inlineCallback)
+            inlineCallback(nextFrame->buffer, nextFrame->size);
+
+          if(frameCallback)
+            frameCallback(nextFrame->buffer, nextFrame->size);
+
+          nextFrame = NULL;
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+  protected:
+    Frame* readFrame() {
+      if(infile->read((char*)&frame.time, sizeof(uint32_t)) &&
+        infile->read((char*)&frame.size, sizeof(uint32_t)) &&
+        infile->read((char*)&frame.buffer, frame.size)) {
+        return &frame;
+      }
+
+      return NULL;
+    }
+
+  private:
+    bool bPlaying=false;
+    uint64_t startTime;
+    std::ifstream* infile;
+    size_t frameCount=0;
+    Frame frame;
+    Frame* nextFrame=NULL;
+    FrameCallback frameCallback;
+};
+
 class ofApp : public ofBaseApp{
 
   public: // methods
@@ -67,10 +154,13 @@ class ofApp : public ofBaseApp{
 
   private: // attributes
     std::string address = "192.168.1.226";
-    bool bRecording=false;
     ofxOrbbecPersee::DepthStreamRef depthStreamRef;
 
+    bool bRecording=false;
     Recorder recorder;
+
+    bool bPlaying=false;
+    Playback playback;
 };
 
 void ofApp::setup() {
@@ -89,6 +179,12 @@ void ofApp::setup() {
 }
 
 void ofApp::update() {
+  if(bPlaying){
+    playback.update([this](void* data, size_t size){
+      std::static_pointer_cast<ofxOrbbecPersee::StreamReceiver>(depthStreamRef->getAddons()[0])->process(data, size);
+    });
+  }
+
   depthStreamRef->update();
 }
 
@@ -98,7 +194,18 @@ void ofApp::draw() {
   auto tex = depthStreamRef->getTexture();
 
   if(tex.isAllocated()) {
+    ofSetColor(255,255,255);
     tex.draw(0, 0);
+  }
+
+  if(bRecording) {
+    ofSetColor(255,0,0,100);
+    ofDrawRectangle(0,0,20,20);
+  }
+
+  if(bPlaying) {
+    ofSetColor(0,255,0,100);
+    ofDrawRectangle(0,0,20,20);
   }
 }
 
@@ -109,6 +216,17 @@ void ofApp::keyPressed(int key) {
       recorder.start();
     } else {
       recorder.stop();
+    }
+  }
+
+  if(key=='p'){
+    bPlaying = !bPlaying;
+    if(bPlaying){
+      playback.start();
+      std::static_pointer_cast<ofxOrbbecPersee::StreamReceiver>(depthStreamRef->getAddons()[0])->getReceiver().stop();
+    } else {
+      playback.stop();
+      std::static_pointer_cast<ofxOrbbecPersee::StreamReceiver>(depthStreamRef->getAddons()[0])->getReceiver().start();
     }
   }
 }

@@ -94,7 +94,7 @@ void Formatter::process(openni::VideoStream& stream) {
   size_t pixelSize;
   switch (frame.getVideoMode().getPixelFormat())
   {
-    case PIXEL_FORMAT_DEPTH_1_MM:
+    case PIXEL_FORMAT_DEPTH_1_MM: // <-- this one is begin given by the persee by default
     case PIXEL_FORMAT_DEPTH_100_UM: {
       pixelSize = sizeof(DepthPixel);
       this->size = pixelCount * pixelSize;

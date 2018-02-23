@@ -32,9 +32,18 @@ namespace ofxOrbbecPersee {
         if(!receiver.hasNew())
           return;
 
+        this->process(receiver.getData(), receiver.getSize());
+
+        // sets internal "hasNew" flag to false
+        receiver.reset();
+      }
+
+      persee::Receiver& getReceiver() { return receiver; }
+
+      void process(void* data, size_t size){
         // inflate ("unzip") received data
-        if(!inflater.inflate(receiver.getData(), receiver.getSize())) {
-          ofLogWarning() << "Inflation of " << receiver.getSize() << "-byte package FAILED";
+        if(!inflater.inflate((char*)data, size)) {
+          ofLogWarning() << "Inflation of " << size << "-byte package FAILED";
           return;
         }
 
@@ -48,12 +57,7 @@ namespace ofxOrbbecPersee {
 
         // }
 
-        // sets internal "hasNew" flag to false
-        receiver.reset();
       }
-
-      persee::Receiver& getReceiver() { return receiver; }
-
     protected:
 
       virtual void destroy(){
