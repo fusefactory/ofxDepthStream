@@ -11,7 +11,7 @@ class Recorder {
     Recorder(){
     }
 
-    void start() {
+    std::string getName() {
       int i=0;
 
       while(true){
@@ -23,7 +23,11 @@ class Recorder {
         }
       }
 
-      outfile = new std::ofstream("recording"+ofToString(i)+".txt",std::ofstream::binary);
+      return "recording"+ofToString(i)+".txt";
+    }
+
+    void start() {
+      outfile = new std::ofstream(getName(),std::ofstream::binary);
 
       startTime = ofGetElapsedTimeMillis();
       std::cout << "started recording" << std::endl;
@@ -58,6 +62,8 @@ class Recorder {
     size_t frameCount=0;
 };
 
+#include <chrono>
+
 class Playback {
 
   public:
@@ -72,16 +78,53 @@ class Playback {
       uint32_t size, time;
     };
 
+    ~Playback(){
+      stop(true);
+    }
+
+    std::string getName() {
+      int i=0;
+
+      while(true){
+        std::ifstream ifile("recording"+ofToString(i)+".txt");
+        if(ifile){
+          i++;
+        } else {
+          break;
+        }
+      }
+
+      return "recording"+ofToString(i-1)+".txt";
+    }
+
     void start() {
-      infile = new std::ifstream("recording.txt", std::ofstream::binary);
+      infile = new std::ifstream(getName(), std::ofstream::binary);
       startTime = ofGetElapsedTimeMillis();
       std:cout << "started playback" << std::endl;
       bPlaying=true;
       this->update();
     }
 
-    void stop() {
+    void startThreaded() {
+      this->thread = new std::thread(std::bind(&Playback::threadFunc, this));
+    }
+
+    void stop(bool wait=true) {
       bPlaying=false;
+
+      if(infile){
+        infile->close();
+        delete infile;
+        infile=NULL;
+      }
+
+      if(wait){
+        if(thread) {
+          thread->join();
+          delete thread;
+          thread=NULL;
+        }
+      }
     }
 
     bool update(FrameCallback inlineCallback=nullptr) {
@@ -90,6 +133,7 @@ class Playback {
 
         if(!nextFrame){
           bPlaying=false;
+          this->onEnd();
           return false;
         }
       }
@@ -100,9 +144,9 @@ class Playback {
         if(t > nextFrame->time) {
           if(inlineCallback)
             inlineCallback(nextFrame->buffer, nextFrame->size);
-
-          if(frameCallback)
+          if(frameCallback) {
             frameCallback(nextFrame->buffer, nextFrame->size);
+          }
 
           nextFrame = NULL;
           return true;
@@ -111,6 +155,8 @@ class Playback {
 
       return false;
     }
+
+    void setFrameCallback(FrameCallback func) { frameCallback = func; }
 
   protected:
     Frame* readFrame() {
@@ -123,14 +169,30 @@ class Playback {
       return NULL;
     }
 
+    void threadFunc() {
+      this->start();
+      while(this->bPlaying){
+        this->update();
+        std::this_thread::sleep_for(std::chrono::duration<long, std::milli>(50l));
+      }
+    }
+
+    void onEnd() {
+      stop(false);
+      if(bLoop) start();
+    }
+
   private:
     bool bPlaying=false;
+    bool bLoop=true;
     uint64_t startTime;
     std::ifstream* infile;
     size_t frameCount=0;
     Frame frame;
     Frame* nextFrame=NULL;
     FrameCallback frameCallback;
+
+    std::thread* thread=NULL;
 };
 
 class ofApp : public ofBaseApp{
@@ -176,14 +238,16 @@ void ofApp::setup() {
       ofLogNotice() << "recorded " << size << "-byte frame";
     }
   });
+
+  playback.setFrameCallback([this](void* data, size_t size){
+    std::static_pointer_cast<ofxOrbbecPersee::StreamReceiver>(depthStreamRef->getAddons()[0])->process(data, size);
+  });
 }
 
 void ofApp::update() {
-  if(bPlaying){
-    playback.update([this](void* data, size_t size){
-      std::static_pointer_cast<ofxOrbbecPersee::StreamReceiver>(depthStreamRef->getAddons()[0])->process(data, size);
-    });
-  }
+  // if(bPlaying){
+  //   // playback.update(
+  // }
 
   depthStreamRef->update();
 }
@@ -222,7 +286,7 @@ void ofApp::keyPressed(int key) {
   if(key=='p'){
     bPlaying = !bPlaying;
     if(bPlaying){
-      playback.start();
+      playback.startThreaded();
       std::static_pointer_cast<ofxOrbbecPersee::StreamReceiver>(depthStreamRef->getAddons()[0])->getReceiver().stop();
     } else {
       playback.stop();
