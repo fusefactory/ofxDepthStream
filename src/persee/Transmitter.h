@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdlib.h>
+#include <vector>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h> //hostent
@@ -15,10 +16,7 @@ namespace persee {
       ~Transmitter();
 
       bool transmit(const void* data, size_t size);
-
-      bool hasClient() const {
-        return bConnected;
-      }
+      void stop(bool wait=true);
 
     protected:
 
@@ -26,8 +24,11 @@ namespace persee {
           perror(msg);
       }
 
-      bool start();
+      void unbind();
+      bool bind();
       void serverThread();
+
+      bool transmitRaw(const void* data, size_t size);
 
     private:
       static const int MAXPACKETSIZE = 16;
@@ -37,11 +38,12 @@ namespace persee {
       std::thread *thread = NULL;
 
       bool bRunning=true;
+      bool bBound=false;
       bool bConnected=false;
-      struct hostent *he;
-      int sockfd, newsockfd, portno;
+
+      int sockfd, clientsocket, portno;
       socklen_t clilen;
       char buffer[256];
-      struct sockaddr_in serv_addr, cli_addr;
+      int cycleSleep=200;
   };
 }

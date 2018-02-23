@@ -19,52 +19,57 @@
 using namespace persee;
 
 Transmitter::Transmitter(int port) : port(port) {
+  bRunning=true;
   this->thread = new std::thread(std::bind(&Transmitter::serverThread, this));
 }
 
 Transmitter::~Transmitter() {
-  if(this->thread) {
-    std::cout << "stopping server thread";
-    bRunning = false;
-    thread->join();
-    std::cout << "server thread done";
-    delete thread;
+  stop(true);
+}
+
+void Transmitter::stop(bool wait){
+  unbind();
+  bRunning = false;
+
+  if(wait){
+    if(this->thread) {
+      // std::cout << "stopping server thread";
+      thread->join();
+      // std::cout << "server thread done";
+      delete thread;
+      thread=NULL;
+    }
   }
 }
 
 bool Transmitter::transmit(const void* data, size_t size) {
-  if (!bConnected) {
-    // std::cout << "no client, didn't sent " << size << " bytes." << std::endl;
-    return false;
-  }
-
   // transmittion-header; 4-byte package length
   char header[4];
   header[0] = (char)((size >> 24) & 0x0ff);
   header[1] = (char)((size >> 16) & 0x0ff);
   header[2] = (char)((size >> 8) & 0x0ff);
   header[3] = (char)(size & 0x0ff);
-  auto n = write(newsockfd,header,4);
+  return transmitRaw(header, 4) && transmitRaw(data, size);
+}
 
-  if (n < 0) {
-    error("ERROR writing package-header to socket");
+bool Transmitter::transmitRaw(const void* data, size_t size){
+  if (!bConnected) {
+    // std::cout << "no client, didn't sent " << size << " bytes." << std::endl;
     return false;
   }
 
-  // content
-  n = write(newsockfd,data,size);
-
-  if (n < 0) {
-    error("ERROR writing package content to socket");
+  auto n = write(clientsocket, data, size);
+  if(n < 0) {
+    bConnected=false;
+    close(clientsocket);
     return false;
   }
 
-  // std::cout << "sent " << size << " bytes." << std::endl;
   return true;
 }
 
-
-bool Transmitter::start() {
+bool Transmitter::bind() {
+  struct sockaddr_in serv_addr;
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
   int option=1;
@@ -80,46 +85,51 @@ bool Transmitter::start() {
   serv_addr.sin_family = AF_INET;
   serv_addr.sin_addr.s_addr = INADDR_ANY;
   serv_addr.sin_port = htons(portno);
-  if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
+  if (::bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
      error("ERROR on binding");
      return false;
    }
 
   listen(sockfd, 5);
+  bBound = true;
   return true;
 }
 
+void Transmitter::unbind() {
+  close(sockfd);
+  close(clientsocket);
+}
+
 void Transmitter::serverThread() {
+  struct sockaddr_in cli_addr;
   int n;
 
   while(bRunning) {
-    if(this->start()) {
+    if(!bBound)
+      this->bind();
+
+    if(bBound) {
       clilen = sizeof(cli_addr);
 
-      newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
-      if (newsockfd < 0) {
+      clientsocket = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
+      if (clientsocket < 0) {
         error("ERROR on accept");
+        bConnected=false;
       } else {
-        bConnected = true;
         std::cout << "client connected" << std::endl;
-
-        while(bRunning){
-          n=recv(newsockfd,packet,MAXPACKETSIZE-1,0);
-          if(n==0) break;
-          Sleep(100);
-          // msg[n]=0;
-          //send(newsockfd,msg,n,0);
-          // Message = string(msg);
-        }
-
-        std::cout << "client disconnected" << std::endl;
-        bConnected = false;
+        bConnected=true;
       }
 
-      close(newsockfd);
+      if(bConnected) {
+        n=recv(clientsocket,packet,MAXPACKETSIZE-1,0);
+        if(n==0){
+          bConnected=false;
+        } else {
+          std::cerr << "TODO: handle incoming data in Transmitter" << std::endl;
+        }
+      }
     }
 
-    close(sockfd);
-    Sleep(1000);
+    Sleep(200);
   }
 }
