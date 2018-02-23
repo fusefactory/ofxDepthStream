@@ -1,11 +1,91 @@
 #include <iostream>
 #include <math.h>
+#include <math.h>
 #include "CamInterface.h"
 
 using namespace openni;
 using namespace persee;
 
 #ifdef OPENNI_AVAILABLE
+
+std::shared_ptr<openni::Device> CamInterface::getDevice() {
+  Status rc = OpenNI::initialize();
+
+  if (rc != STATUS_OK) {
+    printf("Initialize failed\n%s\n", OpenNI::getExtendedError());
+    return nullptr;
+  }
+
+  // OpenNIDeviceListener devicePrinter;
+  //
+  // OpenNI::addDeviceConnectedListener(&devicePrinter);
+  // OpenNI::addDeviceDisconnectedListener(&devicePrinter);
+  // OpenNI::addDeviceStateChangedListener(&devicePrinter);
+
+  // openni::Array<openni::DeviceInfo> deviceList;
+  // openni::OpenNI::enumerateDevices(&deviceList);
+  // for (int i = 0; i < deviceList.getSize(); ++i)
+  // {
+  //   printf("Device \"%s\" already connected\n", deviceList[i].getUri());
+  // }
+
+  auto device = std::make_shared<openni::Device>();
+  rc = device->open(ANY_DEVICE);
+  if (rc != STATUS_OK) {
+    printf("Couldn't open device\n%s\n", OpenNI::getExtendedError());
+    return nullptr;
+  }
+
+  return device;
+}
+
+std::shared_ptr<openni::VideoStream> CamInterface::getDepthStream(openni::Device& device) {
+  auto stream = std::make_shared<openni::VideoStream>();
+  Status rc;
+
+  if (device.getSensorInfo(SENSOR_DEPTH) != NULL)
+  {
+    rc = stream->create(device, SENSOR_DEPTH);
+    if (rc != STATUS_OK)
+    {
+      printf("Couldn't create depth stream\n%s\n", OpenNI::getExtendedError());
+      return nullptr;
+    }
+
+    rc = stream->start();
+    if (rc != STATUS_OK)
+    {
+      printf("Couldn't start the depth stream\n%s\n", OpenNI::getExtendedError());
+      return nullptr;
+    }
+  }
+
+  return stream;
+}
+
+std::shared_ptr<openni::VideoStream> CamInterface::getColorStream(openni::Device& device) {
+  auto stream = std::make_shared<openni::VideoStream>();
+  Status rc;
+  if (device.getSensorInfo(SENSOR_COLOR) != NULL)
+  {
+    rc = stream->create(device, SENSOR_COLOR);
+    if (rc != STATUS_OK)
+    {
+      printf("Couldn't create color stream\n%s\n", OpenNI::getExtendedError());
+      return nullptr;
+    }
+
+    rc = stream->start();
+    if (rc != STATUS_OK)
+    {
+      printf("Couldn't start the color stream\n%s\n", OpenNI::getExtendedError());
+      return nullptr;
+    }
+  }
+
+  return stream;
+}
+
 void Formatter::process(openni::VideoStream& stream) {
   VideoFrameRef frame;
   stream.readFrame(&frame);

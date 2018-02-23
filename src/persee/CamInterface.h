@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include "config.h"
 
 #ifdef OPENNI_AVAILABLE
@@ -33,7 +34,7 @@ namespace persee {
 
   #ifdef OPENNI_AVAILABLE
 
-    class SimpleFrameListener : public VideoStream::NewFrameListener {
+    class SimpleFrameListener : public openni::VideoStream::NewFrameListener {
       public:
         void onNewFrame(openni::VideoStream& stream) {
           bHasNew = true;
@@ -46,79 +47,7 @@ namespace persee {
         bool bHasNew = false;
     };
 
-    std::shared_ptr<Device> getDevice() {
-      Status rc = OpenNI::initialize();
-
-      if (rc != STATUS_OK) {
-        printf("Initialize failed\n%s\n", OpenNI::getExtendedError());
-        return 1;
-      }
-
-      // OpenNIDeviceListener devicePrinter;
-      //
-      // OpenNI::addDeviceConnectedListener(&devicePrinter);
-      // OpenNI::addDeviceDisconnectedListener(&devicePrinter);
-      // OpenNI::addDeviceStateChangedListener(&devicePrinter);
-
-      // openni::Array<openni::DeviceInfo> deviceList;
-      // openni::OpenNI::enumerateDevices(&deviceList);
-      // for (int i = 0; i < deviceList.getSize(); ++i)
-      // {
-      //   printf("Device \"%s\" already connected\n", deviceList[i].getUri());
-      // }
-
-      auto device = std::make_shared<Device>();
-      rc = device->open(ANY_DEVICE);
-      if (rc != STATUS_OK) {
-        printf("Couldn't open device\n%s\n", OpenNI::getExtendedError());
-        return nullptr;
-      }
-
-      rc = depth->start();
-      if (rc != STATUS_OK)
-      {
-        printf("Couldn't start the depth stream\n%s\n", OpenNI::getExtendedError());
-        return nullptr;
-      }
-
-      return device;
-    }
-
-    std::shared_ptr<openni::VideoStream> getDepthStream(Device& device) {
-      auto stream = std::make_shared<openni::VideoStream>();
-
-      if (device.getSensorInfo(SENSOR_DEPTH) != NULL)
-      {
-        rc = stream->create(device, SENSOR_DEPTH);
-        if (rc != STATUS_OK)
-        {
-          printf("Couldn't create depth stream\n%s\n", OpenNI::getExtendedError());
-          return nullptr;
-        }
-      }
-
-      return stream;
-    }
-
-    std::shared_ptr<openni::VideoStream> getColorStream(Device& device) {
-      auto stream = std::make_shared<openni::VideoStream>();
-
-      if (device.getSensorInfo(SENSOR_COLOR) != NULL)
-      {
-        rc = stream->create(device, SENSOR_COLOR);
-        if (rc != STATUS_OK)
-        {
-          printf("Couldn't create color stream\n%s\n", OpenNI::getExtendedError());
-          return nullptr;
-        }
-      }
-
-      return stream;
-    }
-
   #else
-
-    // typedef int VideoStream;
 
     // dummy placeholder which always has a new frame for us
     class SimpleFrameListener {
@@ -176,7 +105,7 @@ namespace persee {
       VideoStreamRef createDepthStream() {
         #ifdef OPENNI_AVAILABLE
           if(!device) device = getDevice();
-          auto s = getDepthStream(device);
+          auto s = getDepthStream(*device);
           return std::make_shared<VideoStream>(s);
         #else
           return std::make_shared<VideoStream>(std::make_shared<openni::VideoStream>());
@@ -186,7 +115,7 @@ namespace persee {
       VideoStreamRef createColorStream() {
         #ifdef OPENNI_AVAILABLE
           if(!device) device = getDevice();
-          auto s = getColorStream(device);
+          auto s = getColorStream(*device);
           return std::make_shared<VideoStream>(s);
         #else
           return std::make_shared<VideoStream>(std::make_shared<openni::VideoStream>());
@@ -196,14 +125,18 @@ namespace persee {
       void close(){
         #ifdef OPENNI_AVAILABLE
           if(device) device->close();
-          OpenNI::shutdown();
+          openni::OpenNI::shutdown();
         #endif
       }
 
     private:
 
       #ifdef OPENNI_AVAILABLE
-        std::shared_ptr<Device> device;
+        std::shared_ptr<openni::Device> getDevice();
+        std::shared_ptr<openni::VideoStream> getDepthStream(openni::Device& device);
+        std::shared_ptr<openni::VideoStream> getColorStream(openni::Device& device);
+
+        std::shared_ptr<openni::Device> device;
       #endif
   };
 }

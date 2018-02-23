@@ -19,18 +19,12 @@
 *                                                                            *
 *****************************************************************************/
 
-#include <stdio.h>
-#include <time.h>
+// // stdlib
 #include <iostream>
 #include <vector>
 #include <chrono>
-
-// stdlib
-#include <netdb.h> //hostent
-#include <functional>
-#include <math.h>
-#include "zlib.h"
 // local
+#include "../../src/persee/config.h"
 #include "../../src/persee/OniSampleUtilities.h"
 #include "../../src/persee/CamInterface.h"
 #include "../../src/persee/Compressor.h"
