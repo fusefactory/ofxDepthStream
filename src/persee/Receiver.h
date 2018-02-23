@@ -12,6 +12,10 @@ namespace persee {
   class Receiver {
 
     public:
+
+      typedef std::function<void(const void* data, size_t size)> FrameCallback;
+
+    public:
       Receiver(){}
 
       Receiver(std::string host, int port) {
@@ -29,6 +33,7 @@ namespace persee {
 
       void setConnectAttemptInterval(unsigned int interval) { connectAttemptInterval = interval; }
       void setVerbose(bool v){ bVerbose=v; }
+      void setFrameCallback(FrameCallback func) { frameCallback = func; }
 
     protected:
 
@@ -65,5 +70,6 @@ namespace persee {
       int lastPackageSize=0;
 
       unsigned int connectAttemptInterval = 5000;
+      FrameCallback frameCallback=nullptr;
   };
 }

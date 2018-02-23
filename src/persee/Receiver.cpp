@@ -77,6 +77,8 @@ void Receiver::threadFunc() {
           // this->cout() << "received: " << total << " byte-package" << std::endl;
           this->bHasNew = true;
           this->lastPackageSize = total;
+          if(frameCallback)
+            frameCallback((const void*)(this->buffer+4), total);
         }
       }
     }

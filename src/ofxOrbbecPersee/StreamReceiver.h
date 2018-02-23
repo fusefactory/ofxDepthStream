@@ -52,6 +52,8 @@ namespace ofxOrbbecPersee {
         receiver.reset();
       }
 
+      persee::Receiver& getReceiver() { return receiver; }
+
     protected:
 
       virtual void destroy(){

@@ -47,6 +47,10 @@ namespace ofxOrbbecPersee {
         addons.push_back(newaddon);
       }
 
+      std::vector<std::shared_ptr<Addon>>& getAddons() {
+        return addons;
+      }
+
     protected:
 
       virtual void updatePixels(const void* data, size_t size){};
