@@ -23,7 +23,7 @@ Receiver::~Receiver() {
   this->stop(true);
 }
 
-void Receiver::start(std::string host, int port) {
+void Receiver::start(const std::string& host, int port) {
   this->stop(true); // calling start while running will cause restart
   this->host = host;
   this->port = port;
@@ -35,11 +35,12 @@ void Receiver::start(std::string host, int port) {
 void Receiver::stop(bool wait){
   // this->cout() << "stopping client thread...";
   bRunning = false;
-  if(bConnected)
-    this->disconnect();
+  this->disconnect();
 
   if(wait) {
+
     if(this->thread) {
+      std::cout << "[persee::Receiver] waiting for thread to end" << std::endl;
       thread->join();
       // this->cout() << " done" << std::endl;
       delete thread;
@@ -77,6 +78,9 @@ void Receiver::threadFunc() {
           // this->cout() << "received: " << total << " byte-package" << std::endl;
           this->bHasNew = true;
           this->lastPackageSize = total;
+
+          this->take(this->buffer+4, total); // our persee::Buffer interface
+
           if(frameCallback)
             frameCallback((const void*)(this->buffer+4), total);
         }
@@ -87,7 +91,7 @@ void Receiver::threadFunc() {
   }
 }
 
-bool Receiver::connectToServer(std::string address, int port) {
+bool Receiver::connectToServer(const std::string& address, int port) {
   //create socket if it is not already created
   // if(sock == -1)
   // {

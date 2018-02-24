@@ -98,9 +98,10 @@ class Playback {
     }
 
     void start() {
-      infile = new std::ifstream(getName(), std::ofstream::binary);
+      std::string name = getName();
+      infile = new std::ifstream(name, std::ofstream::binary);
       startTime = ofGetElapsedTimeMillis();
-      std:cout << "started playback" << std::endl;
+      std::cout << "started playback of: " << name << std::endl;
       bPlaying=true;
       this->update();
     }
@@ -128,6 +129,8 @@ class Playback {
     }
 
     bool update(FrameCallback inlineCallback=nullptr) {
+      if(!bPlaying) return false;
+
       if(!nextFrame){
         nextFrame=readFrame();
 
@@ -187,7 +190,7 @@ class Playback {
     bool bLoop=true;
     uint64_t startTime;
     std::ifstream* infile;
-    size_t frameCount=0;
+    // size_t frameCount=0;
     Frame frame;
     Frame* nextFrame=NULL;
     FrameCallback frameCallback;
@@ -199,8 +202,10 @@ class ofApp : public ofBaseApp{
 
   public: // methods
     void setup() override;
+    // void exit(){} override;
     void update() override;
     void draw() override;
+
 
     void keyPressed(int key) override;
     // void keyReleased(int key);
@@ -216,7 +221,13 @@ class ofApp : public ofBaseApp{
 
   private: // attributes
     std::string address = "192.168.1.226";
-    ofxOrbbecPersee::DepthStreamRef depthStreamRef;
+    // ofxOrbbecPersee::DepthStreamRef depthStreamRef;
+
+    persee::ReceiverRef receiverRef;
+    persee::Buffer depthBuffer;
+
+    ofTexture depthTex;
+    ofPixels depthPixels;
 
     bool bRecording=false;
     Recorder recorder;
@@ -227,39 +238,59 @@ class ofApp : public ofBaseApp{
 
 void ofApp::setup() {
   ofSetWindowShape(640,480);
-  // use all default options (port 4444, only depth stream enabled, 30fps), only specify the Persee's IP
 
-  ofxOrbbecPersee::Client client;
-  client.setup(address);
-  depthStreamRef = client.createDepthStream(); // 640x480 by default
+  // setup tcp network stream receiver
+  receiverRef = persee::Receiver::createAndStart(address); // default port: 4445
+  // receiver will push frame into our depthBuffer (this happens on the receiver-managed thread)
+  receiverRef->outputTo(depthBuffer);
 
-  std::static_pointer_cast<ofxOrbbecPersee::StreamReceiver>(depthStreamRef->getAddons()[0])->getReceiver().setFrameCallback([this](const void* data, size_t size){
-    if(recorder.record(data, size)) {
-      ofLogNotice() << "recorded " << size << "-byte frame";
-    }
-  });
-
-  playback.setFrameCallback([this](void* data, size_t size){
-    std::static_pointer_cast<ofxOrbbecPersee::StreamReceiver>(depthStreamRef->getAddons()[0])->process(data, size);
-  });
+  // create our texture
+  depthPixels.allocate(640, 480, OF_IMAGE_GRAYSCALE);
+  depthTex.allocate(depthPixels);
 }
 
 void ofApp::update() {
-  // if(bPlaying){
-  //   // playback.update(
-  // }
+  // update with inline frame callback
+  playback.update([this](void* data, size_t size){
+    ofLogNotice() << "playback update";
+    // this->depthBuffer.take(data, size);
 
-  depthStreamRef->update();
+    // persee::emptyBuffer(depthBuffer, [this](const void* data, size_t size){
+      // returns shared_ptr to persee::Frame with inflated data
+      persee::inflate(data, size)
+      // returns shared_ptr to persee::Frame with 1-byte grayscale data
+      ->convert(persee::grayscale255bitConverter(this->depthPixels.getWidth(), this->depthPixels.getHeight()))
+      // load grayscale data into our ofTexture instance
+      ->convert<void>([this](const void* data, size_t size){
+        ofLogNotice() << "buffer to tex CConversion update: " << size;
+        this->depthPixels.setFromPixels((const unsigned char *)data, depthPixels.getWidth(), depthPixels.getHeight(), OF_IMAGE_GRAYSCALE);
+        this->depthTex.loadData(depthPixels);
+      });
+    // });
+  });
+
+  // if our depth buffer has a frame; empty it into this lambda
+  persee::emptyBuffer(depthBuffer, [this](const void* data, size_t size){
+    // returns shared_ptr to persee::Frame with inflated data
+    persee::inflate(data, size)
+    // returns shared_ptr to persee::Frame with 1-byte grayscale data
+    ->convert(persee::grayscale255bitConverter(this->depthPixels.getWidth(), this->depthPixels.getHeight()))
+    // load grayscale data into our ofTexture instance
+    ->convert<void>([this](const void* data, size_t size){
+      ofLogNotice() << "buffer to tex onversion update: " << size;
+      this->depthPixels.setFromPixels((const unsigned char *)data, depthPixels.getWidth(), depthPixels.getHeight(), OF_IMAGE_GRAYSCALE);
+      this->depthTex.loadData(depthPixels);
+    });
+  });
 }
 
 void ofApp::draw() {
   ofBackground(0);
 
-  auto tex = depthStreamRef->getTexture();
-
-  if(tex.isAllocated()) {
+  if(depthTex.isAllocated()) {
+    ofLogNotice() << "drawgin tex";
     ofSetColor(255,255,255);
-    tex.draw(0, 0);
+    depthTex.draw(0, 0);
   }
 
   if(bRecording) {
@@ -286,11 +317,13 @@ void ofApp::keyPressed(int key) {
   if(key=='p'){
     bPlaying = !bPlaying;
     if(bPlaying){
-      playback.startThreaded();
-      std::static_pointer_cast<ofxOrbbecPersee::StreamReceiver>(depthStreamRef->getAddons()[0])->getReceiver().stop();
+      // playback.startThreaded();
+      playback.start();
+
+      // std::static_pointer_cast<ofxOrbbecPersee::StreamReceiver>(depthStreamRef->getAddons()[0])->getReceiver().stop();
     } else {
       playback.stop();
-      std::static_pointer_cast<ofxOrbbecPersee::StreamReceiver>(depthStreamRef->getAddons()[0])->getReceiver().start();
+      // std::static_pointer_cast<ofxOrbbecPersee::StreamReceiver>(depthStreamRef->getAddons()[0])->getReceiver().start();
     }
   }
 }

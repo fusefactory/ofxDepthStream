@@ -3,8 +3,8 @@
 namespace persee {
   class Compressor {
     public:
-      bool compress(const unsigned char* data, size_t size);
-      const unsigned char* getData() { return compressed; }
+      bool compress(const void* data, size_t size);
+      const void* getData() { return compressed; }
       int getSize(){ return sizeCompressed; }
 
     private:

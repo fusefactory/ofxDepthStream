@@ -14,14 +14,15 @@ namespace persee {
 
       void destroy();
 
-      bool inflate(char* data, size_t size);
+      bool inflate(const void* data, size_t size);
       size_t getSize() const { return inflateSize; }
-      const char* getData() const { return decompressed; }
+      const void* getData() const { return (void*)decompressed; }
+      void* releaseData(){ void* tmp = (void*)decompressed; decompressed=NULL; return tmp; }
 
     protected:
 
       void growTo(size_t to);
-      char *decompress(char *compressedBytes, unsigned int length);
+      const void* decompress(const void* compressedBytes, unsigned int length);
 
       std::ostream& cout() { return std::cout << "[persee::Inflater] "; }
       std::ostream& cerr() { return std::cerr << "[persee::Inflater] "; }

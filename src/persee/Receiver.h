@@ -7,18 +7,35 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h> //inet_addr
+// local
+#include "Buffer.h"
 
 namespace persee {
-  class Receiver {
 
-    public:
+  class Receiver;
+  typedef std::shared_ptr<Receiver> ReceiverRef;
+
+
+  class Receiver : public Buffer {
+
+    public: // types, consts and static factory methods
+
+      const static int DEFAULT_PORT = 4445;
 
       typedef std::function<void(const void* data, size_t size)> FrameCallback;
 
-    public:
-      Receiver(){}
+      static ReceiverRef createAndStart(const std::string& host) {
+        return createAndStart(host, DEFAULT_PORT);
+      }
 
-      Receiver(std::string host, int port) {
+      static ReceiverRef createAndStart(const std::string& host, int port) {
+        return std::make_shared<Receiver>(host, port);
+      }
+
+    public:
+      Receiver() : thread(NULL) {}
+
+      Receiver(const std::string& host, int port) : thread(NULL) {
         start(host, port);
       }
 
@@ -28,7 +45,7 @@ namespace persee {
         this->start(host, port);
       }
 
-      void start(std::string host, int port);
+      void start(const std::string& host, int port);
       void stop(bool wait=false);
       char* getData() { return (char*)(buffer + 4); }
       int getSize() const { return lastPackageSize; }
@@ -47,7 +64,7 @@ namespace persee {
 
       void threadFunc();
 
-      bool connectToServer(std::string address, int port);
+      bool connectToServer(const std::string& address, int port);
       void disconnect();
       bool receive(size_t size);
       bool receive(char* buffer, size_t size);
@@ -73,7 +90,7 @@ namespace persee {
       int recvSize=0;
       int lastPackageSize=0;
 
-      unsigned int connectAttemptInterval = 5000;
+      unsigned int connectAttemptInterval = 3000;
       FrameCallback frameCallback=nullptr;
   };
 }

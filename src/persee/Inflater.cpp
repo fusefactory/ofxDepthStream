@@ -21,21 +21,20 @@ void Inflater::destroy() {
   }
 }
 
-bool Inflater::inflate(char* data, size_t size) {
-  decompressed = this->decompress(data, size);
-  return decompressed != NULL;
+bool Inflater::inflate(const void* data, size_t size) {
+  return this->decompress(data, size) != NULL;
 }
 
 void Inflater::growTo(size_t to) {
-  char *tmp = (char *) calloc( sizeof(char), to);
-  memcpy(tmp, decompressed, currentBufferSize);
+  char* tmp = (char *) calloc( sizeof(char), to);
+  memcpy(tmp, (char*)decompressed, currentBufferSize);
   destroy();
   decompressed = tmp;
   currentBufferSize = to;
   this->cout() << "grown to " << currentBufferSize << " bytes" << std::endl;
 }
 
-char *Inflater::decompress(char *compressedBytes, unsigned int length) {
+const void* Inflater::decompress(const void* compressedBytes, unsigned int length) {
     if (length == 0) {
         this->cout() << "length = 0, nothing to decompress" << std::endl;
         return NULL;

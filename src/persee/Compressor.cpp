@@ -4,11 +4,11 @@
 
 using namespace persee;
 
-bool Compressor::compress(const unsigned char* data, size_t size) {
+bool Compressor::compress(const void* data, size_t size) {
   // memcpy(buffer, data, size);
   if(data){
     this->size = size;
-    this->buffer = data;
+    this->buffer = (const unsigned char*)data;
 
     // std::string ss(data, size);
     // std::cout << "compressing: " << ss << std::endl;
