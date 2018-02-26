@@ -7,7 +7,6 @@
 class ofApp : public ofBaseApp{
 
   public: // methods
-    ofApp(int argc, char** argv);
     void setup() override;
     void update() override;
     void draw() override;
@@ -25,44 +24,37 @@ class ofApp : public ofBaseApp{
     // void gotMessage(ofMessage msg);
 
   private: // attributes
-    std::string perseeHost = "192.168.1.226"; // "127.0.0.1"; //
-    int perseePort = 4444; // default
-    ofxOrbbecPersee::Client client;
-    ofxOrbbecPersee::DepthStreamRef depthStreamRef;
-    ofxOrbbecPersee::ColorStreamRef colorStreamRef;
-};
+    std::string perseeAddress = "192.168.1.226"; // "127.0.0.1";
+    int depthPort = 4445;
+    int colorPort = 4446;
 
-ofApp::ofApp(int argc, char** argv) {
-  if(argc > 1) perseeHost = argv[1];
-  if(argc > 2) perseePort = std::atoi(argv[2]);
-}
+    persee::ReceiverRef depthReceiverRef, colorReceiverRef;
+    ofTexture depthTex, colorTex;
+};
 
 void ofApp::setup() {
   ofSetWindowShape(1280,480);
-  // use all default options (port 4444, only depth stream enabled, 30fps), only specify the Persee's IP
-  client.setup(perseeHost, perseePort);
-  depthStreamRef = client.createDepthStream(); // 640x480 by default
-  colorStreamRef = client.createColorStream(); // 1280x720 by default
+  // create tcp network receivers for both the depth and the color stream
+  depthReceiverRef = persee::Receiver::createAndStart(perseeAddress, depthPort);
+  colorReceiverRef = persee::Receiver::createAndStart(perseeAddress, colorPort);
 }
 
 void ofApp::update() {
-  depthStreamRef->update();
-  colorStreamRef->update();
+  // checks if our receivers have new data, if so these convenience methods
+  // update (and allocate if necessary!) our textures.
+  ofxOrbbecPersee::receiverToGrayscaleTexture(*depthReceiverRef, depthTex);
+  ofxOrbbecPersee::receiverToColorTexture(*colorReceiverRef, colorTex);
 }
 
 void ofApp::draw() {
   ofBackground(0);
 
-  auto tex = depthStreamRef->getTexture();
-
-  if(tex.isAllocated()) {
-    tex.draw(0, 0);
+  if(depthTex.isAllocated()) {
+    depthTex.draw(0, 0);
   }
 
-  auto tex2 = colorStreamRef->getTexture();
-
-  if(tex2.isAllocated()) {
-    tex2.draw(650, 0, tex2.getWidth(), tex2.getHeight());
+  if(colorTex.isAllocated()) {
+    colorTex.draw(0, 0);
   }
 }
 
@@ -70,5 +62,5 @@ void ofApp::draw() {
 
 int main(int argc, char** argv){
   ofSetupOpenGL(800, 600, OF_WINDOW);
-  ofRunApp(new ofApp(argc, argv));
+  ofRunApp(new ofApp());
 }

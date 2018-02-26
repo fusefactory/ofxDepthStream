@@ -77,7 +77,7 @@ const void* Inflater::decompress(const void* compressedBytes, unsigned int lengt
           // this->cout() << "inflated packet to: " << strm.total_out << " bytes" << std::endl;
         }
         else if (err != Z_OK)  {
-          this->cerr() << "inflation error" << std::endl;
+          this->cerr() << "Inflation failed; unknown error" << std::endl;
           perror("perror");
           return NULL;
           // break;
