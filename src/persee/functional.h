@@ -34,17 +34,23 @@ namespace persee {
   FrameRef inflate(FrameRef ref) { return inflate(ref->data(), ref->size()); }
 
 
-  FrameRef convertTo255bitGrayscaleData(int texWidth, int texHeight, const void* data) {
-    size_t texSize = texWidth * texHeight * 1;
-    auto frame = std::make_shared<Frame>(texSize);
+  FrameRef convertTo255bitGrayscaleData(size_t texSize, const void* data) {
+    void* converted = malloc(texSize);
 
     for(int i=0; i<texSize; i++) {
       // unsigned char a = ((const unsigned char*)data)[i*2+1];
       unsigned char b = ((const unsigned char*)data)[i*2];
-      ((char*)data)[i] = b; //(unsigned char)(((a << 8) | b) >> 8);//(unsigned char)val;
+      ((unsigned char*)converted)[i] = b; //(unsigned char)(((a << 8) | b) >> 8);//(unsigned char)val;
     }
 
-    return frame;
+    // ofLogNotice() << "last value:" << (int)converted[texSize-1];
+
+    // when ther returned  shared_ptr<Frame> deallocates, it will free the memory we gave it
+    return persee::Frame::refWithData(converted, texSize);
+  }
+
+  FrameRef convertTo255bitGrayscaleData(int texWidth, int texHeight, const void* data) {
+    return convertTo255bitGrayscaleData(texWidth * texHeight * 1, data);
   }
 
   FrameRef convertTo255bitGrayscaleData(int texWidth, int texHeight, FrameRef ref) {

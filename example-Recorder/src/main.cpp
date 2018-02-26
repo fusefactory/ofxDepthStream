@@ -4,7 +4,7 @@
 #include "ofxOrbbecPersee/ofxOrbbecPersee.h"
 // local
 
-class Recorder {
+class Recorder : public persee::Buffer  {
 
   public:
 
@@ -27,10 +27,14 @@ class Recorder {
     }
 
     void start() {
-      outfile = new std::ofstream(getName(),std::ofstream::binary);
+      std::string name = getName();
+      outfile = new std::ofstream(name, std::ofstream::binary);
 
+      frameCount = 0;
+      byteCount = 0;
       startTime = ofGetElapsedTimeMillis();
-      std::cout << "started recording" << std::endl;
+
+      std::cout << "started recording to: " << name << std::endl;
     }
 
     void stop() {
@@ -38,33 +42,40 @@ class Recorder {
         outfile->close();
         delete outfile;
         outfile=NULL;
-        std::cout << "stopped recording" << std::endl;
+        std::cout << "Recording stopped; recorded " << frameCount << " frames containing " << byteCount << " bytes of image data" << std::endl;
       }
     }
 
     bool record(const void* data, uint32_t size) {
+      if(!outfile)
+        return false;
+
       uint32_t t = ofGetElapsedTimeMillis() - startTime;
+      outfile->write((const char*)&t, sizeof(t)); // 4 byte timestamp
+      outfile->write((const char*)&size, sizeof(size)); // 4 byte frame size
+      outfile->write((const char*)data, size); // frame body
+      frameCount+=1;
+      byteCount+=size;
+      return true;
+    }
 
-      if(outfile) {
-        outfile->write((const char*)&t, sizeof(t)); // 4 byte timestamp
-        outfile->write((const char*)&size, sizeof(size)); // 4 byte frame size
-        outfile->write((const char*)data, size); // frame body
-        frameCount+=1;
-        return true;
-      }
-
-      return false;
+    // persee::Buffer interface
+    virtual void take(const void* data, size_t size) override {
+      this->record(data, size);
+      // call parent logic (forward data to any target set using our persee::Buffer::setOutputTo method)
+      persee::Buffer::take(data, size);
     }
 
   private:
     uint64_t startTime;
     std::ofstream* outfile;
     size_t frameCount=0;
+    size_t byteCount=0;
 };
 
 #include <chrono>
 
-class Playback {
+class Playback : public persee::Buffer {
 
   public:
 
@@ -100,9 +111,12 @@ class Playback {
     void start() {
       std::string name = getName();
       infile = new std::ifstream(name, std::ofstream::binary);
-      startTime = ofGetElapsedTimeMillis();
-      std::cout << "started playback of: " << name << std::endl;
+
+      frameCount=0;
       bPlaying=true;
+      startTime = ofGetElapsedTimeMillis();
+
+      std::cout << "started playback of: " << name << std::endl;
       this->update();
     }
 
@@ -147,11 +161,12 @@ class Playback {
         if(t > nextFrame->time) {
           if(inlineCallback)
             inlineCallback(nextFrame->buffer, nextFrame->size);
-          if(frameCallback) {
-            frameCallback(nextFrame->buffer, nextFrame->size);
-          }
+
+          // implement/execute our persee::Buffer interface
+          this->take(nextFrame->buffer, nextFrame->size);
 
           nextFrame = NULL;
+          frameCount += 1;
           return true;
         }
       }
@@ -159,9 +174,8 @@ class Playback {
       return false;
     }
 
-    void setFrameCallback(FrameCallback func) { frameCallback = func; }
-
   protected:
+
     Frame* readFrame() {
       if(infile->read((char*)&frame.time, sizeof(uint32_t)) &&
         infile->read((char*)&frame.size, sizeof(uint32_t)) &&
@@ -182,7 +196,13 @@ class Playback {
 
     void onEnd() {
       stop(false);
-      if(bLoop) start();
+      if(bLoop) {
+        if(frameCount == 0) {
+          std::cout << "[persee::Playback] file appears empty" << std::endl;
+        } else {
+          start();
+        }
+      }
     }
 
   private:
@@ -192,8 +212,8 @@ class Playback {
     std::ifstream* infile;
     // size_t frameCount=0;
     Frame frame;
+    size_t frameCount;
     Frame* nextFrame=NULL;
-    FrameCallback frameCallback;
 
     std::thread* thread=NULL;
 };
@@ -241,8 +261,10 @@ void ofApp::setup() {
 
   // setup tcp network stream receiver
   receiverRef = persee::Receiver::createAndStart(address); // default port: 4445
-  // receiver will push frame into our depthBuffer (this happens on the receiver-managed thread)
-  receiverRef->outputTo(depthBuffer);
+  // pipe our tcp receiver into our recorder (will only record when its start method is called)
+  receiverRef->setOutputTo(&recorder);
+  // pipe our recorder into our depth buffer
+  recorder.setOutputTo(&depthBuffer);
 
   // create our texture
   depthPixels.allocate(640, 480, OF_IMAGE_GRAYSCALE);
@@ -252,32 +274,20 @@ void ofApp::setup() {
 void ofApp::update() {
   // update with inline frame callback
   playback.update([this](void* data, size_t size){
-    ofLogNotice() << "playback update";
-    // this->depthBuffer.take(data, size);
-
-    // persee::emptyBuffer(depthBuffer, [this](const void* data, size_t size){
-      // returns shared_ptr to persee::Frame with inflated data
-      persee::inflate(data, size)
-      // returns shared_ptr to persee::Frame with 1-byte grayscale data
-      ->convert(persee::grayscale255bitConverter(this->depthPixels.getWidth(), this->depthPixels.getHeight()))
-      // load grayscale data into our ofTexture instance
-      ->convert<void>([this](const void* data, size_t size){
-        ofLogNotice() << "buffer to tex CConversion update: " << size;
-        this->depthPixels.setFromPixels((const unsigned char *)data, depthPixels.getWidth(), depthPixels.getHeight(), OF_IMAGE_GRAYSCALE);
-        this->depthTex.loadData(depthPixels);
-      });
-    // });
+    // ofLogNotice() << "playback update";
+    this->depthBuffer.take(data, size);
   });
 
-  // if our depth buffer has a frame; empty it into this lambda
+  // check if our depth buffer has a frame (either through our network receiver and recorder, or throuh our playback);
+  // persee::emptybuffer will execute the given lambda only if there is data in the buffer, and also empty the buffer
   persee::emptyBuffer(depthBuffer, [this](const void* data, size_t size){
-    // returns shared_ptr to persee::Frame with inflated data
+    // returns shared_ptr<persee::Frame> with inflated data
     persee::inflate(data, size)
-    // returns shared_ptr to persee::Frame with 1-byte grayscale data
+    // returns shared_ptr<persee::Frame> with 1-byte grayscale data
     ->convert(persee::grayscale255bitConverter(this->depthPixels.getWidth(), this->depthPixels.getHeight()))
     // load grayscale data into our ofTexture instance
     ->convert<void>([this](const void* data, size_t size){
-      ofLogNotice() << "buffer to tex onversion update: " << size;
+      // ofLogNotice() << "buffer to tex onversion update: " << size;
       this->depthPixels.setFromPixels((const unsigned char *)data, depthPixels.getWidth(), depthPixels.getHeight(), OF_IMAGE_GRAYSCALE);
       this->depthTex.loadData(depthPixels);
     });
@@ -288,7 +298,6 @@ void ofApp::draw() {
   ofBackground(0);
 
   if(depthTex.isAllocated()) {
-    ofLogNotice() << "drawgin tex";
     ofSetColor(255,255,255);
     depthTex.draw(0, 0);
   }
@@ -305,6 +314,7 @@ void ofApp::draw() {
 }
 
 void ofApp::keyPressed(int key) {
+  // toggle record on/off
   if(key == 'r') {
     bRecording = !bRecording;
     if(bRecording) {
@@ -314,16 +324,18 @@ void ofApp::keyPressed(int key) {
     }
   }
 
+  // toggle playback on/off
   if(key=='p'){
     bPlaying = !bPlaying;
     if(bPlaying){
       // playback.startThreaded();
       playback.start();
-
-      // std::static_pointer_cast<ofxOrbbecPersee::StreamReceiver>(depthStreamRef->getAddons()[0])->getReceiver().stop();
+      // "disconnected" our recorder from our depth buffer
+      recorder.setOutputTo(NULL);
     } else {
       playback.stop();
-      // std::static_pointer_cast<ofxOrbbecPersee::StreamReceiver>(depthStreamRef->getAddons()[0])->getReceiver().start();
+      // "reconnect" our recorder to our depth buffer
+      recorder.setOutputTo(&depthBuffer);
     }
   }
 }

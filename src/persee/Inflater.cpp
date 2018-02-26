@@ -31,7 +31,7 @@ void Inflater::growTo(size_t to) {
   destroy();
   decompressed = tmp;
   currentBufferSize = to;
-  this->cout() << "grown to " << currentBufferSize << " bytes" << std::endl;
+  if(bVerbose) this->cout() << "grown to " << currentBufferSize << " bytes" << std::endl;
 }
 
 const void* Inflater::decompress(const void* compressedBytes, unsigned int length) {
@@ -42,7 +42,7 @@ const void* Inflater::decompress(const void* compressedBytes, unsigned int lengt
 
     // destroy();
     if (!decompressed) {
-      this->cout() << "allocating first-time inflation buffer" << std::endl;
+      if(bVerbose) this->cout() << "allocating first-time inflation buffer" << std::endl;
       decompressed = (char *) calloc(sizeof(char), BUF_SIZE);
       currentBufferSize = BUF_SIZE;
     }
@@ -57,7 +57,7 @@ const void* Inflater::decompress(const void* compressedBytes, unsigned int lengt
     bool done = false ;
 
     if (inflateInit2(&strm, MAX_WBITS) != Z_OK) {
-        this->cout() << "inflator init failed" << std::endl;
+        this->cerr() << "inflator init failed" << std::endl;
         return NULL;
     }
 
@@ -77,7 +77,7 @@ const void* Inflater::decompress(const void* compressedBytes, unsigned int lengt
           // this->cout() << "inflated packet to: " << strm.total_out << " bytes" << std::endl;
         }
         else if (err != Z_OK)  {
-          this->cout() << "inflation error" << std::endl;
+          this->cerr() << "inflation error" << std::endl;
           perror("perror");
           return NULL;
           // break;

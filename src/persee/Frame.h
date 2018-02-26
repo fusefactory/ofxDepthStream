@@ -16,9 +16,16 @@ namespace persee {
       static FrameRef refToExternalData(const void* data, size_t size) {
         return std::make_shared<Frame>(data, size);
       }
+      static FrameRef refWithData(void* data, size_t size) {
+        auto ref = std::make_shared<Frame>();
+        ref->_size = size;
+        ref->ownedData = data;
+        return ref;
+      }
 
     public: // constructors
 
+      Frame(){}
       // self-allocating
       Frame(size_t size) : _size(size) { ownedData = malloc(size); }
       // pre-initialized frame

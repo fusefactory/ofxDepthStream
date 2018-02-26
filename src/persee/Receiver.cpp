@@ -79,7 +79,8 @@ void Receiver::threadFunc() {
           this->bHasNew = true;
           this->lastPackageSize = total;
 
-          this->take(this->buffer+4, total); // our persee::Buffer interface
+          // our persee::Buffer interface
+          this->take(this->buffer+4, total);
 
           if(frameCallback)
             frameCallback((const void*)(this->buffer+4), total);

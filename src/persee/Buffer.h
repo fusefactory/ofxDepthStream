@@ -16,18 +16,20 @@ namespace persee {
     }
 
     virtual FrameRef getRef(){ return buffered; }
-
-    void outputTo(Buffer& b) {
-      newDataCallback = [&b](const void* data, size_t size){
-        b.take(data, size);
-      };
-    }
-
     void clear() { buffered=nullptr; }
 
+    void setOutputTo(Buffer* b) {
+      if(b)
+        newDataCallback = [b](const void* data, size_t size){
+          b->take(data, size);
+        };
+      else
+        newDataCallback = nullptr;
+    }
 
   protected:
     NewDataCallback newDataCallback=nullptr;
+
   protected:
     FrameRef buffered=nullptr;
   };

@@ -31,5 +31,6 @@ namespace persee {
       char* decompressed=NULL;
       size_t currentBufferSize=0;
       size_t inflateSize=0;
+      bool bVerbose=false;
   };
 }
