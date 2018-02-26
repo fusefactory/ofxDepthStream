@@ -19,11 +19,16 @@ There is very little official documentation and your best source for information
 Once you've installed Ubuntu you can SSH into the device (default user: ubuntu, default password: ' ' [a single space]), and continue with a common linux command-line workflow (when using OpenFrameworks you'll need to grab the "linux armv7" version of OpenFrameworks);
 
 #### Install and run PerseeServer on Persee
-TODO
+See the README in the tools/PerseeServer folder of this repo
 
-#### Build and Run PerseeClient on your dev machine
-TODO
+#### Build and Run the Client on your dev machine
+Currently there are only _make_ build-files for the clients (no xcode or visual studio).
 
+```cd``` into on of the example application's folders and run:
+```bash
+make Debug # to build the applications
+make RunDebug # to run the last development-build
+```
 
 ## SDK Usage
 
@@ -41,30 +46,3 @@ cd tests
 make Debug
 make RunDebug
 ```
-
-## Roadmap
-Current version: 0.0.0
-
-* version 0.3.0
- * OpenNI integration
-* version 0.2.0
- * Record/Playback
-* version 0.1.0
- * Receive RGB and Depth image stream
- * Remote control streaming options
-
-## Comm protocol; most basic
-
-[Server] waiting for clients to connect (default port: 4444)
-[Client] connect to server
-[Server] sends frame-packages (4-byte header + payload) at configured interval (30fps by default, depth image stream by default)
-[Client] receives packages
-
-## Comm protocol; multi stream
-
-[Server] waiting for clients to connect (default port: 4444)
-[Client] connect to server
-[Client] <CMD_GET_STREAM> <STREAM_IDENTIFIER> <RECEIVE_PORT_NUMBER:int>
-[Client] listens on PORT_NUMBER
-[Server] connects to client's address and given port number and starts sending frames at a specific interval
-[Client] sends <CMD_CLOSE> byte through the incoming stream connection to stop the stream
