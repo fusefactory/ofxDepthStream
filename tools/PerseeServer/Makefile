@@ -5,7 +5,7 @@ BIN_DIR = Bin
 INC_DIRS = \
 	../Common
 
-SRC_FILES = src/*.cpp ../src/persee/*.cpp
+SRC_FILES = src/*.cpp ../src/*.cpp
 
 USED_LIBS += OpenNI2 pthread z
 

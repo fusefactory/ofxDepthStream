@@ -3,7 +3,7 @@
 // OF
 #include "ofMain.h"
 // local/persee
-#include "persee/persee.h"
+#include "persee.h"
 
 namespace ofxOrbbecPersee {
 

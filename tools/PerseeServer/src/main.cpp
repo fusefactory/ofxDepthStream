@@ -24,11 +24,11 @@
 #include <vector>
 #include <chrono>
 // local
-#include "../../src/persee/config.h"
-#include "../../src/persee/OniSampleUtilities.h"
-#include "../../src/persee/CamInterface.h"
-#include "../../src/persee/Compressor.h"
-#include "../../src/persee/Transmitter.h"
+#include "config.h"
+#include "../../../libs/persee/src/OniSampleUtilities.h"
+#include "../../../libs/persee/src/CamInterface.h"
+#include "../../../libs/persee/src/Compressor.h"
+#include "../../../libs/persee/src/Transmitter.h"
 
 using namespace std;
 using namespace std::chrono;

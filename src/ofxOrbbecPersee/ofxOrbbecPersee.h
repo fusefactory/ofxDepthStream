@@ -1,2 +1,2 @@
-#include "persee/persee.h"
+#include "persee.h"
 #include "functional.h"
