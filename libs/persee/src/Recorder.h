@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include "Buffer.h"
 
 namespace persee {
@@ -7,42 +8,13 @@ namespace persee {
 
     public:
 
-      Recorder(){
-      }
+      // Recorder(){}
+      ~Recorder();
+      void start(const std::string& name);
+      void start(std::ostream& ostream);
+      void stop();
 
-      void start(const std::string& name) {
-        outfile = new std::ofstream(name, std::ofstream::binary);
-
-        frameCount = 0;
-        byteCount = 0;
-        startTime = ofGetElapsedTimeMillis();
-
-        std::cout << "started recording to: " << name << std::endl;
-      }
-
-      void stop() {
-        if(outfile){
-          outfile->close();
-          delete outfile;
-          outfile=NULL;
-          std::cout << "Recording stopped; recorded " << frameCount << " frames containing " << byteCount << " bytes of image data" << std::endl;
-        }
-      }
-
-      bool record(const void* data, uint32_t size) {
-        if(!outfile)
-          return false;
-
-        uint32_t t = ofGetElapsedTimeMillis() - startTime;
-        outfile->write((const char*)&t, sizeof(t)); // 4 byte timestamp
-        outfile->write((const char*)&size, sizeof(size)); // 4 byte frame size
-        outfile->write((const char*)data, size); // frame body
-        frameCount+=1;
-        byteCount+=size;
-        return true;
-      }
-
-      // Buffer interface
+      // Buffer interface; override Buffer::write and add recording logic
       virtual void write(const void* data, size_t size) override {
         this->record(data, size);
 
@@ -51,10 +23,16 @@ namespace persee {
         Buffer::write(data, size);
       }
 
+    protected:
+
+      bool record(const void* data, uint32_t size);
+
     private:
-      uint64_t startTime;
+      std::chrono::steady_clock::time_point startTime;
       std::ofstream* outfile;
+      std::ostream* ostream;
       size_t frameCount=0;
       size_t byteCount=0;
+      bool bVerbose=true;
   };
 }
