@@ -35,10 +35,10 @@ namespace ofxOrbbecPersee {
       });
   }
 
-  void receiverToGrayscaleTexture(persee::Receiver& receiver, ofTexture& depthTex) {
+  void loadGrayscaleTexture(persee::Buffer& buf, ofTexture& tex) {
     // check if buffer has data
-    persee::emptyAndInflateBuffer(receiver, [&depthTex](const void* data, size_t size){
-      loadGrayscaleTexture(depthTex, data, size);
+    persee::emptyAndInflateBuffer(buf, [&tex](const void* data, size_t size){
+      loadGrayscaleTexture(tex, data, size);
     });
   }
 
@@ -68,9 +68,9 @@ namespace ofxOrbbecPersee {
     tex.loadData(pixels);
   }
 
-  void receiverToColorTexture(persee::Receiver& receiver, ofTexture& tex) {
+  void loadColorTexture(persee::Buffer& buffer, ofTexture& tex) {
     // check if buffer has data
-    persee::emptyAndInflateBuffer(receiver, [&tex](const void* data, size_t size){
+    persee::emptyAndInflateBuffer(buffer, [&tex](const void* data, size_t size){
       loadColorTexture(tex, data, size);
     });
   }

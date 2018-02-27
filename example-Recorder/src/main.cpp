@@ -12,6 +12,8 @@ class ofApp : public ofBaseApp{
     void draw() override;
 
     void keyPressed(int key) override;
+    std::string getNewRecordingFilename();
+    std::string getLastRecordingFilename();
     // void keyReleased(int key);
     // void mouseMoved(int x, int y );
     // void mouseDragged(int x, int y, int button);
@@ -49,6 +51,7 @@ void ofApp::setup() {
   receiverRef->setOutputTo(&recorder);
   // pipe our recorder into our depth buffer
   recorder.setOutputTo(&depthBuffer);
+  // playback.setOutputTo(&depthBuffer);
 
   // create our texture
   depthPixels.allocate(640, 480, OF_IMAGE_GRAYSCALE);
@@ -62,20 +65,7 @@ void ofApp::update() {
     this->depthBuffer.write(data, size);
   });
 
-  // check if our depth buffer has a frame (either through our network receiver and recorder, or throuh our playback);
-  // persee::emptybuffer will execute the given lambda only if there is data in the buffer, and also empty the buffer
-  persee::emptyBuffer(depthBuffer, [this](const void* data, size_t size){
-    // returns shared_ptr<persee::Frame> with inflated data
-    persee::inflate(data, size)
-    // returns shared_ptr<persee::Frame> with 1-byte grayscale data
-    ->convert(persee::grayscale8bitConverter(this->depthPixels.getWidth(), this->depthPixels.getHeight()))
-    // load grayscale data into our ofTexture instance
-    ->convert<void>([this](const void* data, size_t size){
-      // ofLogNotice() << "buffer to tex onversion update: " << size;
-      this->depthPixels.setFromPixels((const unsigned char *)data, depthPixels.getWidth(), depthPixels.getHeight(), OF_IMAGE_GRAYSCALE);
-      this->depthTex.loadData(depthPixels);
-    });
-  });
+  ofxOrbbecPersee::loadGrayscaleTexture(depthBuffer, depthTex);
 }
 
 void ofApp::draw() {
@@ -102,7 +92,7 @@ void ofApp::keyPressed(int key) {
   if(key == 'r') {
     bRecording = !bRecording;
     if(bRecording) {
-      recorder.start();
+      recorder.start(ofToDataPath(getNewRecordingFilename()));
     } else {
       recorder.stop();
     }
@@ -113,7 +103,7 @@ void ofApp::keyPressed(int key) {
     bPlaying = !bPlaying;
     if(bPlaying){
       // playback.startThreaded();
-      playback.start();
+      playback.start(ofToDataPath(getLastRecordingFilename()));
       // "disconnected" our recorder from our depth buffer
       recorder.setOutputTo(NULL);
     } else {
@@ -123,6 +113,35 @@ void ofApp::keyPressed(int key) {
     }
   }
 }
+
+std::string ofApp::getNewRecordingFilename() {
+  int i=0;
+
+  while(true){
+    if(ofFile::doesFileExist("recording"+ofToString(i)+".txt")){
+      i++;
+    } else {
+      break;
+    }
+  }
+
+  return "recording"+ofToString(i)+".txt";
+}
+
+std::string ofApp::getLastRecordingFilename() {
+  int i=0;
+
+  while(true){
+    if(ofFile::doesFileExist("recording"+ofToString(i)+".txt")){
+      i++;
+    } else {
+      break;
+    }
+  }
+
+  return "recording"+ofToString(i-1)+".txt";
+}
+
 
 //========================================================================
 

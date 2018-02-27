@@ -22,30 +22,15 @@ namespace persee {
         stop(true);
       }
 
-      std::string getName() {
-        int i=0;
-
-        while(true){
-          std::ifstream ifile("recording"+ofToString(i)+".txt");
-          if(ifile){
-            i++;
-          } else {
-            break;
-          }
-        }
-
-        return "recording"+ofToString(i-1)+".txt";
-      }
-
-      void start() {
-        std::string name = getName();
-        infile = new std::ifstream(name, std::ofstream::binary);
+      void start(const std::string& name) {
+        filename = name;
+        infile = new std::ifstream(filename, std::ofstream::binary);
 
         frameCount=0;
         bPlaying=true;
         startTime = ofGetElapsedTimeMillis();
 
-        std::cout << "started playback of: " << name << std::endl;
+        std::cout << "started playback of: " << filename << std::endl;
         this->update();
       }
 
@@ -116,7 +101,7 @@ namespace persee {
       }
 
       void threadFunc() {
-        this->start();
+        this->start(this->filename);
         while(this->bPlaying){
           this->update();
           std::this_thread::sleep_for(std::chrono::duration<long, std::milli>(50l));
@@ -129,7 +114,7 @@ namespace persee {
           if(frameCount == 0) {
             std::cout << "[persee::Playback] file appears empty" << std::endl;
           } else {
-            start();
+            start(this->filename);
           }
         }
       }
@@ -138,6 +123,8 @@ namespace persee {
       bool bPlaying=false;
       bool bLoop=true;
       uint64_t startTime;
+
+      std::string filename;
       std::ifstream* infile;
       // size_t frameCount=0;
       Frame frame;

@@ -10,23 +10,7 @@ namespace persee {
       Recorder(){
       }
 
-      std::string getName() {
-        int i=0;
-
-        while(true){
-          std::ifstream ifile("recording"+ofToString(i)+".txt");
-          if(ifile){
-            i++;
-          } else {
-            break;
-          }
-        }
-
-        return "recording"+ofToString(i)+".txt";
-      }
-
-      void start() {
-        std::string name = getName();
+      void start(const std::string& name) {
         outfile = new std::ofstream(name, std::ofstream::binary);
 
         frameCount = 0;
@@ -61,7 +45,9 @@ namespace persee {
       // Buffer interface
       virtual void write(const void* data, size_t size) override {
         this->record(data, size);
-        // call parent logic (forward data to any target set using our Buffer::setOutputTo method)
+
+        // call parent logic (forward data to any target set using our
+        // Buffer::setOutputTo method)
         Buffer::write(data, size);
       }
 

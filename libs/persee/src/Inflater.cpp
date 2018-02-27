@@ -78,7 +78,7 @@ const void* Inflater::decompress(const void* compressedBytes, unsigned int lengt
         }
         else if (err != Z_OK)  {
           this->cerr() << "Inflation failed; unknown error" << std::endl;
-          perror("perror");
+          // perror("perror");
           return NULL;
           // break;
         }

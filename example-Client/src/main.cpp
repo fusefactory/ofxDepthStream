@@ -42,8 +42,8 @@ void ofApp::setup() {
 void ofApp::update() {
   // checks if our receivers have new data, if so these convenience methods
   // update (and allocate if necessary!) our textures.
-  ofxOrbbecPersee::receiverToGrayscaleTexture(*depthReceiverRef, depthTex);
-  ofxOrbbecPersee::receiverToColorTexture(*colorReceiverRef, colorTex);
+  ofxOrbbecPersee::loadGrayscaleTexture(*depthReceiverRef, depthTex);
+  ofxOrbbecPersee::loadColorTexture(*colorReceiverRef, colorTex);
 }
 
 void ofApp::draw() {
