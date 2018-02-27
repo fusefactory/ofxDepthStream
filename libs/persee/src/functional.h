@@ -66,8 +66,8 @@ namespace persee {
 
   void emptyBuffer(Buffer& buf, Frame::InputFunc func) {
     if(auto r = buf.getRef()) {
-      buf.clear();
       r->convert(func);
+      buf.clear();
     }
   }
 

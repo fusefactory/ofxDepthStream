@@ -35,8 +35,34 @@ make RunDebug # to run the last development-build
 #### Basic Usage
 See also the example applications
 
-```
- // TODO
+```c++
+#include "ofxOrbbecPersee/ofxOrbbecPersee.h"
+
+std::shared_ptr<persee::Receiver> receiverRef;
+ofTexture depthTexture;
+
+void ofApp::setup() {
+   // Create depth stream network receiver (takes a hostname/ip string and port number)
+   receiverRef = persee::Receiver::createAndStart("persee.local", 4445);
+   // this receiver instance will start a separate thread in which it listens for new frame data
+}
+
+void ofApp::update() {
+  // this addons provides some convenience methods for;
+  // processing raw frame byte data (which is compressed for network streaming)
+  persee::emptyAndInflateBuffer(*receiverRef, [this](const void* data, size_t size){
+
+    // ...loading texture data
+    ofxOrbbecPersee::loadGrayscaleTexture(depthTexture, data, size);
+
+  }
+}
+
+void ofApp::draw() {
+  if(depthTexture.isAllocated()) {
+    depthTexture.draw(0,0);
+  }
+}
 ```
 
 #### Run unit tests

@@ -60,27 +60,16 @@ void ofApp::update() {
       int maxDepth = 1500;
       size_t w = 640;
       size_t h = 480;
-      // size_t itemSize = size / (w*h); // 2
 
       this->mesh.clear();
 
       for (int y = 0; y < h; y++) {
         for (int x = 0; x < w; x++) {
-          // ofVec3f p = astra.getWorldCoordinateAt(x, y);
           uint16_t val = pointData[y*w+x] * this->depthFactor;
           ofVec3f p(x,y,val);
 
-          // if (p.z == 0) continue;
-          // if (p.z > maxDepth) continue;
-
           this->mesh.addVertex(p);
 
-          // if (bPointCloudUseColor) {
-          //   mesh.addColor(astra.getColorImage().getColor(x, y));
-          // } else {
-          //   float hue  = ofMap(p.z, 0, maxDepth, 0, 255);
-          //   mesh.addColor(ofColor::fromHsb(hue, 255, 255));
-          // }
           float hue  = ofMap(p.z, 0, maxDepth, 0, 255);
           this->mesh.addColor(ofColor::fromHsb(hue, 255, 255));
         }

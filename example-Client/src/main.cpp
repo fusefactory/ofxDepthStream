@@ -2,7 +2,6 @@
 #include "ofMain.h"
 // addons
 #include "ofxOrbbecPersee/ofxOrbbecPersee.h"
-// local
 
 class ofApp : public ofBaseApp{
 
