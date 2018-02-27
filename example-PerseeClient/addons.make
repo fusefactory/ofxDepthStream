@@ -1,3 +1,0 @@
-ofxUnitTests
-ofxOrbbecPersee
-ofxNetwork
