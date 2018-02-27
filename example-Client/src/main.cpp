@@ -25,7 +25,7 @@ class ofApp : public ofBaseApp{
 
   private: // attributes
     std::string perseeAddress = "192.168.1.226"; // "127.0.0.1";
-    int depthPort = 4445;
+    int depthPort = 8089;
     int colorPort = 4446;
 
     persee::ReceiverRef depthReceiverRef, colorReceiverRef;

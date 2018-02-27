@@ -20,6 +20,7 @@ cd Bin/Arm-Release/
 ./SimpleRead
 ```
 
+#### _Build PerseeServer app_
 Next copy the entire ofxOrbbecPersee folder onto the persee (you can checkout the addon's git repo direcetly, or use for example scp: ```scp -r ofxOrbbecPersee ubuntu@<persee's IP address>:~/```).
 
 First, make sure you have _sourced_ the OpenNIDevEnviroenment by running ```source OpenNIDevEnvironment``` from the OpenNI SDK folder (see instructions above) **from your current terminal session**.

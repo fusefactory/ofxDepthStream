@@ -121,7 +121,7 @@ namespace persee {
         #endif
       }
 
-      VideoStreamRef createColorStream() {
+      VideoStreamRef createColorStream_OpenNI() {
         #ifdef OPENNI_AVAILABLE
           if(!device) device = getDevice();
           auto s = getColorStream(*device);
@@ -132,6 +132,10 @@ namespace persee {
         #else
           return std::make_shared<VideoStream>(std::make_shared<openni::VideoStream>());
         #endif
+      }
+
+      VideoStreamRef createColorStream() {
+
       }
 
       void close(){

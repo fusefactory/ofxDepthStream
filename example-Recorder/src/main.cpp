@@ -68,7 +68,7 @@ void ofApp::update() {
     // returns shared_ptr<persee::Frame> with inflated data
     persee::inflate(data, size)
     // returns shared_ptr<persee::Frame> with 1-byte grayscale data
-    ->convert(persee::grayscale255bitConverter(this->depthPixels.getWidth(), this->depthPixels.getHeight()))
+    ->convert(persee::grayscale8bitConverter(this->depthPixels.getWidth(), this->depthPixels.getHeight()))
     // load grayscale data into our ofTexture instance
     ->convert<void>([this](const void* data, size_t size){
       // ofLogNotice() << "buffer to tex onversion update: " << size;

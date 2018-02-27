@@ -7,7 +7,7 @@ INC_DIRS = \
 
 SRC_FILES = src/*.cpp ../../libs/persee/src/*.cpp
 
-USED_LIBS += OpenNI2 pthread z
+USED_LIBS += OpenNI2 pthread z opencv_core opencv_highgui
 
 EXE_NAME = PerseeServer
 

@@ -19,10 +19,13 @@
 *                                                                            *
 *****************************************************************************/
 
-// // stdlib
+// stdlib
 #include <iostream>
 #include <vector>
 #include <chrono>
+// opencv2
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/highgui/highgui.hpp"
 // local
 #include "config.h"
 #include "../../../libs/persee/src/OniSampleUtilities.h"
@@ -32,7 +35,32 @@
 
 using namespace std;
 using namespace std::chrono;
+using namespace cv;
 using namespace persee;
+
+struct ClrSrc {
+  std::shared_ptr<VideoCapture> capRef;
+  Mat frame;
+
+  // ~ClrSrc(){
+  //   cvReleaseImage(&frame);
+  // }
+
+};
+
+std::shared_ptr<ClrSrc> createColorSource() {
+
+  auto capRef = std::make_shared<VideoCapture>(CAP_OPENNI2); // open default camera
+
+  if(!capRef->isOpened()) {
+    std::cerr << "Could not open cv::VideoCapture device for color stream" << std::endl;
+    // return nullptr;
+  }
+
+  auto ref = std::make_shared<ClrSrc>();
+  ref->capRef = capRef;
+  return ref;
+}
 
 int main(int argc, char** argv) {
   // configurables
@@ -56,7 +84,8 @@ int main(int argc, char** argv) {
   persee::CamInterface camInt;
 
   depth = camInt.getDepthStream();
-  color = camInt.getColorStream();
+  // color = camInt.getColorStream();
+  auto clrSrc = createColorSource();
 
   if(depthPort > 0) {
     std::cout << "Starting depth transmitter on port " << depthPort << std::endl;
@@ -102,6 +131,14 @@ int main(int argc, char** argv) {
         } else {
           std::cout << "FAILED to compress " << depth->getSize() << "-byte " << name << " frame" << std::endl;
         }
+      }
+
+      if(clrSrc) {
+        (*clrSrc->capRef) >> clrSrc->frame;
+        // Mat frame;
+        // cap >> frame; // get a new frame from camera
+        // cvtColor(frame, edges, CV_BGR2GRAY);
+        std::cout << "Color frame size: " << clrSrc->frame.total() << " with " << clrSrc->frame.channels() << " channels and size: " << clrSrc->frame.size() << std::endl;
       }
     }
 
