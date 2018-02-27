@@ -1,5 +1,5 @@
 #include "ofxUnitTests.h"
-#include "persee/persee.h"
+#include "persee.h"
 
 class ofApp: public ofxUnitTestsApp{
   void run(){

@@ -22,10 +22,6 @@ void Recorder::start(std::ostream& ostream) {
   startTime = std::chrono::steady_clock::now();
 }
 
-// void Recorder:start(std::ostream& ostream){
-//   outfile = &ostream;
-// }
-
 void Recorder::stop() {
   ostream = NULL;
 
