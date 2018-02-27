@@ -59,10 +59,10 @@ namespace persee {
       }
 
       // Buffer interface
-      virtual void take(const void* data, size_t size) override {
+      virtual void write(const void* data, size_t size) override {
         this->record(data, size);
         // call parent logic (forward data to any target set using our Buffer::setOutputTo method)
-        Buffer::take(data, size);
+        Buffer::write(data, size);
       }
 
     private:

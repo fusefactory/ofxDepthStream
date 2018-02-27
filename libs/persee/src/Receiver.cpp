@@ -80,7 +80,7 @@ void Receiver::threadFunc() {
           this->lastPackageSize = total;
 
           // our persee::Buffer interface
-          this->take(this->buffer+4, total);
+          Buffer::write(this->buffer+4, total);
 
           if(frameCallback)
             frameCallback((const void*)(this->buffer+4), total);

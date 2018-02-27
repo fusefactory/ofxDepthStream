@@ -84,8 +84,10 @@ int main(int argc, char** argv) {
   persee::CamInterface camInt;
 
   depth = camInt.getDepthStream();
+
   // color = camInt.getColorStream();
   auto clrSrc = createColorSource();
+
 
   if(depthPort > 0) {
     std::cout << "Starting depth transmitter on port " << depthPort << std::endl;
@@ -138,7 +140,8 @@ int main(int argc, char** argv) {
         // Mat frame;
         // cap >> frame; // get a new frame from camera
         // cvtColor(frame, edges, CV_BGR2GRAY);
-        std::cout << "Color frame size: " << clrSrc->frame.total() << " with " << clrSrc->frame.channels() << " channels and size: " << clrSrc->frame.size() << std::endl;
+        if(clrSrc->frame.total() > 0)
+          std::cout << "Color frame size: " << clrSrc->frame.total() << " with " << clrSrc->frame.channels() << " channels and size: " << clrSrc->frame.size() << std::endl;
       }
     }
 

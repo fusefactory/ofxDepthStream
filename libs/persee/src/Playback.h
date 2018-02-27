@@ -92,7 +92,7 @@ namespace persee {
               inlineCallback(nextFrame->buffer, nextFrame->size);
 
             // implement/execute our Buffer interface
-            this->take(nextFrame->buffer, nextFrame->size);
+            Buffer::write(nextFrame->buffer, nextFrame->size);
 
             nextFrame = NULL;
             frameCount += 1;

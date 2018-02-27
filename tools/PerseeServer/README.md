@@ -40,3 +40,19 @@ cd Bin/Arm-Release
 
 Follow these instructions to download, build and install the opencv library on the persee
 https://docs.opencv.org/2.4/doc/tutorials/introduction/linux_install/linux_install.html
+
+Make sure to check that the OpenNI2 libraries are found, by first running ```source OpenNIDevEnvironment``` from inside the
+OpenNI folder (in the same terminal session in which you run the cmake commands), so in my case that looked like;
+```bash
+# make sure opencv's cmake can find our OpenNI2 library
+cd ~/code/OpenNI-Linux-Arm-2.3
+source ./OpenNIDevEnvironment
+# create make build-files using cmake
+cd ~/opencv
+mkdir build
+cd build
+cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_OPENNI2=ON -D ..
+# build opencv with OpenNI2 support
+make
+sudo make install
+```

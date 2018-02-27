@@ -24,7 +24,7 @@ class ofApp : public ofBaseApp{
     // void gotMessage(ofMessage msg);
 
   private: // attributes
-    std::string address = "192.168.1.226";
+    std::string address = "persee.local"; //"192.168.1.226";
     // ofxOrbbecPersee::DepthStreamRef depthStreamRef;
 
     persee::ReceiverRef receiverRef;
@@ -59,7 +59,7 @@ void ofApp::update() {
   // update with inline frame callback
   playback.update([this](void* data, size_t size){
     // ofLogNotice() << "playback update";
-    this->depthBuffer.take(data, size);
+    this->depthBuffer.write(data, size);
   });
 
   // check if our depth buffer has a frame (either through our network receiver and recorder, or throuh our playback);

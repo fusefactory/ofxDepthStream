@@ -4,9 +4,14 @@
 
 namespace persee {
 
-  class Frame;
-    typedef std::shared_ptr<Frame> FrameRef;
+  /**
+   * Frame is a simple read-only wrapper around a data block and a size attribute.
+   * Frames can be initialized both with embedded data buffer (which will be
+   * deallocated by the Frame's destructor) and with external data.
+   */
 
+  class Frame;
+  typedef std::shared_ptr<Frame> FrameRef;
 
   class Frame {
     public: // static methods
@@ -33,11 +38,16 @@ namespace persee {
 
       ~Frame() { if(ownedData) free(ownedData); }
 
-    public: // getters/setters
+    public: // getters
 
       const void* data() { return ownedData ? ownedData : externalData; }
       size_t size() { return _size; }
 
+      /**
+       * The concert methods takes a function (ie. lambda) and, executes it
+       * and returns whatever type the lambda returns. This allows linking
+       * operations (frame->convert(...)->convert(...)-> etc. 
+       */
       template<typename ResultType>
       ResultType convert(std::function<ResultType(const void*,size_t)> func) {
         return func(data(), size());

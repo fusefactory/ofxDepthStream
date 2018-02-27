@@ -4,34 +4,39 @@
 
 namespace persee {
   class Buffer {
-  public: // sub-types
-    typedef std::function<void(const void*, size_t)> NewDataCallback;
+    public: // sub-types
 
-  public: // read methods
-    virtual FrameRef getRef(){ return buffered; }
+      typedef std::function<void(const void*, size_t)> NewDataCallback;
 
-  public: // write methods
-    virtual void take(FrameRef f) { this->take(f->data(), f->size()); }
+    public: // read methods
 
-    virtual void take(const void* data, size_t size) {
-      buffered = Frame::refToExternalData(data,size);
-      if(newDataCallback) newDataCallback(data, size);
-    }
+      virtual FrameRef getRef(){ return buffered; }
 
-    void clear() { buffered=nullptr; }
+    public: // write methods
 
-  public: // config methods
-    void setOutputTo(Buffer* b) {
-      if(b)
-        newDataCallback = [b](const void* data, size_t size){
-          b->take(data, size);
-        };
-      else
-        newDataCallback = nullptr;
-    }
+      virtual void write(FrameRef f) { this->write(f->data(), f->size()); }
 
-  protected: // attributes
-    NewDataCallback newDataCallback=nullptr;
-    FrameRef buffered=nullptr;
+      virtual void write(const void* data, size_t size) {
+        buffered = Frame::refToExternalData(data,size);
+        if(newDataCallback) newDataCallback(data, size);
+      }
+
+      void clear() { buffered=nullptr; }
+
+    public: // config methods
+
+      void setOutputTo(Buffer* b) {
+        if(b)
+          newDataCallback = [b](const void* data, size_t size){
+            b->write(data, size);
+          };
+        else
+          newDataCallback = nullptr;
+      }
+
+    protected: // attributes
+
+      NewDataCallback newDataCallback=nullptr;
+      FrameRef buffered=nullptr;
   };
 }
