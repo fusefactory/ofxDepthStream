@@ -274,4 +274,11 @@ namespace ofxOrbbecPersee {
 
     ofLogWarning() << "Frame size not supported by ofxOrbbecPersee::loadDepthTexture (bytes): " << size;
   }
+
+  void loadDepthTexture(persee::Buffer& buffer, ofTexture& tex) {
+    // check if buffer has data
+    persee::emptyAndInflateBuffer(buffer, [&tex](const void* data, size_t size){
+      loadDepthTexture(tex, data, size);
+    });
+  }
 }
