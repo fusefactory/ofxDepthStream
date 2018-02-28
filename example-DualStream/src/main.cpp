@@ -3,6 +3,7 @@
 // addons
 #include "ofxOrbbecPersee/ofxOrbbecPersee.h"
 #include "ofxHistoryPlot.h"
+#include "ofxGui.h"
 // local
 
 class ofApp : public ofBaseApp{
@@ -33,22 +34,35 @@ class ofApp : public ofBaseApp{
       int port;
     } NetworkSource;
 
-    NetworkSource src1 = {"persee.local", 4445};
-    NetworkSource src2 = {"192.168.1.77", 4444};
+    NetworkSource src1 = {"persee.local", 4445}; // orbbec
+    NetworkSource src2 = {"192.168.1.77", 4444}; // kinect
 
+    ofTexture textures[2];
     persee::ReceiverRef receiverRefs[2];
     persee::Recorder recorders[2];
     persee::Playback playbacks[2];
-    float avgBytesPerFrame[2] = { 0.0f, 0.0f };
 
+    // plot/speed
+    float avgBytesPerFrame[2] = { 0.0f, 0.0f };
     ofxHistoryPlot* plots[2];
 
-    // ofEasyCam cam;
-    ofTexture textures[2];
+    // gui
+    typedef struct {
+      ofParameterGroup params;
+      ofParameter<int> minDistance, maxDistance, vertCorrection;
+      ofParameter<float> keystone, margins[4];
+    } ParsStruct;
+
+    ofParameterGroup paramsGui;
+    ParsStruct pars[2];
+    ofxPanel gui;
+    bool bDrawGui=true;
 };
 
+
+
 void ofApp::setup() {
-  ofSetWindowTitle("ofxOrbbecPersee - Mesh Example");
+  ofSetWindowTitle("ofxOrbbecPersee - DualStream Example");
   ofSetWindowShape(1290,720);
   ofSetVerticalSync(true);
 
@@ -60,9 +74,28 @@ void ofApp::setup() {
   receiverRefs[1]->setOutputTo(&recorders[1]);
   playbacks[1].setOutputTo(&recorders[1]);
 
+  // gui
   plots[0] = new ofxHistoryPlot( NULL, "bytes/frame", 400, false); //NULL cos we don't want it to auto-update. confirmed by "true"
   plots[1] = new ofxHistoryPlot( NULL, "bytes/frame", 400, false); //NULL cos we don't want it to auto-update. confirmed by "true"
   plots[1]->setColor( ofColor(0,0,255) );
+
+  auto cfg = [](ParsStruct& pars) {
+    pars.params.add(pars.minDistance.set("minDistance", 0, 0, 9999));
+    pars.params.add(pars.maxDistance.set("maxDistance", 5000, 0, 9999));
+    pars.params.add(pars.vertCorrection.set("vertCorrection", 1, 0, 10));
+    pars.params.add(pars.keystone.set("keystone", 0.0f, 0.0f, 10.0f));
+    pars.params.add(pars.margins[0].set("marginT", 0.0f, 0.0f, 400.0f));
+    pars.params.add(pars.margins[1].set("marginR", 0.0f, 0.0f, 400.0f));
+    pars.params.add(pars.margins[2].set("marginB", 0.0f, 0.0f, 400.0f));
+    pars.params.add(pars.margins[3].set("marginL", 0.0f, 0.0f, 400.0f));
+  };
+
+  cfg(pars[0]);
+  cfg(pars[1]);
+  paramsGui.setName("App");
+  paramsGui.add(pars[0].params);
+  paramsGui.add(pars[1].params);
+  gui.setup(paramsGui);
 }
 
 void ofApp::update() {
@@ -70,7 +103,18 @@ void ofApp::update() {
     auto frameRef = recorders[i].getRef();
 
     persee::emptyAndInflateBuffer(recorders[i], [this, frameRef, i](const void* data, size_t size){
-      ofxOrbbecPersee::loadDepthTexture(textures[i], data, size);
+      ofxOrbbecPersee::loadDepthTexture(
+        textures[i],
+        data, size,
+        ofxOrbbecPersee::DepthLoaderOpts()
+          .setMinDistance(this->pars[i].minDistance)
+          .setMaxDistance(this->pars[i].maxDistance)
+          .setVertCorrection(this->pars[i].vertCorrection)
+          .setKeystone(this->pars[i].keystone)
+          .setMarginTop(this->pars[i].margins[0])
+          .setMarginRight(this->pars[i].margins[1])
+          .setMarginBottom(this->pars[i].margins[2])
+          .setMarginLeft(this->pars[i].margins[3]));
       plots[i]->update(frameRef->size()); // write original (compressed) size to our plot
       this->avgBytesPerFrame[i] = (this->avgBytesPerFrame[i] * 9.0f + frameRef->size()) / 10.0f;
     });
@@ -97,6 +141,10 @@ void ofApp::draw() {
   source = playbacks[1].isPlaying() ? ofFile(playbacks[1].getFilename()).getBaseName() : src2.address+":"+ofToString(src2.port);
   ofDrawBitmapString(speed + source, 650, 520);
   plots[1]->draw(650, 540, 400, 150);
+
+  if(bDrawGui) {
+    gui.draw();
+  }
 }
 
 void ofApp::keyPressed(int key) {
@@ -117,6 +165,10 @@ void ofApp::keyPressed(int key) {
   if(key == 's') {
     stopPlayback(0);
     stopPlayback(1);
+  }
+
+  if(key == 'g'){
+    bDrawGui = !bDrawGui;
   }
 }
 

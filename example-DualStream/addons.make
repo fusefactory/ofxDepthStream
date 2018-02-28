@@ -1,2 +1,3 @@
 ofxOrbbecPersee
 ofxHistoryPlot
+ofxGui

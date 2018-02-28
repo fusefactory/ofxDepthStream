@@ -129,7 +129,7 @@ int main(int argc, char** argv) {
   persee::CamInterface camInt;
 
   depth = camInt.getDepthStream();
-  std::shared_ptr<Converter> converterRef = std::make_shared<Converter>(2, 4); // 16-bits to 32-bits
+  std::shared_ptr<Converter> converterRef = nullptr; //std::make_shared<Converter>(2, 4); // 16-bits to 32-bits
 
   // color = camInt.getColorStream();
   auto clrSrc = createColorSource();
