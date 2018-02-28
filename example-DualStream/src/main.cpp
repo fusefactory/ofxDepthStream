@@ -80,8 +80,8 @@ void ofApp::setup() {
   plots[1]->setColor( ofColor(0,0,255) );
 
   auto cfg = [](ParsStruct& pars) {
-    pars.params.add(pars.minDistance.set("minDistance", 0, 0, 9999));
-    pars.params.add(pars.maxDistance.set("maxDistance", 5000, 0, 9999));
+    pars.params.add(pars.minDistance.set("minDistance", 50, 0, 15000));
+    pars.params.add(pars.maxDistance.set("maxDistance", 8000, 0, 15000));
     pars.params.add(pars.vertCorrection.set("vertCorrection", 1, 0, 10));
     pars.params.add(pars.keystone.set("keystone", 0.0f, 0.0f, 10.0f));
     pars.params.add(pars.margins[0].set("marginT", 0.0f, 0.0f, 400.0f));

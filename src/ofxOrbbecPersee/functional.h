@@ -107,6 +107,7 @@ namespace ofxOrbbecPersee {
     int maxDistance=0;
     int minDistance=5000;
     int vertCorrection=1;
+    int shift1=0, shift2=0;
     float keystone=0.0f;
     float margins[4]={0.0f, 0.0f, 0.0f, 0.0f};
 
@@ -119,6 +120,8 @@ namespace ofxOrbbecPersee {
     DepthLoaderOpts& setMarginBottom(float v) { margins[2] = v; return *this; }
     DepthLoaderOpts& setMarginLeft(float v) { margins[3] = v; return *this; }
     DepthLoaderOpts& setKeystone(float v) { keystone = v; return *this; }
+    DepthLoaderOpts& setShift1(int v) { shift1 = v; return *this; }
+    DepthLoaderOpts& setShift2(int v) { shift2 = v; return *this; }
   };
 
   /**
@@ -153,10 +156,10 @@ namespace ofxOrbbecPersee {
 
         // convert multi-byte into single depth value
         int depthIndex = int((posX + y * tex.getWidth()) * 2);
-        int byte0 = ((unsigned char*)data)[depthIndex + 0];
-        int byte1 = ((unsigned char*)data)[depthIndex + 1];
-        int depth = (byte0 & 0xFF) << 8  | (byte1 & 0xFF);
-
+        // unsigned int byte0 = ((unsigned char*)data)[depthIndex + 0];
+        // unsigned int byte1 = ((unsigned char*)data)[depthIndex + 1];
+        // unsigned int depth = ((byte0 & 0xFF) << (8 + opts.shift1)) | ((byte1 & 0xFF) << opts.shift2);
+        uint16_t depth = *((uint16_t*)(&((char*)data)[depthIndex]));
         int edgeIndex = (x + y * tex.getWidth());
         bool valid = false;
 
