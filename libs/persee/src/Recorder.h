@@ -23,6 +23,10 @@ namespace persee {
         Buffer::write(data, size);
       }
 
+      bool isRecording() {
+        return this->ostream != NULL;
+      }
+
     protected:
 
       bool record(const void* data, uint32_t size);
@@ -30,7 +34,7 @@ namespace persee {
     private:
       std::chrono::steady_clock::time_point startTime;
       std::ofstream* outfile;
-      std::ostream* ostream;
+      std::ostream* ostream = NULL;
       size_t frameCount=0;
       size_t byteCount=0;
       bool bVerbose=true;

@@ -84,7 +84,7 @@ namespace persee {
       int port;
       struct sockaddr_in server;
 
-      static const int BUF_SIZE = (1024*1024*4);
+      static const int BUF_SIZE = (1280*720*4);
       char buffer[BUF_SIZE];
       // int bufferSize=0;
       int recvSize=0;

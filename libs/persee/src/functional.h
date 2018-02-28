@@ -30,6 +30,45 @@ namespace persee {
   FrameRef inflate(Frame& instance) { return inflate(instance.data(), instance.size()); }
   FrameRef inflate(FrameRef ref) { return inflate(ref->data(), ref->size()); }
 
+  // bit-size conversion
+  FrameRef convert_32bit_to_8bit(size_t targetSize, const void* data) {
+    void* converted = malloc(targetSize);
+    double multiplier = 1.0 * (2^8) / (2^32);
+
+    for(int i=0; i<targetSize; i++) {
+      // unsigned char a = ((const unsigned char*)data)[i*2+1];
+      // unsigned char b = ((const unsigned char*)data)[i*4];
+      int byte0 = ((char*)data)[i*4 + 3];
+      int byte1 = ((char*)data)[i*4 + 2];
+      int byte2 = ((char*)data)[i*4 + 1];
+      int byte3 = ((char*)data)[i*4 + 0];
+      unsigned int val = byte0 << 24 | (byte1 & 0xFF) << 16 | (byte2 & 0xFF) << 8 | (byte3 & 0xFF);
+      ((unsigned char*)converted)[i] = (unsigned char)((double)val / multiplier);
+    }
+
+    // when the returned  shared_ptr<Frame> deallocates, it will free the memory we gave it
+    return Frame::refWithData(converted, targetSize);
+  }
+
+  FrameRef convert_16bit_to_8bit(size_t targetSize, const void* data) {
+    void* converted = malloc(targetSize);
+    double multiplier = 1.0 * (2^8) / (2^16);
+
+    for(int i=0; i<targetSize; i++) {
+      // unsigned char a = ((const unsigned char*)data)[i*2+1];
+      // unsigned char b = ((const unsigned char*)data)[i*2]+1;
+      // ((unsigned char*)converted)[i] = b; //(unsigned char)(((a << 8) | b) >> 8);//(unsigned char)val;
+
+      int byte0 = ((char*)data)[i*2 + 0];
+      int byte1 = ((char*)data)[i*2 + 1];
+      unsigned int val = byte0 << 8 | (byte1 & 0xFF);
+      ((unsigned char*)converted)[i] = (unsigned char)((double)val / multiplier);
+    }
+
+    // when the returned  shared_ptr<Frame> deallocates, it will free the memory we gave it
+    return Frame::refWithData(converted, targetSize);
+  }
+
   // grayscale methods
 
   FrameRef convertTo8bitGrayscaleData(size_t texSize, const void* data) {

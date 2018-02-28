@@ -24,8 +24,12 @@ namespace persee {
 
       void start(const std::string& name);
       void startThreaded();
+      void startThreaded(const std::string& name);
       void stop(bool wait=true);
       bool update(FrameCallback inlineCallback=nullptr);
+
+      bool isPlaying() const { return bPlaying; }
+      const std::string& getFilename() const { return filename; }
 
     protected: // methods
 

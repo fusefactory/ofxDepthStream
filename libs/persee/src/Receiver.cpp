@@ -20,7 +20,7 @@
 using namespace persee;
 
 Receiver::~Receiver() {
-  this->stop(true);
+  this->stop(false);
 }
 
 void Receiver::start(const std::string& host, int port) {
@@ -38,7 +38,6 @@ void Receiver::stop(bool wait){
   this->disconnect();
 
   if(wait) {
-
     if(this->thread) {
       std::cout << "[persee::Receiver] waiting for thread to end" << std::endl;
       thread->join();
@@ -55,11 +54,21 @@ void Receiver::error(const char *msg) {
 }
 
 void Receiver::threadFunc() {
+  auto nextConnectAttemptTime = std::chrono::steady_clock::now();
+
   // connect/reconnect loop
   while (bRunning) {
+    // not connected?
     if(!bConnected) {
-      if(!this->connectToServer(this->host, this->port))
-        Sleep(connectAttemptInterval);
+      // time for a new connect attempt?
+      auto now = std::chrono::steady_clock::now();
+      if(now >= nextConnectAttemptTime) {
+        // attempt fails
+        if(!this->connectToServer(this->host, this->port)){
+          // schedule retry
+          nextConnectAttemptTime = now + std::chrono::milliseconds(connectAttemptInterval);
+        }
+      }
     }
 
     if(bConnected) {

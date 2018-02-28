@@ -22,6 +22,11 @@ void Playback::startThreaded() {
   this->thread = new std::thread(std::bind(&Playback::threadFunc, this));
 }
 
+void Playback::startThreaded(const std::string& name){
+  filename = name;
+  this->startThreaded();
+}
+
 void Playback::stop(bool wait) {
   bPlaying=false;
 
