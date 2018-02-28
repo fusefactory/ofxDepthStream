@@ -57,7 +57,7 @@ void ofApp::update() {
 
     if (bDrawPoints) {
       const uint16_t* pointData = (const uint16_t*)data;
-      int maxDepth = 1500;
+      int maxDepth = 2000;
       size_t w = 640;
       size_t h = 480;
 
@@ -65,12 +65,12 @@ void ofApp::update() {
 
       for (int y = 0; y < h; y++) {
         for (int x = 0; x < w; x++) {
-          uint16_t val = pointData[y*w+x] * this->depthFactor;
-          ofVec3f p(x,y,val);
+          uint16_t val = pointData[y*w+x];;
+          ofVec3f p(x,y,-val * this->depthFactor);
 
           this->mesh.addVertex(p);
 
-          float hue  = ofMap(p.z, 0, maxDepth, 0, 255);
+          float hue  = ofMap(val, 0, 6000, 0, 255);
           this->mesh.addColor(ofColor::fromHsb(hue, 255, 255));
         }
       }
@@ -84,7 +84,10 @@ void ofApp::draw() {
   cam.begin();
     if (bDrawDepth) {
       if(depthTex.isAllocated()) {
+        ofPushMatrix();
+        ofScale(-1.0f, -1.0f, 1.0f);
         depthTex.draw(0, 0);
+        ofPopMatrix();
       }
     }
 
