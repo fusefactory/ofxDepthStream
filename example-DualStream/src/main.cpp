@@ -22,7 +22,7 @@ class ofApp : public ofBaseApp{
     // void mouseEntered(int x, int y);
     // void mouseExited(int x, int y);
     // void windowResized(int w, int h);
-    // void dragEvent(ofDragInfo dragInfo);
+    void dragEvent(ofDragInfo dragInfo) override;
     // void gotMessage(ofMessage msg);
 
   private: // attributes
@@ -34,8 +34,7 @@ class ofApp : public ofBaseApp{
 
     NetworkSource src1 = {"persee.local", 4445};
     NetworkSource src2 = {"127.0.0.1", 4445};
-    // std::string perseeAddress = "persee.local"; //"192.168.1.226"; // "127.0.0.1";
-    // int depthPort = 4445;
+
     persee::ReceiverRef receiverRefs[2];
     persee::Recorder recorders[2];
     persee::Playback playbacks[2];
@@ -73,25 +72,40 @@ void ofApp::draw() {
     textures[0].draw(0, 0);
   }
 
+  ofDrawBitmapString(playbacks[0].isPlaying() ? ofFile(playbacks[0].getFilename()).getBaseName() : src1.address+":"+ofToString(src1.port), 10, 500);
+
   if(textures[1].isAllocated()) {
     textures[1].draw(650, 0);
   }
+
+  ofDrawBitmapString(playbacks[1].isPlaying() ? ofFile(playbacks[1].getFilename()).getBaseName() : src2.address+":"+ofToString(src2.port), 650, 520);
 }
 
 void ofApp::keyPressed(int key) {
 
   // if (key == 'd') { bDrawEdge = !bDrawEdge; }
   // if (key == 'D') { bDrawDepth = !bDrawDepth; }
+  if(key == 's') {
+    stopPlayback(0);
+    stopPlayback(1);
+  }
 }
 
 void ofApp::startPlayback(int which, const std::string& filename) {
-  playbacks[which].start(filename);
-  recorders[which].setOutputTo(NULL); // stop network stream
+  playbacks[which].startThreaded(filename);
+  // stop network stream (through recorder)
+  recorders[which].setOutputTo(NULL);
 }
 
 void ofApp::stopPlayback(int which) {
   playbacks[which].stop();
+  // reconnect network stream (through recorder)
   recorders[which].setOutputTo(&buffers[which]);
+}
+
+void ofApp::dragEvent(ofDragInfo dragInfo) {
+  if(dragInfo.files.size() < 1) return;
+  this->startPlayback(dragInfo.position.x < (ofGetWindowWidth() >> 1) ? 0 : 1, dragInfo.files[0]);
 }
 
 //========================================================================
