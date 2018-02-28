@@ -2,6 +2,7 @@
 
 #ifndef __APPLE__
   #define OPENNI_AVAILABLE
+  #define OPENCV_AVAILABLE
 #endif
 
 #define CHUNK 16384

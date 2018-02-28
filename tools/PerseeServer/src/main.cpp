@@ -49,18 +49,63 @@ struct ClrSrc {
 };
 
 std::shared_ptr<ClrSrc> createColorSource() {
+  #ifndef OPENCV_AVAILABLE
+    return nullptr;
+  #else
+    auto capRef = std::make_shared<VideoCapture>(CAP_OPENNI2); // open default camera
 
-  auto capRef = std::make_shared<VideoCapture>(CAP_OPENNI2); // open default camera
+    if(!capRef->isOpened()) {
+      std::cerr << "Could not open cv::VideoCapture device for color stream" << std::endl;
+      // return nullptr;
+    }
 
-  if(!capRef->isOpened()) {
-    std::cerr << "Could not open cv::VideoCapture device for color stream" << std::endl;
-    // return nullptr;
+    auto ref = std::make_shared<ClrSrc>();
+    ref->capRef = capRef;
+    return ref;
+  #endif
+}
+
+class Converter {
+public:
+  Converter(size_t srcBytes, size_t targetBytes) : fromBytes(srcBytes), toBytes(targetBytes){}
+
+  bool convert(const void* data, size_t size) {
+    if((float)size / fromBytes * toBytes > BUF_SIZE){
+      std::cerr << "Convert: " << size << " bytes is too big for our buffer" << std::endl;
+      return false;
+    }
+
+    if(toBytes < fromBytes) {
+      std::cerr << "downscaling not supported (yet)" << std::endl;
+      return false;
+    }
+
+    size_t diff = toBytes-fromBytes;
+    size_t srcCursor=0, destCursor=0;
+    while(srcCursor < size) {
+      // prefix with zeroes
+      memset((void*)&buffer[destCursor], 0, diff);
+      // write source bytes
+      memcpy((void*)&buffer[destCursor+diff], &((char*)data)[srcCursor], fromBytes);
+
+      srcCursor += fromBytes;
+      destCursor += toBytes;
+    }
+
+    lastSize = destCursor;
+    return true;
   }
 
-  auto ref = std::make_shared<ClrSrc>();
-  ref->capRef = capRef;
-  return ref;
-}
+  const void* getData(){ return (void*)buffer; }
+  size_t getSize(){ return lastSize; }
+
+private:
+  size_t fromBytes, toBytes;
+  static const size_t BUF_SIZE = (1280*720*4);
+  unsigned char buffer[BUF_SIZE];
+
+  size_t lastSize=0;
+};
 
 int main(int argc, char** argv) {
   // configurables
@@ -84,6 +129,7 @@ int main(int argc, char** argv) {
   persee::CamInterface camInt;
 
   depth = camInt.getDepthStream();
+  std::shared_ptr<Converter> converterRef = nullptr; //std::make_shared<Converter>(2, 4); // 16-bits to 32-bits
 
   // color = camInt.getColorStream();
   auto clrSrc = createColorSource();
@@ -124,14 +170,30 @@ int main(int argc, char** argv) {
 
         stream->update();
 
-        if(compressor->compress(stream->getData(), stream->getSize())) {
-          for(auto t : (*transmitters)) {
-            if(t->transmit((const char*)compressor->getData(), compressor->getSize())){
-              if(bVerbose) std::cout << "sent " << compressor->getSize() << "-byte " << name << " frame" << std::endl;
-            }
+        const void* data = stream->getData();
+        size_t size = stream->getSize();
+
+        // convert?
+        if(converterRef) {
+          if(converterRef->convert(data, size)) {
+            data = converterRef->getData();
+            size = converterRef->getSize();
+            // std::cout << "converted to 32bit, size: " << size << std::endl;
+          } else {
+            data = NULL;
           }
-        } else {
-          std::cout << "FAILED to compress " << depth->getSize() << "-byte " << name << " frame" << std::endl;
+        }
+
+        if(data) {
+          if(compressor->compress(data, size)) {
+            for(auto t : (*transmitters)) {
+              if(t->transmit((const char*)compressor->getData(), compressor->getSize())){
+                if(bVerbose) std::cout << "sent " << compressor->getSize() << "-byte " << name << " frame" << std::endl;
+              }
+            }
+          } else {
+            std::cout << "FAILED to compress " << depth->getSize() << "-byte " << name << " frame" << std::endl;
+          }
         }
       }
 

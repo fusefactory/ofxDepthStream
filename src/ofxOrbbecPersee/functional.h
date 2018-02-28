@@ -21,7 +21,7 @@ namespace ofxOrbbecPersee {
 
     // check
     if( (depthTex.getWidth() * depthTex.getHeight()) * 2 != size ) {
-      ofLogWarning() << "Color texture size did not match data-size";
+      ofLogWarning() << "Depth texture size did not match data-size";
       return;
     }
 

@@ -43,7 +43,6 @@ namespace persee {
 
       int sockfd, clientsocket, portno;
       socklen_t clilen;
-      char buffer[256];
       int cycleSleep=200;
   };
 }

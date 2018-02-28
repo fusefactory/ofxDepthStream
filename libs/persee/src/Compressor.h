@@ -11,7 +11,7 @@ namespace persee {
       bool doCompression();
 
     private:
-      static const int BUF_SIZE = 1024*1024*4; // TODO; use dynamically allocated size
+      static const int BUF_SIZE = 1280*720*4; // TODO; use dynamically allocated size
       // input
       const unsigned char* buffer; //[RECEIVE_BUF_SIZE];
       unsigned int size=0;
