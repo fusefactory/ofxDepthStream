@@ -7,8 +7,10 @@
 
 namespace ofxOrbbecPersee {
 
-  static const size_t FRAME_SIZE_640x480x16BIT = (640*480*2);
+  static const size_t FRAME_SIZE_640x480x16BIT = (640*480*2); // orbbec
   static const size_t FRAME_SIZE_640x480x32BIT = (640*480*4);
+  static const size_t FRAME_SIZE_512x424x32BIT = (512*424*4); // kinect
+
   /**
    * Supported intput frame-sizes:
    * 640 x 480 x 2=614400 bytes (16-bit)
@@ -187,6 +189,8 @@ namespace ofxOrbbecPersee {
       // ofLogNotice() << "Allocating edge-data texture";
       if(size == FRAME_SIZE_640x480x32BIT) {
         tex.allocate(640, 480, GL_RGB);
+      } else if(size == FRAME_SIZE_512x424x32BIT){
+        tex.allocate(512, 424, GL_RGB);
       } else {
         ofLogWarning() << "Frame-size not supported by ofxOrbbecPersee::loadDepthTexture32bit: " << size;
         return;
@@ -268,6 +272,11 @@ namespace ofxOrbbecPersee {
     }
 
     if (size == FRAME_SIZE_640x480x32BIT) {
+      loadDepthTexture32bit(tex, data, size);
+      return;
+    }
+
+    if (size == FRAME_SIZE_512x424x32BIT) {
       loadDepthTexture32bit(tex, data, size);
       return;
     }

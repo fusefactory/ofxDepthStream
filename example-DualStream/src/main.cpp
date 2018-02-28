@@ -34,7 +34,7 @@ class ofApp : public ofBaseApp{
     } NetworkSource;
 
     NetworkSource src1 = {"persee.local", 4445};
-    NetworkSource src2 = {"127.0.0.1", 4445};
+    NetworkSource src2 = {"192.168.1.77", 4444};
 
     persee::ReceiverRef receiverRefs[2];
     persee::Recorder recorders[2];
