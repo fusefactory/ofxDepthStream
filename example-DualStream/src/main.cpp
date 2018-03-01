@@ -51,15 +51,14 @@ class ofApp : public ofBaseApp{
       ofParameterGroup params;
       ofParameter<int> minDistance, maxDistance, vertCorrection;
       ofParameter<float> keystone, margins[4];
+      ofxPanel gui;
     } ParsStruct;
 
-    ofParameterGroup paramsGui;
+    // ofParameterGroup paramsGui;
     ParsStruct pars[2];
-    ofxPanel gui;
-    bool bDrawGui=true;
+    // ofxPanel gui;
+    bool bDrawGui=true, bDrawHelp=true;
 };
-
-
 
 void ofApp::setup() {
   ofSetWindowTitle("ofxOrbbecPersee - DualStream Example");
@@ -88,14 +87,17 @@ void ofApp::setup() {
     pars.params.add(pars.margins[1].set("marginR", 0.0f, 0.0f, 400.0f));
     pars.params.add(pars.margins[2].set("marginB", 0.0f, 0.0f, 400.0f));
     pars.params.add(pars.margins[3].set("marginL", 0.0f, 0.0f, 400.0f));
+    pars.gui.setup(pars.params);
   };
 
   cfg(pars[0]);
   cfg(pars[1]);
-  paramsGui.setName("App");
-  paramsGui.add(pars[0].params);
-  paramsGui.add(pars[1].params);
-  gui.setup(paramsGui);
+  pars[1].gui.setPosition(650,10);
+
+  // paramsGui.setName("App");
+  // paramsGui.add(pars[0].params);
+  // paramsGui.add(pars[1].params);
+  // gui.setup(paramsGui);
 }
 
 void ofApp::update() {
@@ -105,7 +107,7 @@ void ofApp::update() {
     persee::emptyAndInflateBuffer(recorders[i], [this, frameRef, i](const void* data, size_t size){
       ofxOrbbecPersee::loadDepthTexture(
         textures[i],
-        data, size,
+        data, size/*,
         ofxOrbbecPersee::DepthLoaderOpts()
           .setMinDistance(this->pars[i].minDistance)
           .setMaxDistance(this->pars[i].maxDistance)
@@ -114,7 +116,7 @@ void ofApp::update() {
           .setMarginTop(this->pars[i].margins[0])
           .setMarginRight(this->pars[i].margins[1])
           .setMarginBottom(this->pars[i].margins[2])
-          .setMarginLeft(this->pars[i].margins[3]));
+          .setMarginLeft(this->pars[i].margins[3])*/);
       plots[i]->update(frameRef->size()); // write original (compressed) size to our plot
       this->avgBytesPerFrame[i] = (this->avgBytesPerFrame[i] * 9.0f + frameRef->size()) / 10.0f;
     });
@@ -143,13 +145,22 @@ void ofApp::draw() {
   plots[1]->draw(650, 540, 400, 150);
 
   if(bDrawGui) {
-    gui.draw();
+    pars[0].gui.draw();
+    pars[1].gui.draw();
+  }
+
+  if(bDrawHelp){
+    stringstream ss;
+    ss << "h - toggle this help" << std::endl;
+    ss << "g - toggle GUI" << std::endl;
+    ss << "m - mute all inputs (both recordings and network streams)" << std::endl;
+    ss << "M - unmute (resume network streams)" << std::endl;
+    ofDrawBitmapString(ss.str(), 10, ofGetWindowHeight() - 60);
   }
 }
 
 void ofApp::keyPressed(int key) {
-  // if (key == 'd') { bDrawEdge = !bDrawEdge; }
-  // if (key == 'D') { bDrawDepth = !bDrawDepth; }
+  // 'mute' stop both playbacks and network streams
   if(key == 'm') {
     stopPlayback(0);
     stopPlayback(1);
@@ -157,33 +168,39 @@ void ofApp::keyPressed(int key) {
     receiverRefs[1]->setOutputTo(NULL);
   }
 
+  // 'unmute' stop both playbacks, start network streams
   if(key == 'M') {
     stopPlayback(0);
     stopPlayback(1);
   }
 
+  // 'stop' stop playbacks (resume network streams)
   if(key == 's') {
     stopPlayback(0);
     stopPlayback(1);
   }
 
-  if(key == 'g'){
-    bDrawGui = !bDrawGui;
-  }
+  // 'gui' toggle gui on/off
+  if(key == 'g') bDrawGui = !bDrawGui;
+  // 'help' toggle draw help on/off
+  if(key == 'h') bDrawHelp = !bDrawHelp;
 }
 
+// Start recorded playback ('which' can be 0 for left, 1 for right). Stops network streaming.
 void ofApp::startPlayback(int which, const std::string& filename) {
   playbacks[which].startThreaded(filename);
   // stop network stream (through recorder)
   receiverRefs[which]->setOutputTo(NULL);
 }
 
+// Stop recorded playback ('which' can be 0 for left, 1 for right). Resumes network streaming.
 void ofApp::stopPlayback(int which) {
   playbacks[which].stop();
   // reconnect network stream (through recorder)
   receiverRefs[which]->setOutputTo(&recorders[which]);
 }
 
+// Drag recording data file; start recording playback
 void ofApp::dragEvent(ofDragInfo dragInfo) {
   if(dragInfo.files.size() < 1) return;
   this->startPlayback(dragInfo.position.x < (ofGetWindowWidth() >> 1) ? 0 : 1, dragInfo.files[0]);

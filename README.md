@@ -40,21 +40,24 @@ See also the example applications
 
 std::shared_ptr<persee::Receiver> receiverRef;
 ofTexture depthTexture;
+ofMesh mesh1;
 
 void ofApp::setup() {
    // Create depth stream network receiver (takes a hostname/ip string and port number)
-   receiverRef = persee::Receiver::createAndStart("persee.local", 4445);
    // this receiver instance will start a separate thread in which it listens for new frame data
+   receiverRef = persee::Receiver::createAndStart("persee.local", 4445);
 }
 
 void ofApp::update() {
   // this addons provides some convenience methods for;
-  // processing raw frame byte data (which is compressed for network streaming)
+  // ...processing raw frame byte data (which is compressed for network streaming)
   persee::emptyAndInflateBuffer(*receiverRef, [this](const void* data, size_t size){
 
     // ...loading texture data
-    ofxOrbbecPersee::loadGrayscaleTexture(depthTexture, data, size);
+    ofxOrbbecPersee::loadDepthTexture(this->depthTexture, data, size);
 
+    // ...loading mesh data
+    ofxOrbbecPersee::loadMesh(this->mesh1, data, size);
   }
 }
 
@@ -62,6 +65,8 @@ void ofApp::draw() {
   if(depthTexture.isAllocated()) {
     depthTexture.draw(0,0);
   }
+
+  mesh1.draw();
 }
 ```
 

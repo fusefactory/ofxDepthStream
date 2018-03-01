@@ -11,97 +11,7 @@ namespace ofxOrbbecPersee {
   static const size_t FRAME_SIZE_640x480x32BIT = (640*480*4);
   static const size_t FRAME_SIZE_512x424x32BIT = (512*424*4); // kinect
 
-  /**
-   * Supported intput frame-sizes:
-   * 640 x 480 x 2=614400 bytes (16-bit)
-   * 640 x 480 x 4=1228800 bytes (32-bit)
-   */
-  void loadGrayscaleTexture(ofTexture& tex, const void* data, size_t size) {
-    ofPixels depthPixels;
-
-    // allocate
-    if(tex.isAllocated()) {
-      depthPixels.allocate(tex.getWidth(), tex.getHeight(), OF_IMAGE_GRAYSCALE);
-    } else {
-      // TODO; infer texture size from receiver frame size?
-      ofLogWarning() << "TODO: infer depth texture resolution from data-size";
-      depthPixels.allocate(640, 480, OF_IMAGE_GRAYSCALE);
-      tex.allocate(depthPixels);
-    }
-
-    // check
-    size_t pixelCount = tex.getWidth() * tex.getHeight();
-    size_t size16bit = pixelCount * 2;
-    size_t size32bit = pixelCount * 4;
-
-    if (size == size16bit) {
-      // returns shared_ptr<persee::Frame> with 1-byte grayscale data
-      persee::convert_16bit_to_8bit(pixelCount, data)
-      // load grayscale data into our ofTexture instance
-      ->template convert<void>([&depthPixels, &tex](const void* data, size_t size){
-        // ofLogNotice() << "buffer to tex onversion update: " << size;
-        depthPixels.setFromPixels((const unsigned char *)data, depthPixels.getWidth(), depthPixels.getHeight(), OF_IMAGE_GRAYSCALE);
-        tex.loadData(depthPixels);
-      });
-
-      return;
-    }
-
-    if (size == size32bit) {
-      // returns shared_ptr<persee::Frame> with 1-byte grayscale data
-      persee::convert_32bit_to_8bit(pixelCount, data)
-      // load grayscale data into our ofTexture instance
-      ->template convert<void>([&depthPixels, &tex](const void* data, size_t size){
-        // ofLogNotice() << "buffer to tex onversion update: " << size;
-        depthPixels.setFromPixels((const unsigned char *)data, depthPixels.getWidth(), depthPixels.getHeight(), OF_IMAGE_GRAYSCALE);
-        tex.loadData(depthPixels);
-      });
-
-      return;
-    }
-
-    ofLogWarning() << "Depth texture size did not match data-size (got: " << size << ", expected: " << size16bit << " or " << size32bit << ")";
-  }
-
-  void loadGrayscaleTexture(persee::Buffer& buf, ofTexture& tex) {
-    // check if buffer has data
-    persee::emptyAndInflateBuffer(buf, [&tex](const void* data, size_t size){
-      loadGrayscaleTexture(tex, data, size);
-    });
-  }
-
-  /**
-   * Load data into ofTexture, assuming the data contains 3-channel color data
-   */
-  void loadColorTexture(ofTexture& tex, const void* data, size_t size) {
-    ofPixels pixels;
-
-    // allocate
-    if(tex.isAllocated()) {
-      pixels.allocate(tex.getWidth(), tex.getHeight(), OF_IMAGE_COLOR);
-    } else {
-      ofLogWarning() << "TODO: infer color texture resolution from data-size";
-      pixels.allocate(1280, 720, OF_IMAGE_COLOR);
-      tex.allocate(pixels);
-    }
-
-    // check
-    if((tex.getWidth() * tex.getHeight()) * 3 != size) {
-      ofLogWarning() << "Color texture size did not match data-size (got: " << size << ", expected: 1280x720x3=2764800)";
-      return;
-    }
-
-    // load
-    pixels.setFromPixels((const unsigned char *)data, pixels.getWidth(), pixels.getHeight(), OF_IMAGE_COLOR);
-    tex.loadData(pixels);
-  }
-
-  void loadColorTexture(persee::Buffer& buffer, ofTexture& tex) {
-    // check if buffer has data
-    persee::emptyAndInflateBuffer(buffer, [&tex](const void* data, size_t size){
-      loadColorTexture(tex, data, size);
-    });
-  }
+  // Depth texture loader methods // // // // //
 
   struct DepthLoaderOpts {
     int maxDistance=0;
@@ -127,7 +37,7 @@ namespace ofxOrbbecPersee {
   /**
    * loadEdgeData based on KinectRemote::newData method in the Dokk_OF repo (but converted to 16-bit)
    */
-  void loadDepthTexture16bit(ofTexture& tex, const void* data, size_t size, const DepthLoaderOpts& opts) {
+  void loadDepthTexture16bit(ofTexture& tex, const void* data, size_t size, const DepthLoaderOpts& opts = DepthLoaderOpts()) {
     // allocate
     if(!tex.isAllocated()) {
       // ofLogNotice() << "Allocating edge-data texture";
@@ -197,7 +107,7 @@ namespace ofxOrbbecPersee {
   /**
    * loadEdgeData based on KinectRemote::newData method in the Dokk_OF repo
    */
-  void loadDepthTexture32bit(ofTexture& tex, const void* data, size_t size, const DepthLoaderOpts& opts) {
+  void loadDepthTexture32bit(ofTexture& tex, const void* data, size_t size, const DepthLoaderOpts& opts = DepthLoaderOpts()) {
     // allocate
     if(!tex.isAllocated()) {
       // ofLogNotice() << "Allocating edge-data texture";
@@ -270,9 +180,9 @@ namespace ofxOrbbecPersee {
 
   /**
    * Tries to guess the texture resolution/channel-depth based on frame size
-   * and calls the appropriate converted method
+   * and calls the appropriate converter method
    */
-  void loadDepthTexture(ofTexture& tex, const void* data, size_t size, const DepthLoaderOpts& opts) {
+  void loadDepthTexture(ofTexture& tex, const void* data, size_t size, const DepthLoaderOpts& opts = DepthLoaderOpts()) {
     if (size == FRAME_SIZE_640x480x16BIT) {
       loadDepthTexture16bit(tex, data, size, opts);
       return;
@@ -286,10 +196,175 @@ namespace ofxOrbbecPersee {
     ofLogWarning() << "Frame size not supported by ofxOrbbecPersee::loadDepthTexture (bytes): " << size;
   }
 
-  void loadDepthTexture(persee::Buffer& buffer, ofTexture& tex, const DepthLoaderOpts& opts) {
+  void loadDepthTexture(persee::Buffer& buffer, ofTexture& tex, const DepthLoaderOpts& opts = DepthLoaderOpts()) {
     // check if buffer has data
     persee::emptyAndInflateBuffer(buffer, [&tex, &opts](const void* data, size_t size){
       loadDepthTexture(tex, data, size, opts);
+    });
+  }
+
+  // Mesh Loader methods // // // // //
+
+  struct MeshLoaderOpts {
+    float depthFactor=-1.0f;
+    MeshLoaderOpts& setDepthFactor(float v) { depthFactor = v; return *this; }
+  };
+
+  void loadMesh16bit(ofMesh& mesh, const void* data, size_t width, size_t height, const MeshLoaderOpts& opts = MeshLoaderOpts()) {
+    const uint16_t* pointData = (const uint16_t*)data;
+
+    mesh.clear();
+
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        uint16_t val = pointData[y*width+x];
+        ofVec3f p(x,y, val * opts.depthFactor);
+        mesh.addVertex(p);
+
+        // TODO; provide some coloring options
+        float hue  = ofMap(val, 0, 6000, 0, 255);
+        mesh.addColor(ofColor::fromHsb(hue, 255, 255));
+      }
+    }
+  }
+
+  /** UNTESTED */
+  void loadMesh32bit(ofMesh& mesh, const void* data, size_t width, size_t height, const MeshLoaderOpts& opts = MeshLoaderOpts()) {
+    const uint32_t* pointData = (const uint32_t*)data;
+
+    mesh.clear();
+
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        uint32_t val = pointData[y*width+x]; // TODO/TOTEST; do manual byte processing here?
+        ofVec3f p(x,y, val * opts.depthFactor);
+        mesh.addVertex(p);
+
+        // TODO; provide some coloring options
+        float hue  = ofMap(val, 0, 6000, 0, 255);
+        mesh.addColor(ofColor::fromHsb(hue, 255, 255));
+      }
+    }
+  }
+
+  void loadMesh(ofMesh& mesh, const void* data, size_t size, const MeshLoaderOpts& opts = MeshLoaderOpts()) {
+    if(size == FRAME_SIZE_640x480x16BIT) {
+      loadMesh16bit(mesh, data, 640, 480, opts);
+    }
+
+    if(size == FRAME_SIZE_640x480x32BIT) {
+      loadMesh32bit(mesh, data, 640, 480, opts);
+      return;
+    }
+
+    if(size == FRAME_SIZE_512x424x32BIT){
+      loadMesh32bit(mesh, data, 512, 424, opts);
+      return;
+    }
+
+    ofLogWarning() << "Frame size not supported by ofxOrbbecPersee::loadMesh (bytes): " << size;
+  }
+
+  void loadMesh(persee::Buffer& buffer, ofMesh& mesh, const MeshLoaderOpts& opts = MeshLoaderOpts()) {
+    // check if buffer has data
+    persee::emptyAndInflateBuffer(buffer, [&mesh, &opts](const void* data, size_t size){
+      loadMesh(mesh, data, size, opts);
+    });
+  }
+
+  // Grayscale texture loader methods deprecated? Use depth loader methods)  // // // // //
+
+  /**
+   * Supported intput frame-sizes:
+   * 640 x 480 x 2=614400 bytes (16-bit)
+   * 640 x 480 x 4=1228800 bytes (32-bit)
+   */
+  void loadGrayscaleTexture(ofTexture& tex, const void* data, size_t size) {
+    ofPixels depthPixels;
+
+    // allocate
+    if(tex.isAllocated()) {
+      depthPixels.allocate(tex.getWidth(), tex.getHeight(), OF_IMAGE_GRAYSCALE);
+    } else {
+      // TODO; infer texture size from receiver frame size?
+      ofLogWarning() << "TODO: infer depth texture resolution from data-size";
+      depthPixels.allocate(640, 480, OF_IMAGE_GRAYSCALE);
+      tex.allocate(depthPixels);
+    }
+
+    // check
+    size_t pixelCount = tex.getWidth() * tex.getHeight();
+    size_t size16bit = pixelCount * 2;
+    size_t size32bit = pixelCount * 4;
+
+    if (size == size16bit) {
+      // returns shared_ptr<persee::Frame> with 1-byte grayscale data
+      persee::convert_16bit_to_8bit(pixelCount, data)
+      // load grayscale data into our ofTexture instance
+      ->template convert<void>([&depthPixels, &tex](const void* data, size_t size){
+        // ofLogNotice() << "buffer to tex onversion update: " << size;
+        depthPixels.setFromPixels((const unsigned char *)data, depthPixels.getWidth(), depthPixels.getHeight(), OF_IMAGE_GRAYSCALE);
+        tex.loadData(depthPixels);
+      });
+
+      return;
+    }
+
+    if (size == size32bit) {
+      // returns shared_ptr<persee::Frame> with 1-byte grayscale data
+      persee::convert_32bit_to_8bit(pixelCount, data)
+      // load grayscale data into our ofTexture instance
+      ->template convert<void>([&depthPixels, &tex](const void* data, size_t size){
+        // ofLogNotice() << "buffer to tex onversion update: " << size;
+        depthPixels.setFromPixels((const unsigned char *)data, depthPixels.getWidth(), depthPixels.getHeight(), OF_IMAGE_GRAYSCALE);
+        tex.loadData(depthPixels);
+      });
+
+      return;
+    }
+
+    ofLogWarning() << "Depth texture size did not match data-size (got: " << size << ", expected: " << size16bit << " or " << size32bit << ")";
+  }
+
+  void loadGrayscaleTexture(persee::Buffer& buf, ofTexture& tex) {
+    // check if buffer has data
+    persee::emptyAndInflateBuffer(buf, [&tex](const void* data, size_t size){
+      loadGrayscaleTexture(tex, data, size);
+    });
+  }
+
+  // Color texture loader methods (untested) // // // // //
+
+  /**
+   * Load data into ofTexture, assuming the data contains 3-channel color data
+   */
+  void loadColorTexture(ofTexture& tex, const void* data, size_t size) {
+    ofPixels pixels;
+
+    // allocate
+    if(tex.isAllocated()) {
+      pixels.allocate(tex.getWidth(), tex.getHeight(), OF_IMAGE_COLOR);
+    } else {
+      ofLogWarning() << "TODO: infer color texture resolution from data-size";
+      pixels.allocate(1280, 720, OF_IMAGE_COLOR);
+      tex.allocate(pixels);
+    }
+
+    // check
+    if((tex.getWidth() * tex.getHeight()) * 3 != size) {
+      ofLogWarning() << "Color texture size did not match data-size (got: " << size << ", expected: 1280x720x3=2764800)";
+      return;
+    }
+
+    // load
+    pixels.setFromPixels((const unsigned char *)data, pixels.getWidth(), pixels.getHeight(), OF_IMAGE_COLOR);
+    tex.loadData(pixels);
+  }
+
+  void loadColorTexture(persee::Buffer& buffer, ofTexture& tex) {
+    // check if buffer has data
+    persee::emptyAndInflateBuffer(buffer, [&tex](const void* data, size_t size){
+      loadColorTexture(tex, data, size);
     });
   }
 }
