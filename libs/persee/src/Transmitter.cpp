@@ -24,7 +24,7 @@ Transmitter::Transmitter(int port) : port(port) {
 }
 
 Transmitter::~Transmitter() {
-  stop(true);
+  stop(false);
 }
 
 void Transmitter::stop(bool wait){
@@ -45,10 +45,10 @@ void Transmitter::stop(bool wait){
 bool Transmitter::transmit(const void* data, size_t size) {
   // transmittion-header; 4-byte package length
   char header[4];
-  header[0] = (char)((size >> 24) & 0x0ff);
-  header[1] = (char)((size >> 16) & 0x0ff);
-  header[2] = (char)((size >> 8) & 0x0ff);
-  header[3] = (char)(size & 0x0ff);
+  header[0] = (char)((size >> 24) & 0xff);
+  header[1] = (char)((size >> 16) & 0xff);
+  header[2] = (char)((size >> 8) & 0xff);
+  header[3] = (char)(size & 0xff);
   return transmitRaw(header, 4) && transmitRaw(data, size);
 }
 
@@ -102,34 +102,42 @@ void Transmitter::unbind() {
 
 void Transmitter::serverThread() {
   struct sockaddr_in cli_addr;
+  socklen_t clilen;
   int n;
 
   while(bRunning) {
-    if(!bBound)
+    if(!bBound) {
       this->bind();
+    }
 
     if(bBound) {
       clilen = sizeof(cli_addr);
 
-      clientsocket = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
-      if (clientsocket < 0) {
-        error("ERROR on accept");
-        bConnected=false;
-      } else {
-        std::cout << "client connected" << std::endl;
-        bConnected=true;
+      if(!bConnected) {
+        clientsocket = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
+        if (clientsocket < 0) {
+          error("ERROR on accept");
+          bConnected=false;
+        } else {
+          std::cout << "client connected" << std::endl;
+          bConnected=true;
+        }
       }
 
       if(bConnected) {
-        n=recv(clientsocket,packet,MAXPACKETSIZE-1,0);
-        if(n==0){
+        n=recv(clientsocket,packet,1,0);
+
+        if(n < 1){
+          close(clientsocket);
           bConnected=false;
         } else {
-          std::cerr << "TODO: handle incoming data in Transmitter" << std::endl;
+          std::cerr << "TODO: handle incoming data in persee::Transmitter, disconnecting for now" << std::endl;
+          close(clientsocket);
+          bConnected=false;
         }
       }
     }
 
-    Sleep(200);
+    Sleep(this->cycleSleep);
   }
 }
