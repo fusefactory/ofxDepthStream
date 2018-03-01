@@ -115,12 +115,12 @@ void ofApp::setup() {
 
 void ofApp::update() {
   for(int i=0; i<2; i++){
-    auto frameRef = recorders[i].getRef();
+    size_t originalSize = recorders[i].getRef() ? recorders[i].getRef()->size() : 0.0f;
 
-    persee::emptyAndInflateBuffer(recorders[i], [this, frameRef, i](const void* data, size_t size){
+    persee::emptyAndInflateBuffer(recorders[i], [this, originalSize, i](const void* data, size_t size){
       ofxOrbbecPersee::loadDepthTexture(
         textures[i],
-        data, size/*,
+        data, size,
         ofxOrbbecPersee::DepthLoaderOpts()
           .setMinDistance(this->pars[i].minDistance)
           .setMaxDistance(this->pars[i].maxDistance)
@@ -129,17 +129,17 @@ void ofApp::update() {
           .setMarginTop(this->pars[i].margins[0])
           .setMarginRight(this->pars[i].margins[1])
           .setMarginBottom(this->pars[i].margins[2])
-          .setMarginLeft(this->pars[i].margins[3])*/);
-      plots[i]->update(frameRef->size()/1000.0f); // write original (compressed) size to our plot
-      this->avgBytesPerFrame[i] = (this->avgBytesPerFrame[i] * 9.0f + frameRef->size()) / 10.0f;
-      this->bytesThisSecond[i] += frameRef->size();
+          .setMarginLeft(this->pars[i].margins[3]));
+      plots[i]->update(originalSize/1000.0f); // write original (compressed) size to our plot
+      this->avgBytesPerFrame[i] = (this->avgBytesPerFrame[i] * 9.0f + originalSize) / 10.0f;
+      this->bytesThisSecond[i] += originalSize;
     });
   }
 
   auto t = ofGetElapsedTimeMillis();
   if(t - secondTimer > 1000.0f) {
-    this->avgBytesPerSecond[0] = ((this->avgBytesPerSecond[0] * 4) + this->bytesThisSecond[0]) / 5.0f;
-    this->avgBytesPerSecond[1] = ((this->avgBytesPerSecond[1] * 4) + this->bytesThisSecond[1]) / 5.0f;
+    this->avgBytesPerSecond[0] = ((this->avgBytesPerSecond[0] * 2) + this->bytesThisSecond[0]) / 3.0f;
+    this->avgBytesPerSecond[1] = ((this->avgBytesPerSecond[1] * 2) + this->bytesThisSecond[1]) / 3.0f;
     secondTimer = t;
     this->bytesThisSecond[0] = 0;
     this->bytesThisSecond[1] = 0;
