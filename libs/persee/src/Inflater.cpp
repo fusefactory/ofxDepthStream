@@ -58,6 +58,7 @@ const void* Inflater::decompress(const void* compressedBytes, unsigned int lengt
 
     if (inflateInit2(&strm, MAX_WBITS) != Z_OK) {
         this->cerr() << "inflator init failed" << std::endl;
+        failCount++;
         return NULL;
     }
 
@@ -77,7 +78,8 @@ const void* Inflater::decompress(const void* compressedBytes, unsigned int lengt
           // this->cout() << "inflated packet to: " << strm.total_out << " bytes" << std::endl;
         }
         else if (err != Z_OK)  {
-          this->cerr() << "Inflation failed; unknown error" << std::endl;
+          if(bVerbose) this->cerr() << "Inflation failed; unknown error" << std::endl;
+          failCount++;
           // perror("perror");
           return NULL;
           // break;
@@ -86,6 +88,7 @@ const void* Inflater::decompress(const void* compressedBytes, unsigned int lengt
 
     if (inflateEnd (& strm) != Z_OK) {
         this->cerr() << "inflate end with non-OK result" << std::endl;
+        failCount++;
         return NULL;
     }
 

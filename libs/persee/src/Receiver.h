@@ -68,6 +68,7 @@ namespace persee {
       void disconnect();
       bool receive(size_t size);
       bool receive(char* buffer, size_t size);
+      bool receiveInt(int& target);
       bool send_data(std::string data);
 
 
@@ -77,7 +78,7 @@ namespace persee {
       bool bConnected=false;
       bool bHasNew=false;
       int cycleSleep=10;
-      bool bVerbose=false;
+      bool bVerbose=false, bSuperVerbose=false;
 
       int sock=-1;
       std::string host;
@@ -90,7 +91,7 @@ namespace persee {
       int recvSize=0;
       int lastPackageSize=0;
 
-      unsigned int connectAttemptInterval = 3000;
+      unsigned int connectAttemptInterval = 5000;
       FrameCallback frameCallback=nullptr;
   };
 }

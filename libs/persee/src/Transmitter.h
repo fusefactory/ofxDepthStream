@@ -42,7 +42,6 @@ namespace persee {
       bool bConnected=false;
 
       int sockfd, clientsocket, portno;
-      socklen_t clilen;
       int cycleSleep=200;
   };
 }

@@ -63,42 +63,55 @@ void Receiver::threadFunc() {
       // time for a new connect attempt?
       auto now = std::chrono::steady_clock::now();
       if(now >= nextConnectAttemptTime) {
+        if(bVerbose) this->cout() << "Attempting connection to: " << this->host << ":" << this->port << std::endl;
         // attempt fails
         if(!this->connectToServer(this->host, this->port)){
+          if(bVerbose) this->cout() << "connection failure..." << std::endl;
           // schedule retry
           nextConnectAttemptTime = now + std::chrono::milliseconds(connectAttemptInterval);
+        } else {
+          this->cout() << "connected..." << std::endl;
         }
       }
     }
 
+    int packageSize=0;
+
+    // read header
     if(bConnected) {
+      // if(bVerbose) this->cout() << "receive header..." << std::endl;
       // get 4-byte header
-      if(this->receive(4)) {
-        int b0 = (int)(0x0ff & buffer[0]);
-        int b1 = (int)(0x0ff & buffer[1]);
-        int b2 = (int)(0x0ff & buffer[2]);
-        int b3 = (int)(0x0ff & buffer[3]);
-        int total = ((b0 << 24) | (b1 << 16) | (b2 << 8) | b3);
-        if(bVerbose) this->cout() << "got header for " << total << " bytes" << std::endl;
-        int alreadyGot = this->recvSize - 4;
-
-        // get X-byte package
-        if(this->receive(this->buffer + 4 + alreadyGot, total - alreadyGot)) {
-          // this->cout() << "received: " << total << " byte-package" << std::endl;
-          this->bHasNew = true;
-          this->lastPackageSize = total;
-
-          // our persee::Buffer interface
-          Buffer::write(this->buffer+4, total);
-
-          if(frameCallback)
-            frameCallback((const void*)(this->buffer+4), total);
-        }
+      
+      if(this->receiveInt(packageSize)) {
+        if(bSuperVerbose) this->cout() << "got header for " << packageSize << " bytes" << std::endl;
+      } else {
+        this->disconnect();
       }
     }
+    
+    // read body
+    if(bConnected && packageSize > 0) {
+      // get X-byte package
+      if(!this->receive(this->buffer, packageSize)) {
+        this->disconnect();
+      } else {
+        if(bSuperVerbose) this->cout() << "received: " << packageSize << " byte-package" << std::endl;
+        this->bHasNew = true;
+        this->lastPackageSize = packageSize;
 
+        // our persee::Buffer interface
+        Buffer::write(this->buffer, packageSize);
+
+        if(frameCallback)
+          frameCallback((const void*)(this->buffer), packageSize);
+      }
+    }
+    
+    // this->cout() << "Sleeping... " << cycleSleep << std::endl;
     Sleep(cycleSleep);
   }
+  
+  if(bVerbose) this->cout() << "Thread end... " << std::endl;
 }
 
 bool Receiver::connectToServer(const std::string& address, int port) {
@@ -198,10 +211,10 @@ bool Receiver::receive(char* buffer, size_t size) {
 
   size_t amount=0;
 
-  while(amount < size) {
+  while(bConnected && amount < size) {
     int packageSize = recv(sock, buffer+amount, size-amount, 0);
 
-    if(packageSize < 0) {
+    if(packageSize <= 0) {
       // this->disconnect();
       return false;
     }
@@ -216,6 +229,19 @@ bool Receiver::receive(char* buffer, size_t size) {
   }
 
   this->recvSize = amount;
+  return true;
+}
+
+bool Receiver::receiveInt(int& target){
+  char buf[4];
+  if(!this->receive(buf, 4))
+    return false;
+
+  int b0 = (int)(0x0ff & buf[0]);
+  int b1 = (int)(0x0ff & buf[1]);
+  int b2 = (int)(0x0ff & buf[2]);
+  int b3 = (int)(0x0ff & buf[3]);
+  target = ((b0 << 24) | (b1 << 16) | (b2 << 8) | b3);
   return true;
 }
 

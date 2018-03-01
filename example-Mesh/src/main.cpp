@@ -24,16 +24,15 @@ class ofApp : public ofBaseApp{
     // void gotMessage(ofMessage msg);
 
   private: // attributes
-    std::string perseeAddress = "persee.local"; //"192.168.1.226"; // "127.0.0.1";
+    std::string perseeAddress = "persee.local"; // "192.168.1.226"; // "127.0.0.1";
     int depthPort = 4445;
+    persee::ReceiverRef receiverRef;
 
     ofVboMesh mesh;
-    float depthFactor=0.08f;
-    ofEasyCam cam;
+    float depthFactor=-0.08f;
     ofTexture depthTex;
 
-    persee::ReceiverRef depthReceiverRef;
-
+    ofEasyCam cam;
     bool bDrawPoints=true, bDrawDepth=true;
 };
 
@@ -42,38 +41,24 @@ void ofApp::setup() {
   ofSetWindowShape(1280,720);
   ofSetVerticalSync(true);
 
-  // create tcp network receivers for both the depth and the color stream
-  depthReceiverRef = persee::Receiver::createAndStart(perseeAddress, depthPort);
   mesh.setMode(OF_PRIMITIVE_POINTS);
+
+  // create tcp network receivers for both the depth and the color stream
+  receiverRef = persee::Receiver::createAndStart(perseeAddress, depthPort);
 }
 
 void ofApp::update() {
-  // emptyAndInflateBuffer only executes the given lambda when a frame was received and could successfully be inflated
-  persee::emptyAndInflateBuffer(*depthReceiverRef, [this](const void* data, size_t size){
+  // emptyAndInflateBuffer only executes the given lambda when a frame was received
+  // and if that frame could successfully be inflated (data is compressed to conserve network bandwith)
+  persee::emptyAndInflateBuffer(*receiverRef, [this](const void* data, size_t size){
 
     if (bDrawDepth) {
-      ofxOrbbecPersee::loadGrayscaleTexture(depthTex, data, size);
+      ofxOrbbecPersee::loadDepthTexture(depthTex, data, size);
     }
 
     if (bDrawPoints) {
-      const uint16_t* pointData = (const uint16_t*)data;
-      int maxDepth = 2000;
-      size_t w = 640;
-      size_t h = 480;
-
-      this->mesh.clear();
-
-      for (int y = 0; y < h; y++) {
-        for (int x = 0; x < w; x++) {
-          uint16_t val = pointData[y*w+x];;
-          ofVec3f p(x,y,-val * this->depthFactor);
-
-          this->mesh.addVertex(p);
-
-          float hue  = ofMap(val, 0, 6000, 0, 255);
-          this->mesh.addColor(ofColor::fromHsb(hue, 255, 255));
-        }
-      }
+      ofxOrbbecPersee::loadMesh(mesh, data, size, ofxOrbbecPersee::MeshLoaderOpts()
+        .setDepthFactor(depthFactor));
     }
   });
 }

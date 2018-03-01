@@ -18,6 +18,7 @@ namespace persee {
       size_t getSize() const { return inflateSize; }
       const void* getData() const { return (void*)decompressed; }
       void* releaseData(){ void* tmp = (void*)decompressed; decompressed=NULL; return tmp; }
+      size_t getFailCount() const { return failCount; }
 
     protected:
 
@@ -31,6 +32,7 @@ namespace persee {
       char* decompressed=NULL;
       size_t currentBufferSize=0;
       size_t inflateSize=0;
+      size_t failCount=0;
       bool bVerbose=false;
   };
 }
