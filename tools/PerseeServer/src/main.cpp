@@ -112,51 +112,85 @@ int main(int argc, char** argv) {
   // bool bResendFrames = false;
 
   unsigned int sleepTime = 5; // ms
-  int depthPort = argc > 1 ? atoi(argv[1]) : 4445;
-  int colorPort = argc > 2 ? atoi(argv[2]) : 4446;
-  int fps = argc > 3 ? atoi(argv[3]) : 12;
-  float frameDiffTime = 1.0f/(float)fps * 1000.0f; // fps
+  int depthPort = 4445;
+  // int colorPort = 4446;
+  int fps = 12;
   bool bVerbose=false;
+  std::shared_ptr<Converter> converterRef = nullptr; //std::make_shared<Converter>(2, 4); // 16-bits to 32-bits
+
+  // process command-line arguments
+  for(int i=0; i<argc; i++) {
+    if(strcmp(argv[i], "--verbose") == 0 || strcmp(argv[i], "-v") == 0) {
+      bVerbose=true;
+      continue;
+    }
+
+    if(strcmp(argv[i], "--convert-32bit") == 0 || strcmp(argv[i], "-c") == 0) {
+      converterRef = std::make_shared<Converter>(2, 4); // 16-bits to 32-bits
+      continue;
+    }
+
+    if(argc <= (i+1)) {
+      std::cerr << "Didn't get value for " << argv[i] << std::endl;
+      break;
+    }
+
+    if(strcmp(argv[i], "--depth-port") == 0 || strcmp(argv[i], "-d") == 0) {
+      depthPort = atoi(argv[i+1]);
+      continue;
+    }
+
+    if(strcmp(argv[i], "--fps") == 0 || strcmp(argv[i], "-f") == 0) {
+      fps = atoi(argv[i+1]);
+      continue;
+    }
+
+    if(strcmp(argv[i], "--sleep-time") == 0 || strcmp(argv[i], "-s") == 0) {
+      sleepTime = atoi(argv[i+1]);
+      continue;
+    }
+
+    std::cerr << "Unknown argument: " << argv[i] << std::endl;
+  }
 
   // attributes
-  steady_clock::time_point lastFrameTime = steady_clock::now();
   auto compressor = std::make_shared<Compressor>();
   std::vector<std::shared_ptr<Transmitter>> depthStreamTransmitters;
   std::vector<std::shared_ptr<Transmitter>> colorStreamTransmitters;
-
   std::shared_ptr<persee::VideoStream> depth=nullptr, color=nullptr;
 
+  // setup camera feed
   persee::CamInterface camInt;
-
   depth = camInt.getDepthStream();
-  std::shared_ptr<Converter> converterRef = nullptr; //std::make_shared<Converter>(2, 4); // 16-bits to 32-bits
-
   // color = camInt.getColorStream();
   auto clrSrc = createColorSource();
 
-
+  // setup streamers
   if(depthPort > 0) {
     std::cout << "Starting depth transmitter on port " << depthPort << std::endl;
     depthStreamTransmitters.push_back(std::make_shared<Transmitter>(depthPort));
   }
 
-  if(colorPort > 0){
-    std::cout << "Starting color transmitter on port " << colorPort << std::endl;
-    colorStreamTransmitters.push_back(std::make_shared<Transmitter>(colorPort));
-  }
+  // if(colorPort > 0){
+  //   std::cout << "Starting color transmitter on port " << colorPort << std::endl;
+  //   colorStreamTransmitters.push_back(std::make_shared<Transmitter>(colorPort));
+  // }
+
+  // config timing
+  auto nextFrameTime = steady_clock::now();
+  unsigned int frameMs = (int)(1.0f/(float)fps * 1000.0f); // milliseconds
 
   // main loop; send frames
-  while (true) {
-    steady_clock::time_point t = steady_clock::now();
+  while (!wasKeyboardHit()) {
+    auto t = steady_clock::now();
 
-    auto dur = std::chrono::duration_cast<std::chrono::milliseconds>(t - lastFrameTime).count();
-
-    if (dur >= frameDiffTime) {
-      lastFrameTime = t;
-
+    // time for next frame?
+    if (t >= nextFrameTime) {
       auto stream = camInt.getReadyStream();
 
       if(stream) {
+        // schedule next frame
+        nextFrameTime = t + std::chrono::milliseconds(frameMs);
 
         std::string name;
         std::vector<std::shared_ptr<Transmitter>>* transmitters;
@@ -170,6 +204,7 @@ int main(int argc, char** argv) {
 
         stream->update();
 
+        // raw frame data
         const void* data = stream->getData();
         size_t size = stream->getSize();
 
@@ -184,33 +219,32 @@ int main(int argc, char** argv) {
           }
         }
 
-        if(data) {
+        // conversion didn't fail
+        if(!data) {
+          std::cout << "FAILED to compress " << depth->getSize() << "-byte " << name << " frame" << std::endl;
+        } else {
+          // compress
           if(compressor->compress(data, size)) {
+            // transmit through all transmitters (should be only one)
             for(auto t : (*transmitters)) {
               if(t->transmit((const char*)compressor->getData(), compressor->getSize())){
+                // log if in verbose mode
                 if(bVerbose) std::cout << "sent " << compressor->getSize() << "-byte " << name << " frame" << std::endl;
               }
             }
-          } else {
-            std::cout << "FAILED to compress " << depth->getSize() << "-byte " << name << " frame" << std::endl;
           }
         }
       }
 
+      // clrSrc is not working yet, just some dev-only logging
       if(clrSrc) {
         (*clrSrc->capRef) >> clrSrc->frame;
-        // Mat frame;
-        // cap >> frame; // get a new frame from camera
-        // cvtColor(frame, edges, CV_BGR2GRAY);
-        if(clrSrc->frame.total() > 0)
+        if(bVerbose)
           std::cout << "Color frame size: " << clrSrc->frame.total() << " with " << clrSrc->frame.channels() << " channels and size: " << clrSrc->frame.size() << std::endl;
       }
     }
 
     Sleep(sleepTime);
-
-    if(wasKeyboardHit())
-      break;
   }
 
   std::cout << "cleaning up..." << std::endl;
