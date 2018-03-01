@@ -14,9 +14,9 @@ namespace ofxOrbbecPersee {
   // Depth texture loader methods // // // // //
 
   struct DepthLoaderOpts {
-    int maxDistance=0;
-    int minDistance=5000;
-    int vertCorrection=1;
+    int minDistance=0;
+    int maxDistance=5000;
+    int vertCorrection=0; // 1?
     int shift1=0, shift2=0;
     float keystone=0.0f;
     float margins[4]={0.0f, 0.0f, 0.0f, 0.0f};
@@ -250,6 +250,7 @@ namespace ofxOrbbecPersee {
   void loadMesh(ofMesh& mesh, const void* data, size_t size, const MeshLoaderOpts& opts = MeshLoaderOpts()) {
     if(size == FRAME_SIZE_640x480x16BIT) {
       loadMesh16bit(mesh, data, 640, 480, opts);
+      return;
     }
 
     if(size == FRAME_SIZE_640x480x32BIT) {

@@ -53,7 +53,7 @@ void ofApp::update() {
   persee::emptyAndInflateBuffer(*receiverRef, [this](const void* data, size_t size){
 
     if (bDrawDepth) {
-      ofxOrbbecPersee::loadGrayscaleTexture(depthTex, data, size);
+      ofxOrbbecPersee::loadDepthTexture(depthTex, data, size);
     }
 
     if (bDrawPoints) {
