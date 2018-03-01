@@ -92,8 +92,8 @@ void ofApp::setup() {
   plots[3]->setRange(0, 7000);
 
   auto cfg = [](ParsStruct& pars) {
-    pars.params.add(pars.minDistance.set("minDistance", 50, 0, 15000));
-    pars.params.add(pars.maxDistance.set("maxDistance", 8000, 0, 15000));
+    pars.params.add(pars.minDistance.set("minDistance", 30, 0, 1000));
+    pars.params.add(pars.maxDistance.set("maxDistance", 15000, 0, 20000));
     pars.params.add(pars.vertCorrection.set("vertCorrection", 1, 0, 10));
     pars.params.add(pars.keystone.set("keystone", 0.0f, 0.0f, 10.0f));
     pars.params.add(pars.margins[0].set("marginT", 0.0f, 0.0f, 400.0f));
