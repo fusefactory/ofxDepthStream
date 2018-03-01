@@ -159,7 +159,7 @@ void ofApp::draw() {
     stringstream ss;
     ss << ofToString(avgBytesPerFrame[0]/1000.0f) + " kB/f - ";
     ss << ofToString(avgBytesPerSecond[0]/1000.0f) + " kB/s - ";
-    ss << playbacks[0].isPlaying() ? ofFile(playbacks[0].getFilename()).getBaseName() : src1.address+":"+ofToString(src1.port);
+    ss << (playbacks[0].isPlaying() ? ofFile(playbacks[0].getFilename()).getBaseName() : src1.address+":"+ofToString(src1.port));
     ofDrawBitmapString(ss.str(), 10, 500);
     plots[0]->draw(10, 540, 400, 100);
     plots[2]->draw(10, 640, 400, 100);
@@ -173,7 +173,7 @@ void ofApp::draw() {
     stringstream ss;
     ss << ofToString(avgBytesPerFrame[1]/1000.0f) + " kB/f - ";
     ss << ofToString(avgBytesPerSecond[1]/1000.0f) + " kB/s - ";
-    ss << playbacks[1].isPlaying() ? ofFile(playbacks[1].getFilename()).getBaseName() : src2.address+":"+ofToString(src2.port);
+    ss << (playbacks[1].isPlaying() ? ofFile(playbacks[1].getFilename()).getBaseName() : src2.address+":"+ofToString(src2.port));
     ofDrawBitmapString(ss.str(), 650, 520);
     plots[1]->draw(650, 540, 400, 100);
     plots[3]->draw(650, 640, 400, 100);

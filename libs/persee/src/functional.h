@@ -115,7 +115,7 @@ namespace persee {
       auto inflatedFrameRef = inflate(data, size);
 
       if(!inflatedFrameRef) {
-        std::cerr << "Could not inflate " << size << "-byte buffer data" << std::endl;
+        // std::cerr << "Could not inflate " << size << "-byte buffer data" << std::endl;
         return;
       }
 
