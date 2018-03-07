@@ -119,7 +119,7 @@ int main(int argc, char** argv) {
   std::shared_ptr<Converter16to32bit> converterRef = nullptr;
 
   // process command-line arguments
-  for(int i=0; i<argc; i++) {
+  for(int i=1; i<argc; i++) {
     if(strcmp(argv[i], "--verbose") == 0 || strcmp(argv[i], "-v") == 0) {
       bVerbose=true;
       continue;
