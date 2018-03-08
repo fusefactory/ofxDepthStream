@@ -65,7 +65,7 @@ void ofApp::update() {
     this->depthBuffer.write(data, size);
   });
 
-  ofxOrbbecPersee::loadGrayscaleTexture(depthBuffer, depthTex);
+  ofxOrbbecPersee::loadDepthTexture(depthBuffer, depthTex);
 }
 
 void ofApp::draw() {

@@ -2,10 +2,8 @@
 #include "ofMain.h"
 // addons
 #include "ofxOrbbecPersee/ofxOrbbecPersee.h"
-// local
 
 class ofApp : public ofBaseApp{
-
   public: // methods
     void setup() override;
     void update() override;
@@ -24,14 +22,18 @@ class ofApp : public ofBaseApp{
     // void gotMessage(ofMessage msg);
 
   private: // attributes
+
+    // persee/depth data
     std::string perseeAddress = "persee.local"; // "192.168.1.226"; // "127.0.0.1";
     int depthPort = 4445;
     persee::ReceiverRef receiverRef;
 
+    // data-containers; mesh/texture
     ofVboMesh mesh;
     float depthFactor=-0.08f;
     ofTexture depthTex;
 
+    // rendering
     ofEasyCam cam;
     bool bDrawPoints=true, bDrawDepth=true;
 };
@@ -43,19 +45,20 @@ void ofApp::setup() {
 
   mesh.setMode(OF_PRIMITIVE_POINTS);
 
-  // create tcp network receivers for both the depth and the color stream
+  // create tcp network receiver for the depth image stream
   receiverRef = persee::Receiver::createAndStart(perseeAddress, depthPort);
 }
 
 void ofApp::update() {
   // emptyAndInflateBuffer only executes the given lambda when a frame was received
-  // and if that frame could successfully be inflated (data is compressed to conserve network bandwith)
+  // and if that frame could successfully be inflated (data is compressed to conserve network bandwidth)
   persee::emptyAndInflateBuffer(*receiverRef, [this](const void* data, size_t size){
-
+    // load the received data into a grayscale texture
     if (bDrawDepth) {
       ofxOrbbecPersee::loadDepthTexture(depthTex, data, size);
     }
 
+    // load the received data into our point-cloud mesh
     if (bDrawPoints) {
       ofxOrbbecPersee::loadMesh(mesh, data, size, ofxOrbbecPersee::MeshLoaderOpts()
         .setDepthFactor(depthFactor));
@@ -66,37 +69,26 @@ void ofApp::update() {
 void ofApp::draw() {
   ofBackground(0);
 
-  cam.begin();
-    if (bDrawDepth) {
-      if(depthTex.isAllocated()) {
-        ofPushMatrix();
-        ofScale(-1.0f, -1.0f, 1.0f);
-        depthTex.draw(0, 0);
-        ofPopMatrix();
-      }
+  {
+    cam.begin();
+
+    if (bDrawDepth && depthTex.isAllocated()) {
+      ofPushMatrix();
+      ofScale(-1.0f, -1.0f, 1.0f);
+      depthTex.draw(0, 0);
+      ofPopMatrix();
     }
 
     if (bDrawPoints) {
       ofEnableDepthTest();
       ofRotateY(180);
       ofScale(1.5, 1.5);
-
       mesh.draw();
-
-      // for (auto& hand : astra.getHandsWorld()) {
-      //   auto& pos = hand.second;
-      //   ofSetColor(ofColor::white);
-      //   ofDrawCircle(pos, 10);
-      //
-      //   stringstream ss;
-      //   ss << "id: " << hand.first << endl;
-      //   ss << "pos: " << hand.second;
-      //   ofDrawBitmapString(ss.str(), pos.x, pos.y - 30, pos.z);
-      // }
-
       ofDisableDepthTest();
     }
-  cam.end();
+
+    cam.end();
+  }
 
   ofDrawBitmapString("Press d or D to toggle draw modes", 10, 680);
   ofDrawBitmapString("Press ,/< or ./> to de-/increase depthFactor", 10, 700);

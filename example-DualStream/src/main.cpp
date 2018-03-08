@@ -78,16 +78,16 @@ void ofApp::setup() {
   playbacks[1].setOutputTo(&recorders[1]);
 
   // gui
-  plots[0] = new ofxHistoryPlot( NULL, "kB/frame", 400, false); //NULL cos we don't want it to auto-update. confirmed by "true"
+  plots[0] = new ofxHistoryPlot( NULL, "kB/frame", 400, false);
   plots[0]->setColor( ofColor(0,255,255) );
   plots[0]->setRange(0, 400);
-  plots[1] = new ofxHistoryPlot( NULL, "kB/frame", 400, false); //NULL cos we don't want it to auto-update. confirmed by "true"
+  plots[1] = new ofxHistoryPlot( NULL, "kB/frame", 400, false);
   plots[1]->setColor( ofColor(255,0,255) );
   plots[1]->setRange(0, 400);
-  plots[2] = new ofxHistoryPlot( NULL, "kB/sec", 400, false); //NULL cos we don't want it to auto-update. confirmed by "true"
+  plots[2] = new ofxHistoryPlot( NULL, "kB/sec", 400, false);
   plots[2]->setColor( ofColor(0,255,255) );
   plots[2]->setRange(0, 7000);
-  plots[3] = new ofxHistoryPlot( NULL, "kB/sec", 400, false); //NULL cos we don't want it to auto-update. confirmed by "true"
+  plots[3] = new ofxHistoryPlot( NULL, "kB/sec", 400, false);
   plots[3]->setColor( ofColor(255,0,255) );
   plots[3]->setRange(0, 7000);
 
@@ -106,11 +106,6 @@ void ofApp::setup() {
   cfg(pars[0]);
   cfg(pars[1]);
   pars[1].gui.setPosition(650,10);
-
-  // paramsGui.setName("App");
-  // paramsGui.add(pars[0].params);
-  // paramsGui.add(pars[1].params);
-  // gui.setup(paramsGui);
 }
 
 void ofApp::update() {
