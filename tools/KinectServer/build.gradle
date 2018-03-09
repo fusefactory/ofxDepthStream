@@ -1,0 +1,59 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+mainClassName = 'fuse.kinectv2.examples.KinectStreamingServer'
+group = 'fuse.kinectv2.examples'
+version = '1.0.0'
+description = """Fuse Kinect depth-stream Transmitter"""
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+applicationDistribution.from('lib/mac') {
+    into "bin/lib/mac"
+}
+
+applicationDistribution.from('lib/win') {
+    into "bin/lib/win"
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+sourceSets {
+    main {
+         java {
+             srcDir sourceSets.main.java.srcDirs + './lib/kinectstreaming/src/main/java'
+        }
+    }
+}
+
+repositories {
+     mavenLocal()
+     mavenCentral()
+     maven { url "https://clojars.org/repo" }
+}
+
+dependencies {
+    compile group: 'org.jogamp.jogl', name: 'jogl-all', version:'2.3.2'
+    compile group: 'org.jogamp.gluegen', name: 'gluegen-rt', version:'2.3.2'
+    // https://mvnrepository.com/artifact/org.jogamp.gluegen/gluegen-rt
+    // compile group: 'org.jogamp.gluegen', name: 'gluegen-rt', version: '2.0-rc11'
+
+    // https://mvnrepository.com/artifact/kephale/freenect
+    compile group: 'kephale', name: 'freenect', version: '20120325_001'
+}
+
+// avoid windows error when running the generated distribution's .bat script
+// reduces the super long CLASSPATH line which explicitly mentions every jar separately,
+// into a single shot %APP_HOME%\lib\* wildcard
+tasks.withType(CreateStartScripts).each { task ->
+    task.doLast {
+        String text = task.windowsScript.text
+        text = text.replaceFirst(/(set CLASSPATH=%APP_HOME%\\lib\\).*/, { "${it[1]}*" })
+        task.windowsScript.write text
+    }
+}

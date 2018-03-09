@@ -1,1 +1,4 @@
 bin
+lib
+builds
+*.class
