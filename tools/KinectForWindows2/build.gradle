@@ -3,10 +3,10 @@ apply plugin: 'maven'
 apply plugin: 'eclipse'
 apply plugin: 'application'
 
-mainClassName = 'fuse.kinectforwindows2.examples.SimpleDepthExample'
-group = 'fuse.kinectforwindows2.examples'
+mainClassName = 'fuse.kinectforwindows2.streaming.examples.KinectStreamingServer'
+group = 'fuse.kinectforwindows2.streaming.examples'
 version = '1.0.0'
-description = """Fuse KinectForWindows2 depth-stream Transmitter"""
+description = """Fuse KinectStreamingServer depth-stream Transmitter"""
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -22,7 +22,7 @@ tasks.withType(JavaCompile) {
 sourceSets {
     main {
          java {
-             srcDir sourceSets.main.java.srcDirs + './lib/kinectstreaming/src'
+             srcDir sourceSets.main.java.srcDirs + './lib/kinectstreaming/src/main/java'
         }
     }
 }
