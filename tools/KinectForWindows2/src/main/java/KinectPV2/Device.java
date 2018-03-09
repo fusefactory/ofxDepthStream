@@ -1,5 +1,7 @@
 package KinectPV2;
 
+import java.io.File;
+
 public class Device
 {
 	static
@@ -8,20 +10,49 @@ public class Device
 		String platformName = System.getProperty("os.name");
 		platformName = platformName.toLowerCase();
 		System.out.println(arch + " " + platformName);
+
+		boolean loaded = false;
+
 		if (arch == 64)
 		{
-			System.loadLibrary("Kinect20.Face");
-			System.loadLibrary("KinectPV2");
-			System.out.println("Loading KinectV2");
+			String libsPath = System.getProperty("kinect.libs.path");
+			if(libsPath != null) {
+				System.out.println("Found `kinect.libs.path` property: "+libsPath);
+
+				String fname1 = "Kinect20.Face.dll";
+				String fname2 = "KinectPV2.dll";
+
+				for (String path : libsPath.split(";"))
+				{
+					File f1 = new File(path, fname1);
+					File f2 = new File(path, fname2);
+					if (f1.exists() && f2.exists())
+					{
+						System.load(f1.getAbsolutePath());
+						System.load(f2.getAbsolutePath());
+						System.out.println("Loaded KinectV2 libraries");
+						loaded = true;
+						break;
+					}
+				}
+
+				if (!loaded) System.err.println("Kinect libraries not found (looking for: "+fname1+" and "+fname2+")");
+			}
+
+			if(!loaded) { // try default libs path
+				System.loadLibrary("kinect/Kinect20.Face");
+				System.loadLibrary("kinect/KinectPV2");
+				System.out.println("Loading KinectV2");
+			}
 		}
 		else
 		{
 			System.out.println("not compatible with 32bits");
 		}
 	}
-	
+
 	private long ptr;
-	
+
 	public Device()
 	{
 		jniDevice();

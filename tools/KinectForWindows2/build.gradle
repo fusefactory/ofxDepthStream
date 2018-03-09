@@ -41,12 +41,12 @@ dependencies {
 }
 
 // for `gradle run` development command
-// run {
-//     systemProperty "freenect.libs.path", "./lib/freenect2"
-// }
+run {
+    systemProperty "kinect.libs.path", "./lib/kinect"
+}
 
 // for distribution launch script
-// applicationDefaultJvmArgs = ["-Dfreenect.libs.path=./lib/freenect2;../lib/freenect2"]
+applicationDefaultJvmArgs = ["-Dkinect.libs.path=./lib/kinect;../lib/kinect"]
 
 // avoid windows error when running the generated distribution's .bat script
 // reduces the super long CLASSPATH line which explicitly mentions every jar separately,
