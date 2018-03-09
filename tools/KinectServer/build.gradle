@@ -11,16 +11,16 @@ description = """Fuse Kinect depth-stream Transmitter"""
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-applicationDistribution.from('lib/mac') {
-    into "bin/lib/mac"
-}
-
-applicationDistribution.from('lib/win') {
-    into "bin/lib/win"
+applicationDistribution.from('lib/freenect2') {
+    into "lib/"
 }
 
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
+}
+
+run {
+    systemProperty "java.library.path", System.getProperty("java.library.path")+":"+"./lib/freenect2"
 }
 
 sourceSets {
@@ -45,6 +45,8 @@ dependencies {
 
     // https://mvnrepository.com/artifact/kephale/freenect
     compile group: 'kephale', name: 'freenect', version: '20120325_001'
+
+    // runtime fileTree(dir: "${rootDir}/lib/freenect2/", exclude: "*.jar")
 }
 
 // avoid windows error when running the generated distribution's .bat script

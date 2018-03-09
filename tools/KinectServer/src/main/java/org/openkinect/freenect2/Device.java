@@ -22,35 +22,36 @@ public class Device
 					break;
 				}
 			}
-			if (!found) System.err.println("KinectV2 library not found");
+			if (!found) System.err.println("KinectV2 library not found (java.library.path: "+libraryPath+")");
 		}
 		else if (osName.indexOf("mac") >= 0)
 		{
 			String libraryPath = System.getProperty("java.library.path");
 			for (String path : libraryPath.split(":"))
 			{
-				if (new File(path + "/mac/libJNILibfreenect2.dylib").exists())
+				File f = new File(path + "/mac/libJNILibfreenect2.dylib");
+				if (f.exists())
 				{
-					System.load(path + "/mac/libJNILibfreenect2.dylib");
+					System.load(f.getAbsolutePath());
 					found = true;
 					break;
 				}
 			}
-			if (!found) System.err.println("KinectV2 library not found");
+			if (!found) System.err.println("KinectV2 library not found (java.library.path: "+libraryPath+")");
 		}
 		else
 		{
 			System.err.println("KinectV2 not compatible with the current OS or is a 32 bit system");
 		}
 	}
-	
+
 	private long ptr;
-	
+
 	public Device()
 	{
 		ptr = jniInit();
 	}
-	
+
 	// JNI functions
     public native long jniInit();
     public native void jniOpen();
@@ -60,22 +61,22 @@ public class Device
     public native void jniEumerateDevices();
     public native void jniUpdateDevice();
     public native boolean jniDeviceReady();
-    
+
     // multiple kinect funtions
     public native void jniOpenSerial(String serialNumber);
     public native int jniGetNumDevices();
     public native String jniGetSerialDevice(int index);
-    
+
     // get data functions
     public native int[] jniGetDepthData();
     public native int[] jniGetRawDepthData();
-    
+
     public native int[] jniGetIrData();
     public native int[] jniGetColorData();
     public native int[] jniGetUndistorted();
     public native int[] jniGetRegistered();
     public native float[] jniGetDepthCameraPositions();
-    
+
     // enables functions
     public native void jniEnableVideo(boolean enable);
     public native void jniEnableDepth(boolean enable);
