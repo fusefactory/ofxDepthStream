@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="kinectstreaming/src"/>
+	<classpathentry kind="src" path="src">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="KinectV2/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="lib" path="lib/jna.jar"/>
+	<classpathentry kind="lib" path="lib/gluegen-rt-natives-macosx-universal.jar"/>
+	<classpathentry kind="lib" path="lib/gluegen-rt-natives-windows-amd64.jar"/>
+	<classpathentry kind="lib" path="lib/gluegen-rt-natives-windows-i586.jar"/>
+	<classpathentry kind="lib" path="lib/gluegen-rt.jar"/>
+	<classpathentry kind="lib" path="lib/jogl-all-natives-macosx-universal.jar"/>
+	<classpathentry kind="lib" path="lib/jogl-all-natives-windows-amd64.jar"/>
+	<classpathentry kind="lib" path="lib/jogl-all-natives-windows-i586.jar"/>
+	<classpathentry kind="lib" path="lib/jogl-all.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
