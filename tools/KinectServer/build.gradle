@@ -12,16 +12,14 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 applicationDistribution.from('lib/freenect2') {
-    into "lib/"
+    into "lib/freenect2/"
 }
 
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
-run {
-    systemProperty "java.library.path", System.getProperty("java.library.path")+":"+"./lib/freenect2"
-}
+
 
 sourceSets {
     main {
@@ -48,6 +46,14 @@ dependencies {
 
     // runtime fileTree(dir: "${rootDir}/lib/freenect2/", exclude: "*.jar")
 }
+
+// for `gradle run` development command
+run {
+    systemProperty "java.library.path", System.getProperty("java.library.path")+":"+"./lib/freenect2"
+}
+
+// for distribution launch script
+applicationDefaultJvmArgs = ["-Djava.library.path=./lib/freenect2:../lib/freenect2"]
 
 // avoid windows error when running the generated distribution's .bat script
 // reduces the super long CLASSPATH line which explicitly mentions every jar separately,
