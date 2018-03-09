@@ -19,8 +19,6 @@ tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
-
-
 sourceSets {
     main {
          java {
@@ -49,11 +47,11 @@ dependencies {
 
 // for `gradle run` development command
 run {
-    systemProperty "java.library.path", System.getProperty("java.library.path")+":"+"./lib/freenect2"
+    systemProperty "freenect.libs.path", "./lib/freenect2"
 }
 
 // for distribution launch script
-applicationDefaultJvmArgs = ["-Djava.library.path=./lib/freenect2:../lib/freenect2"]
+applicationDefaultJvmArgs = ["-Dfreenect.libs.path=./lib/freenect2;../lib/freenect2"]
 
 // avoid windows error when running the generated distribution's .bat script
 // reduces the super long CLASSPATH line which explicitly mentions every jar separately,

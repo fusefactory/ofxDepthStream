@@ -8,16 +8,23 @@ public class Device
 	{
 		boolean found = false;
 		String osName = System.getProperty("os.name").toLowerCase();
+		String libraryPath = System.getProperty("freenect.libs.path");
+
+		
 		if (osName.indexOf("win") >= 0)
 		{
-			String libraryPath = System.getProperty("java.library.path");
+		  String relativeName = "win\\libJNILibfreenect2.dll";
 			for (String path : libraryPath.split(";"))
 			{
-				if (new File(path + "\\win\\libJNILibfreenect2.dll").exists())
+			  File f = new File(path, relativeName);
+				if (f.exists())
 				{
-					System.loadLibrary("win/turbojpeg");
-					System.loadLibrary("win/libusb-1.0");
-					System.loadLibrary("win/libJNILibfreenect2");
+				  System.load(new File(path, "win\\turbojpeg.dll").getAbsolutePath());
+				  System.load(new File(path, "win\\libusb-1.0.dll").getAbsolutePath());
+          System.load(f.getAbsolutePath());
+//					System.loadLibrary("win/turbojpeg");
+//					System.loadLibrary("win/libusb-1.0");
+//					System.loadLibrary("win/libJNILibfreenect2");
 					found = true;
 					break;
 				}
@@ -26,10 +33,11 @@ public class Device
 		}
 		else if (osName.indexOf("mac") >= 0)
 		{
-			String libraryPath = System.getProperty("java.library.path");
-			for (String path : libraryPath.split(":"))
+		  String relativeName = "mac/libJNILibfreenect2.dylib";
+
+			for (String path : libraryPath.split(";"))
 			{
-				File f = new File(path + "/mac/libJNILibfreenect2.dylib");
+				File f = new File(path, relativeName);
 				if (f.exists())
 				{
 					System.load(f.getAbsolutePath());
@@ -37,7 +45,7 @@ public class Device
 					break;
 				}
 			}
-			if (!found) System.err.println("KinectV2 library not found (java.library.path: "+libraryPath+")");
+			if (!found) System.err.println("KinectV2 library not found (looking for: "+relativeName+" in freenect.libs.path: "+libraryPath+")");
 		}
 		else
 		{
