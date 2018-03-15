@@ -6,7 +6,7 @@ apply plugin: 'application'
 mainClassName = 'fuse.kinectforwindows2.streaming.examples.KinectStreamingServer'
 group = 'fuse.kinectforwindows2.streaming.examples'
 version = '1.0.0'
-description = """Fuse KinectStreamingServer depth-stream Transmitter"""
+description = """Fuse KinectStreamingServer for windows 64-bit"""
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
