@@ -1,4 +1,5 @@
 # KinectForWindows2
+Transmits a depth-image stream over a TCP network from a 64-bit windows machine.
 
 ### Run in development
 _Run the below command from the application folder (the same folder as this README)_
@@ -23,5 +24,3 @@ gradle distZip
 * Inside the unzipped content folder, either:
  * double-click on the `KinectForWindows2.bat` file in the `bin/` folder, or:
  * Run `./bin/KinectForWindows2.bat` from a terminal
-
- 

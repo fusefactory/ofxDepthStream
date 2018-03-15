@@ -1,9 +1,12 @@
 # PerseeServer
-Note that the Makefiles are copied from one of the Sample applications from [orbbec's OpenNI SDK](https://github.com/orbbec/OpenNI2). The builddev.sh script was added for development purposes (to build the application on OSX, without OpenNI and OpenCV dependency).
+Transmits a depth-image stream over a TCP network from the Orbbec Persee.
 
-# Build instructions
+##### note
+_Note that the Makefiles are copied from one of the Sample applications from [orbbec's OpenNI SDK](https://github.com/orbbec/OpenNI2). The builddev.sh script was added for development purposes (to build the application on OSX, with mock-replacements for the OpenNI and OpenCV dependencies)._
 
-These instructions assume ubuntu (16.04) has been installed on the persee (see main README). The following instruction should be performed on the Persee command line. You can ssh into the persee with username: ubuntu and password: ' ' (a single space).
+## Build instructions
+
+These instructions assume ubuntu (16.04) has been installed on the persee (see main README in this repo). The following instruction should be performed on the Persee command line. You can ssh into the persee with username: ubuntu and password: ' ' (a single space).
 
 #### Install and build de OpenNI SDK
 Download "OpenNI 2 for Linux" from http://orbbec3d.org/develop, extract the zip file and then extract the file *OpenNI-Linux-Arm-2.3-without_filter.zip*. cd into the extracted folder.
@@ -27,23 +30,25 @@ First, make sure you have _sourced_ the OpenNIDevEnvironment by running ```sourc
 
 Next run the following from the ofxOrbbecPersee folder:
 ```bash
-# build
 cd tools/PerseeServer
 make
-# run
+```
+
+#### Run PerseeServer app
+```bash
 cd Bin/Arm-Release
 ./PerseeServer
 ```
 
 #### Configure PerseeServer
-Currently de PerseeServer only streams the depth image ([color stream is a work in progress on](https://3dclub.orbbec3d.com/t/color-stream-using-opencv-on-persee-with-ubuntu-16-04/1459)).
+Currently de PerseeServer only streams the depth image ([color stream is a work in progress](https://3dclub.orbbec3d.com/t/color-stream-using-opencv-on-persee-with-ubuntu-16-04/1459)).
 
 Command-line arguments:
 ```bash
   ./PerseeServer --depth-port 4445 # sets port from which depth image is streamed, 4445 by default
   ./PerseeServer --convert-32bit # enables 32-bit conversion, disabled by default (sends 16-bit)
   ./PerseeServer --verbose # enables verbose mode, disabled by default
-  ./PerseeServer --fps 30 # configures number of frames/seconds to transmit (12 by default)
+  ./PerseeServer --fps 30 # configures the framerate (frames/second) to transmit (60 by default, though it's not guaranteed that this framerate is achieved)
 ```
 
 # Color Stream through OpenCV; (Status: Work In Progress)
