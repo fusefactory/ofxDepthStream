@@ -1,5 +1,0 @@
-Download Zadig from http://zadig.akeo.ie/.
-Run Zadig and in options, check "List All Devices" and uncheck "Ignore Hubs or Composite Parents"
-Select the "Xbox NUI Sensor (composite parent)" from the drop-down box. (Important: Ignore the "NuiSensor Adaptor" varieties, which are the adapter, NOT the Kinect) The current driver will list usbccgp. USB ID is VID 045E, PID 02C4 or 02D8.
-Select libusbK (v3.0.7.0 or newer) from the replacement driver list.
-Click the "Replace Driver" button. Click yes on the warning about replacing a system driver. (This is because it is a composite parent.)
