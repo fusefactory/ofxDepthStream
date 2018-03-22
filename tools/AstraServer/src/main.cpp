@@ -68,125 +68,118 @@ class Converter16to32bit {
 
 class StreamingFrameListener : public astra::FrameListener
 {
-private:
+  private:
     using buffer_ptr = std::unique_ptr<int16_t []>;
     buffer_ptr buffer_;
     unsigned int lastWidth_;
     unsigned int lastHeight_;
 
-public:
-    StreamingFrameListener() {
-      this->compressor = std::make_shared<depth::Compressor>();
-      this->transmitter = std::make_shared<depth::Transmitter>(this->depthPort);
+  public:
+    StreamingFrameListener(unsigned int port=4445, float fps=60.0f, std::shared_ptr<Converter16to32bit> converter=nullptr, bool verbose=false) : depthPort(port), converterRef(converter), bVerbose(verbose) {
+        frameMs = 1.0f / fps * 1000.0f;
+        nextFrameTime = std::chrono::system_clock::now();
+        this->compressor = std::make_shared<depth::Compressor>();
+        this->transmitter = std::make_shared<depth::Transmitter>(this->depthPort);
     }
 
-    virtual void on_frame_ready(astra::StreamReader& reader,
-                                astra::Frame& frame) override
-    {
+    virtual void on_frame_ready(astra::StreamReader& reader, astra::Frame& frame) override {
+        auto t = std::chrono::system_clock::now();
+
+        // not yet time for next frame?
+        if (t < nextFrameTime)
+          return;
+
+        nextFrameTime = t + std::chrono::milliseconds(frameMs);
+
         const astra::DepthFrame depthFrame = frame.get<astra::DepthFrame>();
 
         if (depthFrame.is_valid())
         {
-            print_depth(depthFrame,reader.stream<astra::DepthStream>().coordinateMapper());
             this->transmitFrame(depthFrame.data(), depthFrame.byte_length());
-            check_fps();
         }
     }
 
     void transmitFrame(const void* data, size_t size) {
+      // convert?
+      if(converterRef) {
+        if(converterRef->convert(data, size)) {
+          if(bVerbose) std::cout << "converting from 16-bit to 32-bit" << std::endl;
+          data = converterRef->getData();
+          size = converterRef->getSize();
+          // std::cout << "converted to 32bit, size: " << size << std::endl;
+        } else {
+          std::cerr << "16 to 32 bit conversion failed" << std::endl;
+          return;
+        }
+      }
+
       if(!compressor->compress(data, size)) {
         std::cerr << "compression failed" << std::endl;
         return;
       }
 
       if (transmitter->transmit((const char*)compressor->getData(), compressor->getSize())) {
-        if(bVerbose) std::cout << "sent " << compressor->getSize() << "-byte depth frame" << std::endl;
+        if(bVerbose) std::cout << "transmitted " << compressor->getSize() << "-byte depth frame" << std::endl;
       } else {
-        std::cerr << "transmit failed of " << compressor->getSize() << "-byte depth frame" << std::endl;
+        if(bVerbose) std::cout << "transmit of " << compressor->getSize() << "-byte depth frame FAILED (probably no connection)" << std::endl;
       }
     }
 
-    void print_depth(const astra::DepthFrame& depthFrame,
-                     const astra::CoordinateMapper& mapper)
-    {
-        if (depthFrame.is_valid())
-        {
-            int width = depthFrame.width();
-            int height = depthFrame.height();
-            int frameIndex = depthFrame.frame_index();
-
-            //determine if buffer needs to be reallocated
-            if (width != lastWidth_ || height != lastHeight_)
-            {
-                buffer_ = buffer_ptr(new int16_t[depthFrame.length()]);
-                lastWidth_ = width;
-                lastHeight_ = height;
-            }
-            depthFrame.copy_to(buffer_.get());
-
-            size_t index = ((width * (height / 2.0f)) + (width / 2.0f));
-            short middle = buffer_[index];
-
-            float worldX, worldY, worldZ;
-            float depthX, depthY, depthZ;
-            mapper.convert_depth_to_world(width / 2.0f, height / 2.0f, middle, &worldX, &worldY, &worldZ);
-            mapper.convert_world_to_depth(worldX, worldY, worldZ, &depthX, &depthY, &depthZ);
-
-            std::cout << "depth frameIndex: " << frameIndex
-                      << " value: " << middle
-                      << " wX: " << worldX
-                      << " wY: " << worldY
-                      << " wZ: " << worldZ
-                      << " dX: " << depthX
-                      << " dY: " << depthY
-                      << " dZ: " << depthZ
-                      << std::endl;
-        }
-    }
-
-    void check_fps()
-    {
-        const double frameWeight = 0.2;
-
-        auto newTimepoint = clock_type::now();
-        auto frameDuration = std::chrono::duration_cast<duration_type>(newTimepoint - lastTimepoint_);
-
-        frameDuration_ = frameDuration * frameWeight + frameDuration_ * (1 - frameWeight);
-        lastTimepoint_ = newTimepoint;
-
-        double fps = 1.0 / frameDuration_.count();
-
-        auto precision = std::cout.precision();
-        std::cout << std::fixed
-                  << std::setprecision(1)
-                  << fps << " fps ("
-                  << std::setprecision(2)
-                  << frameDuration.count() * 1000 << " ms)"
-                  << std::setprecision(precision)
-                  << std::endl;
-    }
-
-private:
-    using duration_type = std::chrono::duration < double > ;
-    duration_type frameDuration_{ 0.0 };
-
-    using clock_type = std::chrono::system_clock;
-    std::chrono::time_point<clock_type> lastTimepoint_;
-
-private:
+  private:
     // unsigned int sleepTime = 5; // ms
     int depthPort = 4445;
     // int colorPort = 4446;
-    int fps = 60;
     bool bVerbose=false;
     std::shared_ptr<Converter16to32bit> converterRef = nullptr;
 
     depth::CompressorRef compressor=nullptr;
     depth::TransmitterRef transmitter=nullptr;
+
+    using clock_type = std::chrono::system_clock;
+    unsigned int frameMs = (int)(1.0f/(float)60.0 * 1000.0f); // milliseconds
+    std::chrono::time_point<clock_type> nextFrameTime;
 };
 
 int main(int argc, char** argv)
 {
+    bool verbose=false;
+    unsigned int depthPort=4445;
+    bool convert16to32bit=false;
+    unsigned int fps=60.0f;
+    std::shared_ptr<Converter16to32bit> converterRef=nullptr;
+
+    // process command-line arguments
+    for(int i=1; i<argc; i++) {
+      if(strcmp(argv[i], "--verbose") == 0 || strcmp(argv[i], "-v") == 0) {
+        verbose=true;
+        continue;
+      }
+
+      if(strcmp(argv[i], "--convert-32bit") == 0 || strcmp(argv[i], "-c") == 0) {
+        converterRef = std::make_shared<Converter16to32bit>();
+        continue;
+      }
+
+      if(argc <= (i+1)) {
+        std::cerr << "Didn't get value for " << argv[i] << std::endl;
+        break;
+      }
+
+      if(strcmp(argv[i], "--depth-port") == 0 || strcmp(argv[i], "-d") == 0) {
+        depthPort = atoi(argv[i+1]);
+        i++;
+        continue;
+      }
+
+      if(strcmp(argv[i], "--fps") == 0 || strcmp(argv[i], "-f") == 0) {
+        fps = atoi(argv[i+1]);
+        i++;
+        continue;
+      }
+
+      std::cerr << "Unknown argument: " << argv[i] << std::endl;
+    }
+
     astra::initialize();
 
     set_key_handler();
@@ -194,7 +187,7 @@ int main(int argc, char** argv)
     astra::StreamSet streamSet;
     astra::StreamReader reader = streamSet.create_reader();
 
-    StreamingFrameListener listener;
+    StreamingFrameListener listener(depthPort, fps, converterRef, verbose);
 
     reader.stream<astra::DepthStream>().start();
 
