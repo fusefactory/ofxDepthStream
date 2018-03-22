@@ -21,7 +21,52 @@
 #include <iomanip>
 #include "key_handler.h"
 
-class SampleFrameListener : public astra::FrameListener
+#include "../../../libs/DepthStream/src/Compressor.h"
+#include "../../../libs/DepthStream/src/Transmitter.h"
+
+class Converter16to32bit {
+  public:
+    bool convert(const void* data, size_t size) {
+      if((size * 2) > BUF_SIZE){
+        std::cerr << "Convert: " << size << " bytes is too big for our buffer" << std::endl;
+        return false;
+      }
+
+      memset(buffer, 0, BUF_SIZE);
+
+      size_t index=0;
+      size_t ttl = size/2;
+      while(index < ttl) {
+        uint16_t val = ((uint16_t*)data)[index];
+
+        // std::cout << "convert iteration: " << index << "," << ttl << "siz2: " << sizeof(uint32_t) << std::endl;
+        ((unsigned char*)buffer)[index * 4 + 0] = 0;
+        ((unsigned char*)buffer)[index * 4 + 1] = 0;
+        ((unsigned char*)buffer)[index * 4 + 2] = (unsigned char)(val >> 8 & 0xFF);
+        ((unsigned char*)buffer)[index * 4 + 3] = (unsigned char)(val & 0xFF);
+
+        index += 1;
+
+        // ((uint32_t*)this->buffer)[index*2] = ((uint16_t*)data)[index];
+        // ((uint16_t*)this->buffer)[index*2+1] = 0;
+        // index += 1;
+      }
+
+      lastSize = size * 2; //destCursor;
+      // std::cout << "Converting done, original size: " << size << ", ttl: " << ttl << ", last size: " << lastSize << std::endl;
+      return true;
+    }
+
+    const void* getData(){ return (void*)buffer; }
+    size_t getSize(){ return lastSize; }
+
+  private:
+    static const size_t BUF_SIZE = (1280*720*4);
+    unsigned char buffer[BUF_SIZE];
+    size_t lastSize=0;
+};
+
+class StreamingFrameListener : public astra::FrameListener
 {
 private:
     using buffer_ptr = std::unique_ptr<int16_t []>;
@@ -30,6 +75,11 @@ private:
     unsigned int lastHeight_;
 
 public:
+    StreamingFrameListener() {
+      this->compressor = std::make_shared<depth::Compressor>();
+      this->transmitter = std::make_shared<depth::Transmitter>(this->depthPort);
+    }
+
     virtual void on_frame_ready(astra::StreamReader& reader,
                                 astra::Frame& frame) override
     {
@@ -37,10 +87,23 @@ public:
 
         if (depthFrame.is_valid())
         {
-            print_depth(depthFrame,
-            reader.stream<astra::DepthStream>().coordinateMapper());
+            print_depth(depthFrame,reader.stream<astra::DepthStream>().coordinateMapper());
+            this->transmitFrame(depthFrame.data(), depthFrame.byte_length());
             check_fps();
         }
+    }
+
+    void transmitFrame(const void* data, size_t size) {
+      if(!compressor->compress(data, size)) {
+        std::cerr << "compression failed" << std::endl;
+        return;
+      }
+
+      if (transmitter->transmit((const char*)compressor->getData(), compressor->getSize())) {
+        if(bVerbose) std::cout << "sent " << compressor->getSize() << "-byte depth frame" << std::endl;
+      } else {
+        std::cerr << "transmit failed of " << compressor->getSize() << "-byte depth frame" << std::endl;
+      }
     }
 
     void print_depth(const astra::DepthFrame& depthFrame,
@@ -109,6 +172,17 @@ private:
 
     using clock_type = std::chrono::system_clock;
     std::chrono::time_point<clock_type> lastTimepoint_;
+
+private:
+    // unsigned int sleepTime = 5; // ms
+    int depthPort = 4445;
+    // int colorPort = 4446;
+    int fps = 60;
+    bool bVerbose=false;
+    std::shared_ptr<Converter16to32bit> converterRef = nullptr;
+
+    depth::CompressorRef compressor=nullptr;
+    depth::TransmitterRef transmitter=nullptr;
 };
 
 int main(int argc, char** argv)
@@ -120,7 +194,7 @@ int main(int argc, char** argv)
     astra::StreamSet streamSet;
     astra::StreamReader reader = streamSet.create_reader();
 
-    SampleFrameListener listener;
+    StreamingFrameListener listener;
 
     reader.stream<astra::DepthStream>().start();
 

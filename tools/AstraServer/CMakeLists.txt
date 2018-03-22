@@ -21,7 +21,6 @@ cmake_minimum_required(VERSION 3.2)
 # endif()
 
 
-
 set(CMAKE_CXX_STANDARD 11)
 
 function(add_astra_sdk_dependency _targetname)
@@ -36,7 +35,7 @@ endfunction()
 
 set (_projname "AstraServer")
 set (_projname "AstraServer")
-set (${_projname}_SOURCES main.cpp)
+FILE (GLOB ${_projname}_SOURCES src/*.cpp ../../libs/DepthStream/src/*.cpp)
 add_executable(${_projname} ${${_projname}_SOURCES})
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
@@ -44,6 +43,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 # set(ASTRA_ROOT /path/to/AstraSDK-0.5.0-20160426T102621Z-darwin-x64)
 
 find_package(Astra REQUIRED)
-target_link_libraries(${_projname} ${ASTRA_LIBRARIES})
+target_link_libraries(${_projname} ${ASTRA_LIBRARIES} z)
 add_astra_sdk_dependency(${_projname})
 include_directories(${ASTRA_INCLUDE_DIR})

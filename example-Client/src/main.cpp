@@ -11,7 +11,7 @@ class ofApp : public ofBaseApp{
     void draw() override;
 
   private: // attributes
-    std::string remoteCamAddress = "persee.local"; //"192.168.1.226"; // "127.0.0.1";
+    std::string remoteCamAddress = "127.0.0.1"; // persee.local"; //"192.168.1.226"; // "127.0.0.1";
     int depthPort = 4445;
     int colorPort = 4446;
 

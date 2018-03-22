@@ -8,6 +8,9 @@
 #include <thread>
 
 namespace depth {
+  class Transmitter;
+  typedef std::shared_ptr<Transmitter> TransmitterRef;
+
   class Transmitter {
 
     public:
