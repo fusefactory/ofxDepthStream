@@ -2,6 +2,7 @@
 
 OpenFrameworks addon with _heavily opiniated_ tools for working with the Orbbec **Persee**.
 
+
 ## Rational
 
 The Orbbec Persee is a point-cloud sensor with embedded programmable computer system (think; an Kinect stacked on top of a Raspberry PI), designed to
@@ -9,7 +10,7 @@ run as a stand-alone device. This addon provides a library and (example) applica
  * Running a server app on the persee (which transmits data over the network)
  * Running a client apps (which use the data streamed over the network by the persee)
 
-## Quick Start
+## Instructions
 
 #### Install Ubuntu
 The Persee come pre-installed with Android but all tooling and examples seem to be out-dated and the general consensus seems to be that it's better to install Ubuntu.
@@ -24,7 +25,7 @@ See the README in the tools/PerseeServer folder of this repo
 #### Build and Run the Client on your dev machine
 Currently there are only _make_ build-files for the clients (no xcode or visual studio).
 
-```cd``` into on of the example application's folders and run:
+```cd``` into one of the example application's folders and run:
 ```bash
 make Debug # to build the applications
 make RunDebug # to run the last development-build
