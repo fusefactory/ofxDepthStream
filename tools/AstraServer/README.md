@@ -16,3 +16,19 @@ make
 ```
 
 When successful this should create the ```AstraServer``` executable inside the build folder.
+
+#### Command line options
+
+```bash
+# -v, --verbose; enable verbose mode
+AstraServer -v
+
+# -c --convert-32bit; transmit 32-bit instead of 16-bit depth-frames (each pixel 4 bytes instead of 2 bytes)
+AstraServer -c
+
+# -d --depth-port; set port from which to stream
+AstraServer -d 8080
+
+# -f --fps; set framerate (not guaranteed this rate is achieved)
+AstraServer -f 30
+```
