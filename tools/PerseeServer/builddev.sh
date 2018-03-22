@@ -1,1 +1,1 @@
-g++ -lz -std=c++11 src/*.cpp ../../libs/persee/src/*.cpp
+g++ -lz -std=c++11 src/*.cpp ../../libs/DepthStream/src/*.cpp

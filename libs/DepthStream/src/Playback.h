@@ -3,7 +3,7 @@
 #include <chrono>
 #include "Buffer.h"
 
-namespace persee {
+namespace depth {
   class Playback : public Buffer {
 
     public: // types

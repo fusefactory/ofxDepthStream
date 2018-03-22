@@ -1,2 +1,2 @@
 ofxUnitTests
-ofxOrbbecPersee
+ofxDepthStream

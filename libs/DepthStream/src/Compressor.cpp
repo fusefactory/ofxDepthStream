@@ -2,7 +2,7 @@
 #include "Compressor.h"
 #include "zlib.h"
 
-using namespace persee;
+using namespace depth;
 
 bool Compressor::compress(const void* data, size_t size) {
   // memcpy(buffer, data, size);

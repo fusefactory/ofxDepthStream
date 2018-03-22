@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace persee {
+namespace depth {
   class Inflater;
   typedef std::shared_ptr<Inflater> InflaterRef;
 
@@ -25,8 +25,8 @@ namespace persee {
       void growTo(size_t to);
       const void* decompress(const void* compressedBytes, unsigned int length);
 
-      std::ostream& cout() { return std::cout << "[persee::Inflater] "; }
-      std::ostream& cerr() { return std::cerr << "[persee::Inflater] "; }
+      std::ostream& cout() { return std::cout << "[depth::Inflater] "; }
+      std::ostream& cerr() { return std::cerr << "[depth::Inflater] "; }
 
     private:
       char* decompressed=NULL;

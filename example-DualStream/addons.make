@@ -1,3 +1,3 @@
-ofxOrbbecPersee
+ofxDepthStream
 ofxHistoryPlot
 ofxGui

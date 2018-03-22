@@ -17,7 +17,7 @@
 #include "OniSampleUtilities.h"
 #include "Receiver.h"
 
-using namespace persee;
+using namespace depth;
 
 Receiver::~Receiver() {
   this->stop(false);
@@ -39,7 +39,7 @@ void Receiver::stop(bool wait){
 
   if(wait) {
     if(this->thread) {
-      std::cout << "[persee::Receiver] waiting for thread to end" << std::endl;
+      std::cout << "[depth::Receiver] waiting for thread to end" << std::endl;
       thread->join();
       // this->cout() << " done" << std::endl;
       delete thread;
@@ -99,7 +99,7 @@ void Receiver::threadFunc() {
         this->bHasNew = true;
         this->lastPackageSize = packageSize;
 
-        // our persee::Buffer interface
+        // our depth::Buffer interface
         Buffer::write(this->buffer, packageSize);
 
         if(frameCallback)

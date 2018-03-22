@@ -1,6 +1,6 @@
 #pragma once
 
-namespace persee {
+namespace depth {
   class Compressor {
     public:
       bool compress(const void* data, size_t size);

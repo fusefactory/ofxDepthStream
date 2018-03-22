@@ -1,5 +1,5 @@
 #include "ofxUnitTests.h"
-#include "persee.h"
+#include "DepthStream.h"
 
 class ofApp: public ofxUnitTestsApp{
   void run(){
@@ -8,9 +8,9 @@ class ofApp: public ofxUnitTestsApp{
 
   void test_compress_inflate() {
     // create frame ref
-    auto ref1 = persee::Frame::ref(640*480*2);
-    auto compressedRef = persee::compress(ref1);
-    auto ref2 = persee::inflate(compressedRef);
+    auto ref1 = depth::Frame::ref(640*480*2);
+    auto compressedRef = depth::compress(ref1);
+    auto ref2 = depth::inflate(compressedRef);
 
     test_eq(ref1->size(), ref2->size(), "");
     test_eq(ref2->size(), (640*480*2), "");

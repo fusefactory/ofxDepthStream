@@ -3,7 +3,7 @@
 #include <chrono>
 #include "Buffer.h"
 
-namespace persee {
+namespace depth {
   class Recorder : public Buffer  {
 
     public:

@@ -28,15 +28,15 @@
 #include "opencv2/highgui/highgui.hpp"
 // local
 #include "config.h"
-#include "../../../libs/persee/src/OniSampleUtilities.h"
-#include "../../../libs/persee/src/CamInterface.h"
-#include "../../../libs/persee/src/Compressor.h"
-#include "../../../libs/persee/src/Transmitter.h"
+#include "../../../libs/DepthStream/src/OniSampleUtilities.h"
+#include "../../../libs/DepthStream/src/CamInterface.h"
+#include "../../../libs/DepthStream/src/Compressor.h"
+#include "../../../libs/DepthStream/src/Transmitter.h"
 
 using namespace std;
 using namespace std::chrono;
 using namespace cv;
-using namespace persee;
+using namespace depth;
 
 struct ClrSrc {
   std::shared_ptr<VideoCapture> capRef;
@@ -160,10 +160,10 @@ int main(int argc, char** argv) {
   auto compressor = std::make_shared<Compressor>();
   std::vector<std::shared_ptr<Transmitter>> depthStreamTransmitters;
   std::vector<std::shared_ptr<Transmitter>> colorStreamTransmitters;
-  std::shared_ptr<persee::VideoStream> depth=nullptr, color=nullptr;
+  std::shared_ptr<depth::VideoStream> depth=nullptr, color=nullptr;
 
   // setup camera feed
-  persee::CamInterface camInt;
+  depth::CamInterface camInt;
   depth = camInt.getDepthStream();
   // color = camInt.getColorStream();
   auto clrSrc = createColorSource();

@@ -2,7 +2,7 @@
 
 #include "Frame.h"
 
-namespace persee {
+namespace depth {
   class Buffer {
     public: // sub-types
 

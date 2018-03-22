@@ -4,9 +4,14 @@ Transmits a depth-image stream over a TCP network from the Orbbec Persee.
 ##### note
 _Note that the Makefiles are copied from one of the Sample applications from [orbbec's OpenNI SDK](https://github.com/orbbec/OpenNI2). The builddev.sh script was added for development purposes (to build the application on OSX, with mock-replacements for the OpenNI and OpenCV dependencies)._
 
-## Build instructions
+## Instructions
 
-These instructions assume ubuntu (16.04) has been installed on the persee (see main README in this repo). The following instruction should be performed on the Persee command line. You can ssh into the persee with username: ubuntu and password: ' ' (a single space).
+#### Install Ubuntu
+This application needs to run on Ubuntu, not Android which the comes pre-installed on the Persee. These are the instruction to install Orbbec's Ubuntu 16.04 image on the Persee.
+
+There is very little official documentation and your best source for information is [orbbec's forum](https://3dclub.orbbec3d.com): ["Universal download thread" where you can find the Ubuntu image (instructions included)](https://3dclub.orbbec3d.com/t/universal-download-thread-for-persee/694). _Spoiler: you'll need a windows machine to run the tools necessary to install the image (running window inside VirtualBox didn't work for me) \o/_
+
+Once you've installed Ubuntu you can SSH into the device (default user: ubuntu, default password: ' ' [a single space]), and continue with a common linux command-line workflow (when using OpenFrameworks you'll need to grab the "linux armv7" version of OpenFrameworks);
 
 #### Install and build de OpenNI SDK
 Download "OpenNI 2 for Linux" from http://orbbec3d.org/develop, extract the zip file and then extract the file *OpenNI-Linux-Arm-2.3-without_filter.zip*. cd into the extracted folder.
@@ -24,11 +29,11 @@ cd Bin/Arm-Release/
 ```
 
 #### Build PerseeServer app
-Next copy the entire ofxOrbbecPersee folder onto the persee (you can checkout the addon's git repo directly, or use scp: ```scp -r ../ofxOrbbecPersee ubuntu@<persee's IP address>:~/```).
+Next copy the entire ofxDepthStream folder onto the persee (you can checkout the addon's git repo directly, or use scp: ```scp -r ../ofxDepthStream ubuntu@<persee's IP address>:~/```).
 
 First, make sure you have _sourced_ the OpenNIDevEnvironment by running ```source OpenNIDevEnvironment``` from the OpenNI SDK folder (see instructions above) **do this in the same terminal session in which you run the build commands below**.
 
-Next run the following from the ofxOrbbecPersee folder:
+Next run the following from the ofxDepthStream folder:
 ```bash
 cd tools/PerseeServer
 make
@@ -40,7 +45,7 @@ cd Bin/Arm-Release
 ./PerseeServer
 ```
 
-#### Configure PerseeServer
+#### PerseeServer args
 Currently de PerseeServer only streams the depth image ([color stream is a work in progress](https://3dclub.orbbec3d.com/t/color-stream-using-opencv-on-persee-with-ubuntu-16-04/1459)).
 
 Command-line arguments:

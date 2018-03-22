@@ -16,7 +16,7 @@
 #include "OniSampleUtilities.h"
 #include "Transmitter.h"
 
-using namespace persee;
+using namespace depth;
 
 Transmitter::Transmitter(int port) : port(port) {
   bRunning=true;
@@ -131,7 +131,7 @@ void Transmitter::serverThread() {
           close(clientsocket);
           bConnected=false;
         } else {
-          std::cerr << "TODO: handle incoming data in persee::Transmitter, disconnecting for now" << std::endl;
+          std::cerr << "TODO: handle incoming data in depth::Transmitter, disconnecting for now" << std::endl;
           close(clientsocket);
           bConnected=false;
         }

@@ -10,7 +10,7 @@
 // local
 #include "Buffer.h"
 
-namespace persee {
+namespace depth {
 
   class Receiver;
   typedef std::shared_ptr<Receiver> ReceiverRef;
@@ -58,8 +58,8 @@ namespace persee {
 
     protected:
 
-      std::ostream& cout() { return std::cout << "[persee::Receiver] "; }
-      std::ostream& cerr() { return std::cerr << "[persee::Receiver] "; }
+      std::ostream& cout() { return std::cout << "[depth::Receiver] "; }
+      std::ostream& cerr() { return std::cerr << "[depth::Receiver] "; }
       void error(const char *msg);
 
       void threadFunc();

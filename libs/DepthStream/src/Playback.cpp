@@ -4,7 +4,7 @@
 #include <chrono>
 #include "Playback.h"
 
-using namespace persee;
+using namespace depth;
 
 void Playback::start(const std::string& name) {
   filename = name;
@@ -99,7 +99,7 @@ void Playback::onEnd() {
   stop(false);
   if(bLoop) {
     if(frameCount == 0) {
-      std::cout << "[persee::Playback] file appears empty" << std::endl;
+      std::cout << "[depth::Playback] file appears empty" << std::endl;
     } else {
       start(this->filename);
     }
