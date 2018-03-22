@@ -17,8 +17,8 @@ set (${_projname}_SOURCES main.cpp)
 add_executable(${_projname} ${${_projname}_SOURCES})
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
-# TODO; remove this
-set(ASTRA_ROOT /Users/mark/code/AstraSDK-0.5.0-20160426T102621Z-darwin-x64)
+# You should probably just set the ASTRA_ROOT environment variable in the command line, but you can also set it here;
+# set(ASTRA_ROOT /path/to/AstraSDK-0.5.0-20160426T102621Z-darwin-x64)
 
 find_package(Astra REQUIRED)
 target_link_libraries(${_projname} ${ASTRA_LIBRARIES})
