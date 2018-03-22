@@ -1,7 +1,7 @@
 // OF
 #include "ofMain.h"
 // addons
-#include "ofxOrbbecPersee/ofxOrbbecPersee.h"
+#include "ofxDepthStream/ofxDepthStream.h"
 
 class ofApp : public ofBaseApp{
 
@@ -11,26 +11,26 @@ class ofApp : public ofBaseApp{
     void draw() override;
 
   private: // attributes
-    std::string perseeAddress = "persee.local"; //"192.168.1.226"; // "127.0.0.1";
+    std::string remoteCamAddress = "persee.local"; //"192.168.1.226"; // "127.0.0.1";
     int depthPort = 4445;
     int colorPort = 4446;
 
-    persee::ReceiverRef depthReceiverRef, colorReceiverRef;
+    depth::ReceiverRef depthReceiverRef, colorReceiverRef;
     ofTexture depthTex, colorTex;
 };
 
 void ofApp::setup() {
   ofSetWindowShape(1280,480);
   // create tcp network receivers for both the depth and the color stream
-  depthReceiverRef = persee::Receiver::createAndStart(perseeAddress, depthPort);
-  colorReceiverRef = persee::Receiver::createAndStart(perseeAddress, colorPort); // color stream isn't working yet on the transmitter side...
+  depthReceiverRef = depth::Receiver::createAndStart(remoteCamAddress, depthPort);
+  colorReceiverRef = depth::Receiver::createAndStart(remoteCamAddress, colorPort); // color stream isn't working yet on the transmitter side...
 }
 
 void ofApp::update() {
   // checks if our receivers have new data, if so these convenience methods
   // update (and allocate if necessary!) our textures.
-  ofxOrbbecPersee::loadDepthTexture(*depthReceiverRef, depthTex);
-  ofxOrbbecPersee::loadColorTexture(*colorReceiverRef, colorTex);
+  ofxDepthStream::loadDepthTexture(*depthReceiverRef, depthTex);
+  ofxDepthStream::loadColorTexture(*colorReceiverRef, colorTex);
 }
 
 void ofApp::draw() {

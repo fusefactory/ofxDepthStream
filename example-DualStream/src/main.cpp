@@ -1,7 +1,7 @@
 // OF
 #include "ofMain.h"
 // addons
-#include "ofxOrbbecPersee/ofxOrbbecPersee.h"
+#include "ofxDepthStream/ofxDepthStream.h"
 #include "ofxHistoryPlot.h"
 #include "ofxGui.h"
 // local
@@ -38,9 +38,9 @@ class ofApp : public ofBaseApp{
     NetworkSource src2 = {"192.168.1.77", 4444}; // kinect
 
     ofTexture textures[2];
-    persee::ReceiverRef receiverRefs[2];
-    persee::Recorder recorders[2];
-    persee::Playback playbacks[2];
+    depth::ReceiverRef receiverRefs[2];
+    depth::Recorder recorders[2];
+    depth::Playback playbacks[2];
 
     // plot/speed
     float avgBytesPerFrame[2] = { 0.0f, 0.0f };
@@ -65,15 +65,15 @@ class ofApp : public ofBaseApp{
 };
 
 void ofApp::setup() {
-  ofSetWindowTitle("ofxOrbbecPersee - DualStream Example");
+  ofSetWindowTitle("ofxDepthStream - DualStream Example");
   ofSetWindowShape(1290,750);
   ofSetVerticalSync(true);
 
-  receiverRefs[0] = persee::Receiver::createAndStart(src1.address, src1.port);
+  receiverRefs[0] = depth::Receiver::createAndStart(src1.address, src1.port);
   receiverRefs[0]->setOutputTo(&recorders[0]);
   playbacks[0].setOutputTo(&recorders[0]);
 
-  receiverRefs[1] = persee::Receiver::createAndStart(src2.address, src2.port);
+  receiverRefs[1] = depth::Receiver::createAndStart(src2.address, src2.port);
   receiverRefs[1]->setOutputTo(&recorders[1]);
   playbacks[1].setOutputTo(&recorders[1]);
 
@@ -112,11 +112,11 @@ void ofApp::update() {
   for(int i=0; i<2; i++){
     size_t originalSize = recorders[i].getRef() ? recorders[i].getRef()->size() : 0.0f;
 
-    persee::emptyAndInflateBuffer(recorders[i], [this, originalSize, i](const void* data, size_t size){
-      ofxOrbbecPersee::loadDepthTexture(
+    depth::emptyAndInflateBuffer(recorders[i], [this, originalSize, i](const void* data, size_t size){
+      ofxDepthStream::loadDepthTexture(
         textures[i],
         data, size,
-        ofxOrbbecPersee::DepthLoaderOpts()
+        ofxDepthStream::DepthLoaderOpts()
           .setMinDistance(this->pars[i].minDistance)
           .setMaxDistance(this->pars[i].maxDistance)
           .setVertCorrection(this->pars[i].vertCorrection)

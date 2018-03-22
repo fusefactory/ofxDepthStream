@@ -24,11 +24,11 @@ cd Bin/Arm-Release/
 ```
 
 #### Build PerseeServer app
-Next copy the entire ofxOrbbecPersee folder onto the persee (you can checkout the addon's git repo directly, or use scp: ```scp -r ../ofxOrbbecPersee ubuntu@<persee's IP address>:~/```).
+Next copy the entire ofxDepthStream folder onto the persee (you can checkout the addon's git repo directly, or use scp: ```scp -r ../ofxDepthStream ubuntu@<persee's IP address>:~/```).
 
 First, make sure you have _sourced_ the OpenNIDevEnvironment by running ```source OpenNIDevEnvironment``` from the OpenNI SDK folder (see instructions above) **do this in the same terminal session in which you run the build commands below**.
 
-Next run the following from the ofxOrbbecPersee folder:
+Next run the following from the ofxDepthStream folder:
 ```bash
 cd tools/PerseeServer
 make

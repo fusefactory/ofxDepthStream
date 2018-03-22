@@ -1,15 +1,15 @@
 meta:
-	ADDON_NAME = ofxOrbbecPersee
-	ADDON_DESCRIPTION = Tools for working with the Orbbec Persee.
+	ADDON_NAME = ofxDepthStream
+	ADDON_DESCRIPTION = Tools for working with (multiple) depth-sensor cameras
 	ADDON_AUTHOR = Mark van de Korput @ Fuse Interactive
-	ADDON_TAGS = "orbbec" "persee" "depth camera" "Computer Vision" "OpenNI"
-	ADDON_URL = https://bitbucket.org/fuseinteractive/ofxorbbecpersee
+	ADDON_TAGS = "depth camera" "Computer Vision" "OpenNI" "Kinect" "Orbbec" "Persee" "Astra"
+	ADDON_URL = https://github.com/fusefactory/ofxDepthStream
 
 common:
-	# ADDON_DEPENDENCIES += ofxJSON ## OPTIONAL, features enabled with OFXCMS_JSON macro
-	# ADDON_INCLUDES += lib/persee/src
-	# ADDON_SOURCES += lib/persee/src/Inflater.cpp
-	# ADDON_LIBS_EXCLUDE += libs/persee/PerseeServer/src/main.cpp
+	# ADDON_DEPENDENCIES +=
+	# ADDON_INCLUDES +=
+	# ADDON_SOURCES +=
+	# ADDON_LIBS_EXCLUDE += 
 
 	# dependencies with other addons, a list of them separated by spaces
 	# or use += in several lines

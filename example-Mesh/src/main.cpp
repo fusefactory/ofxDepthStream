@@ -1,7 +1,7 @@
 // OF
 #include "ofMain.h"
 // addons
-#include "ofxOrbbecPersee/ofxOrbbecPersee.h"
+#include "ofxDepthStream/ofxDepthStream.h"
 
 class ofApp : public ofBaseApp{
   public: // methods
@@ -23,10 +23,10 @@ class ofApp : public ofBaseApp{
 
   private: // attributes
 
-    // persee/depth data
-    std::string perseeAddress = "persee.local"; // "192.168.1.226"; // "127.0.0.1";
+    // remote depth cam
+    std::string remoteCamAddress = "persee.local"; // "192.168.1.226"; // "127.0.0.1";
     int depthPort = 4445;
-    persee::ReceiverRef receiverRef;
+    depth::ReceiverRef receiverRef;
 
     // data-containers; mesh/texture
     ofVboMesh mesh;
@@ -39,28 +39,28 @@ class ofApp : public ofBaseApp{
 };
 
 void ofApp::setup() {
-  ofSetWindowTitle("ofxOrbbecPersee - Mesh Example");
+  ofSetWindowTitle("ofxDepthStream - Mesh Example");
   ofSetWindowShape(1280,720);
   ofSetVerticalSync(true);
 
   mesh.setMode(OF_PRIMITIVE_POINTS);
 
   // create tcp network receiver for the depth image stream
-  receiverRef = persee::Receiver::createAndStart(perseeAddress, depthPort);
+  receiverRef = depth::Receiver::createAndStart(remoteCamAddress, depthPort);
 }
 
 void ofApp::update() {
   // emptyAndInflateBuffer only executes the given lambda when a frame was received
   // and if that frame could successfully be inflated (data is compressed to conserve network bandwidth)
-  persee::emptyAndInflateBuffer(*receiverRef, [this](const void* data, size_t size){
+  depth::emptyAndInflateBuffer(*receiverRef, [this](const void* data, size_t size){
     // load the received data into a grayscale texture
     if (bDrawDepth) {
-      ofxOrbbecPersee::loadDepthTexture(depthTex, data, size);
+      ofxDepthStream::loadDepthTexture(depthTex, data, size);
     }
 
     // load the received data into our point-cloud mesh
     if (bDrawPoints) {
-      ofxOrbbecPersee::loadMesh(mesh, data, size, ofxOrbbecPersee::MeshLoaderOpts()
+      ofxDepthStream::loadMesh(mesh, data, size, ofxDepthStream::MeshLoaderOpts()
         .setDepthFactor(depthFactor));
     }
   });

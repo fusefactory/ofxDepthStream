@@ -2,7 +2,7 @@
 #include <fstream>
 #include "Recorder.h"
 
-using namespace persee;
+using namespace depth;
 
 Recorder::~Recorder() {
   stop();

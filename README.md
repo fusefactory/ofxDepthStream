@@ -1,4 +1,4 @@
-# ofxOrbbecPersee
+# ofxDepthStream
 
 OpenFrameworks addon with _heavily opiniated_ tools for working with the Orbbec **Persee**.
 
@@ -37,28 +37,28 @@ make RunDebug # to run the last development-build
 See also the example applications
 
 ```c++
-#include "ofxOrbbecPersee/ofxOrbbecPersee.h"
+#include "ofxDepthStream/ofxDepthStream.h"
 
-std::shared_ptr<persee::Receiver> receiverRef;
+std::shared_ptr<depth::Receiver> receiverRef;
 ofTexture depthTexture;
 ofMesh mesh1;
 
 void ofApp::setup() {
    // Create depth stream network receiver (takes a hostname/ip string and port number)
    // this receiver instance will start a separate thread in which it listens for new frame data
-   receiverRef = persee::Receiver::createAndStart("persee.local", 4445);
+   receiverRef = depth::Receiver::createAndStart("persee.local", 4445);
 }
 
 void ofApp::update() {
   // this addons provides some convenience methods for;
   // ...processing raw frame byte data (which is compressed for network streaming)
-  persee::emptyAndInflateBuffer(*receiverRef, [this](const void* data, size_t size){
+  depth::emptyAndInflateBuffer(*receiverRef, [this](const void* data, size_t size){
 
     // ...loading texture data
-    ofxOrbbecPersee::loadDepthTexture(this->depthTexture, data, size);
+    ofxDepthStream::loadDepthTexture(this->depthTexture, data, size);
 
     // ...loading mesh data
-    ofxOrbbecPersee::loadMesh(this->mesh1, data, size);
+    ofxDepthStream::loadMesh(this->mesh1, data, size);
   }
 }
 

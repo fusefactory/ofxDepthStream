@@ -14,7 +14,7 @@
 #endif
 
 
-namespace persee {
+namespace depth {
 
   class Formatter {
     public:

@@ -11,7 +11,7 @@
 #define BUF_SIZE (2024*2024*4)
 
 using namespace std;
-using namespace persee;
+using namespace depth;
 
 void Inflater::destroy() {
   if(decompressed){

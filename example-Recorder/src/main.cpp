@@ -1,7 +1,7 @@
 // OF
 #include "ofMain.h"
 // addons
-#include "ofxOrbbecPersee/ofxOrbbecPersee.h"
+#include "ofxDepthStream/ofxDepthStream.h"
 
 class ofApp : public ofBaseApp{
 
@@ -27,26 +27,26 @@ class ofApp : public ofBaseApp{
 
   private: // attributes
     std::string address = "persee.local"; //"192.168.1.226";
-    // ofxOrbbecPersee::DepthStreamRef depthStreamRef;
+    // ofxDepthStream::DepthStreamRef depthStreamRef;
 
-    persee::ReceiverRef receiverRef;
-    persee::Buffer depthBuffer;
+    depth::ReceiverRef receiverRef;
+    depth::Buffer depthBuffer;
 
     ofTexture depthTex;
     ofPixels depthPixels;
 
     bool bRecording=false;
-    persee::Recorder recorder;
+    depth::Recorder recorder;
 
     bool bPlaying=false;
-    persee::Playback playback;
+    depth::Playback playback;
 };
 
 void ofApp::setup() {
   ofSetWindowShape(640,480);
 
   // setup tcp network stream receiver
-  receiverRef = persee::Receiver::createAndStart(address); // default port: 4445
+  receiverRef = depth::Receiver::createAndStart(address); // default port: 4445
   // pipe our tcp receiver into our recorder (will only record when its start method is called)
   receiverRef->setOutputTo(&recorder);
   // pipe our recorder into our depth buffer
@@ -65,7 +65,7 @@ void ofApp::update() {
     this->depthBuffer.write(data, size);
   });
 
-  ofxOrbbecPersee::loadDepthTexture(depthBuffer, depthTex);
+  ofxDepthStream::loadDepthTexture(depthBuffer, depthTex);
 }
 
 void ofApp::draw() {

@@ -59,44 +59,44 @@
 
 /* Begin PBXFileReference section */
 		0A1DAC09F322AE313A40706D /* ofxToggle.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxToggle.h; path = ../../../addons/ofxGui/src/ofxToggle.h; sourceTree = SOURCE_ROOT; };
-		0D0559C159EFC6F04C673829 /* Playback.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Playback.h; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/Playback.h; sourceTree = SOURCE_ROOT; };
-		133D326BAFDE1B19668CBAEB /* Recorder.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Recorder.cpp; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/Recorder.cpp; sourceTree = SOURCE_ROOT; };
+		0D0559C159EFC6F04C673829 /* Playback.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Playback.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Playback.h; sourceTree = SOURCE_ROOT; };
+		133D326BAFDE1B19668CBAEB /* Recorder.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Recorder.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Recorder.cpp; sourceTree = SOURCE_ROOT; };
 		15F2C6477A769C03A56D1401 /* ofxSlider.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxSlider.cpp; path = ../../../addons/ofxGui/src/ofxSlider.cpp; sourceTree = SOURCE_ROOT; };
 		17E65988300FBD9AAA2CD0CA /* ofxGui.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxGui.h; path = ../../../addons/ofxGui/src/ofxGui.h; sourceTree = SOURCE_ROOT; };
 		1C0DA2561397A7DE0246858B /* ofxGuiGroup.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxGuiGroup.h; path = ../../../addons/ofxGui/src/ofxGuiGroup.h; sourceTree = SOURCE_ROOT; };
 		2834D88A62CD23F3DE2C47D1 /* ofxButton.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxButton.h; path = ../../../addons/ofxGui/src/ofxButton.h; sourceTree = SOURCE_ROOT; };
-		320788C8E891259C8C9339BB /* Receiver.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Receiver.h; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/Receiver.h; sourceTree = SOURCE_ROOT; };
-		34930C7C332DBFC19F46CE6D /* persee.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = persee.h; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/persee.h; sourceTree = SOURCE_ROOT; };
-		4012191948D1B421DC4621F1 /* OniSampleUtilities.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = OniSampleUtilities.cpp; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/OniSampleUtilities.cpp; sourceTree = SOURCE_ROOT; };
-		43FA1D2AAA9EA0A08B2B0DA2 /* functional.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = functional.h; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/functional.h; sourceTree = SOURCE_ROOT; };
+		320788C8E891259C8C9339BB /* Receiver.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Receiver.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Receiver.h; sourceTree = SOURCE_ROOT; };
+		34930C7C332DBFC19F46CE6D /* DepthStream.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = DepthStream.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/DepthStream.h; sourceTree = SOURCE_ROOT; };
+		4012191948D1B421DC4621F1 /* OniSampleUtilities.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = OniSampleUtilities.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/OniSampleUtilities.cpp; sourceTree = SOURCE_ROOT; };
+		43FA1D2AAA9EA0A08B2B0DA2 /* functional.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = functional.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/functional.h; sourceTree = SOURCE_ROOT; };
 		4EC6A0E8C8383519E5E10736 /* ofxHistoryPlot.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxHistoryPlot.h; path = ../../../addons/ofxHistoryPlot/src/ofxHistoryPlot.h; sourceTree = SOURCE_ROOT; };
 		52AFA1F08C420992CAAAE648 /* ofxSlider.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxSlider.h; path = ../../../addons/ofxGui/src/ofxSlider.h; sourceTree = SOURCE_ROOT; };
-		555F0FB276A1A791185272DC /* functional.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = functional.h; path = ../../../addons/ofxOrbbecPersee/src/ofxOrbbecPersee/functional.h; sourceTree = SOURCE_ROOT; };
-		68C4AA1460065E6B4B6F0B74 /* Inflater.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Inflater.h; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/Inflater.h; sourceTree = SOURCE_ROOT; };
-		7068F34FA7EC43F0C3957DE5 /* Buffer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Buffer.h; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/Buffer.h; sourceTree = SOURCE_ROOT; };
+		555F0FB276A1A791185272DC /* functional.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = functional.h; path = ../../../addons/ofxDepthStream/src/ofxDepthStream/functional.h; sourceTree = SOURCE_ROOT; };
+		68C4AA1460065E6B4B6F0B74 /* Inflater.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Inflater.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Inflater.h; sourceTree = SOURCE_ROOT; };
+		7068F34FA7EC43F0C3957DE5 /* Buffer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Buffer.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Buffer.h; sourceTree = SOURCE_ROOT; };
 		78D67A00EB899FAC09430597 /* ofxLabel.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxLabel.cpp; path = ../../../addons/ofxGui/src/ofxLabel.cpp; sourceTree = SOURCE_ROOT; };
 		802251BAF1B35B1D67B32FD0 /* ofxSliderGroup.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxSliderGroup.cpp; path = ../../../addons/ofxGui/src/ofxSliderGroup.cpp; sourceTree = SOURCE_ROOT; };
 		87F26B4B24CBD428AD9EEBAA /* ofxBaseGui.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxBaseGui.h; path = ../../../addons/ofxGui/src/ofxBaseGui.h; sourceTree = SOURCE_ROOT; };
 		89449E3044D456F7DE7BEA14 /* ofxPanel.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxPanel.h; path = ../../../addons/ofxGui/src/ofxPanel.h; sourceTree = SOURCE_ROOT; };
 		907C5B5E104864A2D3A25745 /* ofxToggle.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxToggle.cpp; path = ../../../addons/ofxGui/src/ofxToggle.cpp; sourceTree = SOURCE_ROOT; };
-		90FBFCA621A87A6F2C48AC78 /* ofxOrbbecPersee.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOrbbecPersee.h; path = ../../../addons/ofxOrbbecPersee/src/ofxOrbbecPersee/ofxOrbbecPersee.h; sourceTree = SOURCE_ROOT; };
+		90FBFCA621A87A6F2C48AC78 /* ofxDepthStream.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxDepthStream.h; path = ../../../addons/ofxDepthStream/src/ofxDepthStream/ofxDepthStream.h; sourceTree = SOURCE_ROOT; };
 		932CAB813CEE8FAAC0E75105 /* ofxHistoryPlot.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxHistoryPlot.cpp; path = ../../../addons/ofxHistoryPlot/src/ofxHistoryPlot.cpp; sourceTree = SOURCE_ROOT; };
 		9604B925D32EE39065747725 /* ofxBaseGui.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxBaseGui.cpp; path = ../../../addons/ofxGui/src/ofxBaseGui.cpp; sourceTree = SOURCE_ROOT; };
-		A914A91E97B38023B2C81183 /* config.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = config.h; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/config.h; sourceTree = SOURCE_ROOT; };
-		B26028560ECF5F142C5F47DD /* Inflater.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Inflater.cpp; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/Inflater.cpp; sourceTree = SOURCE_ROOT; };
+		A914A91E97B38023B2C81183 /* config.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = config.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/config.h; sourceTree = SOURCE_ROOT; };
+		B26028560ECF5F142C5F47DD /* Inflater.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Inflater.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Inflater.cpp; sourceTree = SOURCE_ROOT; };
 		B87C60311EC1FE841C1ECD89 /* ofxLabel.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxLabel.h; path = ../../../addons/ofxGui/src/ofxLabel.h; sourceTree = SOURCE_ROOT; };
-		BE33431E470AE0A0FCECCA1B /* CamInterface.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = CamInterface.cpp; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/CamInterface.cpp; sourceTree = SOURCE_ROOT; };
-		BF1A121223AA4AAB317F6896 /* Playback.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Playback.cpp; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/Playback.cpp; sourceTree = SOURCE_ROOT; };
-		C60BF89535478335CDE3B8D6 /* Frame.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Frame.h; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/Frame.h; sourceTree = SOURCE_ROOT; };
+		BE33431E470AE0A0FCECCA1B /* CamInterface.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = CamInterface.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/CamInterface.cpp; sourceTree = SOURCE_ROOT; };
+		BF1A121223AA4AAB317F6896 /* Playback.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Playback.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Playback.cpp; sourceTree = SOURCE_ROOT; };
+		C60BF89535478335CDE3B8D6 /* Frame.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Frame.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Frame.h; sourceTree = SOURCE_ROOT; };
 		C70D8946940288799E82131E /* ofxSliderGroup.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxSliderGroup.h; path = ../../../addons/ofxGui/src/ofxSliderGroup.h; sourceTree = SOURCE_ROOT; };
 		C88333E71C9457E441C33474 /* ofxButton.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxButton.cpp; path = ../../../addons/ofxGui/src/ofxButton.cpp; sourceTree = SOURCE_ROOT; };
-		CBF9AD2EBAFB22F81F7D39D3 /* CamInterface.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = CamInterface.h; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/CamInterface.h; sourceTree = SOURCE_ROOT; };
-		D2ADF08538188E8BDDF945ED /* Transmitter.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Transmitter.h; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/Transmitter.h; sourceTree = SOURCE_ROOT; };
-		DBF41B1A32A5B766BFAC39E6 /* Receiver.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Receiver.cpp; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/Receiver.cpp; sourceTree = SOURCE_ROOT; };
-		DD654642BAAD198FDB34F06E /* Recorder.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Recorder.h; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/Recorder.h; sourceTree = SOURCE_ROOT; };
-		E0C993173F8D3D97018A5DF0 /* Transmitter.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Transmitter.cpp; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/Transmitter.cpp; sourceTree = SOURCE_ROOT; };
+		CBF9AD2EBAFB22F81F7D39D3 /* CamInterface.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = CamInterface.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/CamInterface.h; sourceTree = SOURCE_ROOT; };
+		D2ADF08538188E8BDDF945ED /* Transmitter.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Transmitter.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Transmitter.h; sourceTree = SOURCE_ROOT; };
+		DBF41B1A32A5B766BFAC39E6 /* Receiver.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Receiver.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Receiver.cpp; sourceTree = SOURCE_ROOT; };
+		DD654642BAAD198FDB34F06E /* Recorder.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Recorder.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Recorder.h; sourceTree = SOURCE_ROOT; };
+		E0C993173F8D3D97018A5DF0 /* Transmitter.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Transmitter.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Transmitter.cpp; sourceTree = SOURCE_ROOT; };
 		E112B3AEBEA2C091BF2B40AE /* ofxPanel.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxPanel.cpp; path = ../../../addons/ofxGui/src/ofxPanel.cpp; sourceTree = SOURCE_ROOT; };
-		E3122DD39704FE9A46F07F42 /* OniSampleUtilities.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OniSampleUtilities.h; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/OniSampleUtilities.h; sourceTree = SOURCE_ROOT; };
+		E3122DD39704FE9A46F07F42 /* OniSampleUtilities.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OniSampleUtilities.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/OniSampleUtilities.h; sourceTree = SOURCE_ROOT; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E4B69B5B0A3A1756003C02F2 /* example-DualStreamDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "example-DualStreamDebug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4B69E1D0A3A1BDC003C02F2 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
@@ -104,8 +104,8 @@
 		E4EB691F138AFCF100A09F29 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		ECF8674C7975F1063C5E30CA /* ofxGuiGroup.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxGuiGroup.cpp; path = ../../../addons/ofxGui/src/ofxGuiGroup.cpp; sourceTree = SOURCE_ROOT; };
-		EF20301C2D5F0104AFFFBA90 /* Compressor.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Compressor.cpp; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/Compressor.cpp; sourceTree = SOURCE_ROOT; };
-		FC4098B5B4E4BEF06D74F691 /* Compressor.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Compressor.h; path = ../../../addons/ofxOrbbecPersee/libs/persee/src/Compressor.h; sourceTree = SOURCE_ROOT; };
+		EF20301C2D5F0104AFFFBA90 /* Compressor.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Compressor.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Compressor.cpp; sourceTree = SOURCE_ROOT; };
+		FC4098B5B4E4BEF06D74F691 /* Compressor.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Compressor.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Compressor.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,13 +120,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		045A35ED05E0A2C25DD8FE13 /* ofxOrbbecPersee */ = {
+		045A35ED05E0A2C25DD8FE13 /* ofxDepthStream */ = {
 			isa = PBXGroup;
 			children = (
-				90FBFCA621A87A6F2C48AC78 /* ofxOrbbecPersee.h */,
+				90FBFCA621A87A6F2C48AC78 /* ofxDepthStream.h */,
 				555F0FB276A1A791185272DC /* functional.h */,
 			);
-			name = ofxOrbbecPersee;
+			name = ofxDepthStream;
 			sourceTree = "<group>";
 		};
 		09FAC8F2B42CA7F4DC63DAD1 /* src */ = {
@@ -145,7 +145,7 @@
 				EF20301C2D5F0104AFFFBA90 /* Compressor.cpp */,
 				DD654642BAAD198FDB34F06E /* Recorder.h */,
 				DBF41B1A32A5B766BFAC39E6 /* Receiver.cpp */,
-				34930C7C332DBFC19F46CE6D /* persee.h */,
+				34930C7C332DBFC19F46CE6D /* DepthStream.h */,
 				7068F34FA7EC43F0C3957DE5 /* Buffer.h */,
 				D2ADF08538188E8BDDF945ED /* Transmitter.h */,
 				320788C8E891259C8C9339BB /* Receiver.h */,
@@ -174,18 +174,18 @@
 			name = ofxGui;
 			sourceTree = "<group>";
 		};
-		4AB7114306EB777D99AA1EA3 /* persee */ = {
+		4AB7114306EB777D99AA1EA3 /* DepthStream */ = {
 			isa = PBXGroup;
 			children = (
 				09FAC8F2B42CA7F4DC63DAD1 /* src */,
 			);
-			name = persee;
+			name = DepthStream;
 			sourceTree = "<group>";
 		};
 		5B30EDA34F4D526D13CD067C /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				4AB7114306EB777D99AA1EA3 /* persee */,
+				4AB7114306EB777D99AA1EA3 /* DepthStream */,
 			);
 			name = libs;
 			sourceTree = "<group>";
@@ -200,7 +200,7 @@
 		A2F4C741E50181E533341628 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				045A35ED05E0A2C25DD8FE13 /* ofxOrbbecPersee */,
+				045A35ED05E0A2C25DD8FE13 /* ofxDepthStream */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -232,20 +232,20 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
-				BCE3B1E6A2D6CD083A085585 /* ofxOrbbecPersee */,
+				BCE3B1E6A2D6CD083A085585 /* ofxDepthStream */,
 				C65E01A63772FC3E5D61CE7F /* ofxHistoryPlot */,
 				480A780D8D0308AE4A368801 /* ofxGui */,
 			);
 			name = addons;
 			sourceTree = "<group>";
 		};
-		BCE3B1E6A2D6CD083A085585 /* ofxOrbbecPersee */ = {
+		BCE3B1E6A2D6CD083A085585 /* ofxDepthStream */ = {
 			isa = PBXGroup;
 			children = (
 				A2F4C741E50181E533341628 /* src */,
 				5B30EDA34F4D526D13CD067C /* libs */,
 			);
-			name = ofxOrbbecPersee;
+			name = ofxDepthStream;
 			sourceTree = "<group>";
 		};
 		C65E01A63772FC3E5D61CE7F /* ofxHistoryPlot */ = {
@@ -435,11 +435,11 @@
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					src,
-					../../../addons/ofxOrbbecPersee/libs,
-					../../../addons/ofxOrbbecPersee/libs/persee,
-					../../../addons/ofxOrbbecPersee/libs/persee/src,
-					../../../addons/ofxOrbbecPersee/src,
-					../../../addons/ofxOrbbecPersee/src/ofxOrbbecPersee,
+					../../../addons/ofxDepthStream/libs,
+					../../../addons/ofxDepthStream/libs/DepthStream,
+					../../../addons/ofxDepthStream/libs/DepthStream/src,
+					../../../addons/ofxDepthStream/src,
+					../../../addons/ofxDepthStream/src/ofxDepthStream,
 					../../../addons/ofxHistoryPlot/src,
 					../../../addons/ofxGui/src,
 				);
@@ -476,11 +476,11 @@
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					src,
-					../../../addons/ofxOrbbecPersee/libs,
-					../../../addons/ofxOrbbecPersee/libs/persee,
-					../../../addons/ofxOrbbecPersee/libs/persee/src,
-					../../../addons/ofxOrbbecPersee/src,
-					../../../addons/ofxOrbbecPersee/src/ofxOrbbecPersee,
+					../../../addons/ofxDepthStream/libs,
+					../../../addons/ofxDepthStream/libs/DepthStream,
+					../../../addons/ofxDepthStream/libs/DepthStream/src,
+					../../../addons/ofxDepthStream/src,
+					../../../addons/ofxDepthStream/src/ofxDepthStream,
 					../../../addons/ofxHistoryPlot/src,
 					../../../addons/ofxGui/src,
 				);
@@ -510,11 +510,11 @@
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					src,
-					../../../addons/ofxOrbbecPersee/libs,
-					../../../addons/ofxOrbbecPersee/libs/persee,
-					../../../addons/ofxOrbbecPersee/libs/persee/src,
-					../../../addons/ofxOrbbecPersee/src,
-					../../../addons/ofxOrbbecPersee/src/ofxOrbbecPersee,
+					../../../addons/ofxDepthStream/libs,
+					../../../addons/ofxDepthStream/libs/DepthStream,
+					../../../addons/ofxDepthStream/libs/DepthStream/src,
+					../../../addons/ofxDepthStream/src,
+					../../../addons/ofxDepthStream/src/ofxDepthStream,
 					../../../addons/ofxHistoryPlot/src,
 					../../../addons/ofxGui/src,
 				);
@@ -544,11 +544,11 @@
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					src,
-					../../../addons/ofxOrbbecPersee/libs,
-					../../../addons/ofxOrbbecPersee/libs/persee,
-					../../../addons/ofxOrbbecPersee/libs/persee/src,
-					../../../addons/ofxOrbbecPersee/src,
-					../../../addons/ofxOrbbecPersee/src/ofxOrbbecPersee,
+					../../../addons/ofxDepthStream/libs,
+					../../../addons/ofxDepthStream/libs/DepthStream,
+					../../../addons/ofxDepthStream/libs/DepthStream/src,
+					../../../addons/ofxDepthStream/src,
+					../../../addons/ofxDepthStream/src/ofxDepthStream,
 					../../../addons/ofxHistoryPlot/src,
 					../../../addons/ofxGui/src,
 				);

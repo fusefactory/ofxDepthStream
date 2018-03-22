@@ -7,7 +7,7 @@
 #include <netdb.h> //hostent
 #include <thread>
 
-namespace persee {
+namespace depth {
   class Transmitter {
 
     public:

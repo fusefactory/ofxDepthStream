@@ -4,7 +4,7 @@
 #include "CamInterface.h"
 
 using namespace openni;
-using namespace persee;
+using namespace depth;
 
 #ifdef OPENNI_AVAILABLE
 

@@ -24,12 +24,12 @@
 #include <stdio.h>
 // #include <OpenNI.h>
 
-namespace persee {
+namespace depth {
   int wasKeyboardHit();
 
   #ifdef WIN32
   #else
-  void Sleep(int millisecs);
+    void Sleep(int millisecs);
   #endif
 
   // void calculateHistogram(float* pHistogram, int histogramSize, const openni::VideoFrameRef& frame);

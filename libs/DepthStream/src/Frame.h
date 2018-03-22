@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace persee {
+namespace depth {
 
   /**
    * Frame is a simple read-only wrapper around a data block and a size attribute.

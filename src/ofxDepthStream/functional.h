@@ -2,10 +2,10 @@
 
 // OF
 #include "ofMain.h"
-// local/persee
-#include "persee.h"
+// local
+#include "DepthStream.h"
 
-namespace ofxOrbbecPersee {
+namespace ofxDepthStream {
 
   static const size_t FRAME_SIZE_640x480x16BIT = (640*480*2); // orbbec
   static const size_t FRAME_SIZE_640x480x32BIT = (640*480*4);
@@ -44,7 +44,7 @@ namespace ofxOrbbecPersee {
       if(size == FRAME_SIZE_640x480x16BIT) {
         tex.allocate(640, 480, GL_RGB);
       } else {
-        ofLogWarning() << "Frame-size not supported by ofxOrbbecPersee::loadDepthTexture16bit: " << size;
+        ofLogWarning() << "Frame-size not supported by ofxDepthStream::loadDepthTexture16bit: " << size;
         return;
       }
     }
@@ -116,7 +116,7 @@ namespace ofxOrbbecPersee {
       } else if(size == FRAME_SIZE_512x424x32BIT){
         tex.allocate(512, 424, GL_RGB);
       } else {
-        ofLogWarning() << "Frame-size not supported by ofxOrbbecPersee::loadDepthTexture32bit: " << size;
+        ofLogWarning() << "Frame-size not supported by ofxDepthStream::loadDepthTexture32bit: " << size;
         return;
       }
     }
@@ -193,12 +193,12 @@ namespace ofxOrbbecPersee {
       return;
     }
 
-    ofLogWarning() << "Frame size not supported by ofxOrbbecPersee::loadDepthTexture (bytes): " << size;
+    ofLogWarning() << "Frame size not supported by ofxDepthStream::loadDepthTexture (bytes): " << size;
   }
 
-  void loadDepthTexture(persee::Buffer& buffer, ofTexture& tex, const DepthLoaderOpts& opts = DepthLoaderOpts()) {
+  void loadDepthTexture(depth::Buffer& buffer, ofTexture& tex, const DepthLoaderOpts& opts = DepthLoaderOpts()) {
     // check if buffer has data
-    persee::emptyAndInflateBuffer(buffer, [&tex, &opts](const void* data, size_t size){
+    depth::emptyAndInflateBuffer(buffer, [&tex, &opts](const void* data, size_t size){
       loadDepthTexture(tex, data, size, opts);
     });
   }
@@ -263,12 +263,12 @@ namespace ofxOrbbecPersee {
       return;
     }
 
-    ofLogWarning() << "Frame size not supported by ofxOrbbecPersee::loadMesh (bytes): " << size;
+    ofLogWarning() << "Frame size not supported by ofxDepthStream::loadMesh (bytes): " << size;
   }
 
-  void loadMesh(persee::Buffer& buffer, ofMesh& mesh, const MeshLoaderOpts& opts = MeshLoaderOpts()) {
+  void loadMesh(depth::Buffer& buffer, ofMesh& mesh, const MeshLoaderOpts& opts = MeshLoaderOpts()) {
     // check if buffer has data
-    persee::emptyAndInflateBuffer(buffer, [&mesh, &opts](const void* data, size_t size){
+    depth::emptyAndInflateBuffer(buffer, [&mesh, &opts](const void* data, size_t size){
       loadMesh(mesh, data, size, opts);
     });
   }
@@ -299,8 +299,8 @@ namespace ofxOrbbecPersee {
     size_t size32bit = pixelCount * 4;
 
     if (size == size16bit) {
-      // returns shared_ptr<persee::Frame> with 1-byte grayscale data
-      persee::convert_16bit_to_8bit(pixelCount, data)
+      // returns shared_ptr<depth::Frame> with 1-byte grayscale data
+      depth::convert_16bit_to_8bit(pixelCount, data)
       // load grayscale data into our ofTexture instance
       ->template convert<void>([&depthPixels, &tex](const void* data, size_t size){
         // ofLogNotice() << "buffer to tex onversion update: " << size;
@@ -312,8 +312,8 @@ namespace ofxOrbbecPersee {
     }
 
     if (size == size32bit) {
-      // returns shared_ptr<persee::Frame> with 1-byte grayscale data
-      persee::convert_32bit_to_8bit(pixelCount, data)
+      // returns shared_ptr<depth::Frame> with 1-byte grayscale data
+      depth::convert_32bit_to_8bit(pixelCount, data)
       // load grayscale data into our ofTexture instance
       ->template convert<void>([&depthPixels, &tex](const void* data, size_t size){
         // ofLogNotice() << "buffer to tex onversion update: " << size;
@@ -327,9 +327,9 @@ namespace ofxOrbbecPersee {
     ofLogWarning() << "Depth texture size did not match data-size (got: " << size << ", expected: " << size16bit << " or " << size32bit << ")";
   }
 
-  void loadGrayscaleTexture(persee::Buffer& buf, ofTexture& tex) {
+  void loadGrayscaleTexture(depth::Buffer& buf, ofTexture& tex) {
     // check if buffer has data
-    persee::emptyAndInflateBuffer(buf, [&tex](const void* data, size_t size){
+    depth::emptyAndInflateBuffer(buf, [&tex](const void* data, size_t size){
       loadGrayscaleTexture(tex, data, size);
     });
   }
@@ -362,9 +362,9 @@ namespace ofxOrbbecPersee {
     tex.loadData(pixels);
   }
 
-  void loadColorTexture(persee::Buffer& buffer, ofTexture& tex) {
+  void loadColorTexture(depth::Buffer& buffer, ofTexture& tex) {
     // check if buffer has data
-    persee::emptyAndInflateBuffer(buffer, [&tex](const void* data, size_t size){
+    depth::emptyAndInflateBuffer(buffer, [&tex](const void* data, size_t size){
       loadColorTexture(tex, data, size);
     });
   }

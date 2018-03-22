@@ -5,7 +5,7 @@
 #include "Inflater.h"
 #include "Compressor.h"
 
-namespace persee {
+namespace depth {
 
   // compress methods
 
