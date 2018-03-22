@@ -1,4 +1,27 @@
 cmake_minimum_required(VERSION 3.2)
+
+# if (ANDROID)
+#   set(ASTRA_ANDROID TRUE)
+# elseif (WIN32)
+#   set(ASTRA_WINDOWS TRUE)
+# elseif (APPLE)
+#   set(ASTRA_OSX TRUE)
+# elseif (UNIX) #not android
+#   set(ASTRA_UNIX TRUE)
+# endif()
+
+# set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+
+#
+# if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+#   set(ASTRA_64 ON)
+# else()
+#   set(ASTRA_32 ON)
+# endif()
+
+
+
 set(CMAKE_CXX_STANDARD 11)
 
 function(add_astra_sdk_dependency _targetname)

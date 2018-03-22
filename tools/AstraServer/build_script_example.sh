@@ -1,4 +1,4 @@
-ASTRA_ROOT = /Users/mark/code/AstraSDK-0.5.0-20160426T102621Z-darwin-x64/
+export ASTRA_ROOT=/Users/mark/code/AstraSDK-0.5.0-20160426T102621Z-darwin-x64/
 
 if [ ! -d build ]; then
   mkdir build
