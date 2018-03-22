@@ -1,6 +1,9 @@
 #pragma once
 
 namespace depth {
+  class Compressor;
+  typedef std::shared_ptr<Compressor> CompressorRef;
+
   class Compressor {
     public:
       bool compress(const void* data, size_t size);
