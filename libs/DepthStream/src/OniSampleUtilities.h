@@ -22,7 +22,6 @@
 #define ONISAMPLEUTILITIES_H
 
 #include <stdio.h>
-// #include <OpenNI.h>
 
 namespace depth {
   int wasKeyboardHit();
@@ -31,8 +30,6 @@ namespace depth {
   #else
     void Sleep(int millisecs);
   #endif
-
-  // void calculateHistogram(float* pHistogram, int histogramSize, const openni::VideoFrameRef& frame);
 }
 
 #endif // ONISAMPLEUTILITIES_H

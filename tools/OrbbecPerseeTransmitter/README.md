@@ -1,4 +1,4 @@
-# PerseeServer
+# OrbbecPerseeTransmitter
 Transmits a depth-image stream over a TCP network from the Orbbec Persee.
 
 ##### note
@@ -28,32 +28,32 @@ cd Bin/Arm-Release/
 ./SimpleRead
 ```
 
-#### Build PerseeServer app
+#### Build OrbbecPerseeTransmitter app
 Next copy the entire ofxDepthStream folder onto the persee (you can checkout the addon's git repo directly, or use scp: ```scp -r ../ofxDepthStream ubuntu@<persee's IP address>:~/```).
 
 First, make sure you have _sourced_ the OpenNIDevEnvironment by running ```source OpenNIDevEnvironment``` from the OpenNI SDK folder (see instructions above) **do this in the same terminal session in which you run the build commands below**.
 
 Next run the following from the ofxDepthStream folder:
 ```bash
-cd tools/PerseeServer
+cd tools/OrbbecPerseeTransmitter
 make
 ```
 
-#### Run PerseeServer app
+#### Run OrbbecPerseeTransmitter app
 ```bash
 cd Bin/Arm-Release
-./PerseeServer
+./OrbbecPerseeTransmitter
 ```
 
-#### PerseeServer args
-Currently de PerseeServer only streams the depth image ([color stream is a work in progress](https://3dclub.orbbec3d.com/t/color-stream-using-opencv-on-persee-with-ubuntu-16-04/1459)).
+#### OrbbecPerseeTransmitter args
+Currently de OrbbecPerseeTransmitter only streams the depth image ([color stream is a work in progress](https://3dclub.orbbec3d.com/t/color-stream-using-opencv-on-persee-with-ubuntu-16-04/1459)).
 
 Command-line arguments:
 ```bash
-  ./PerseeServer --depth-port 4445 # sets port from which depth image is streamed, 4445 by default
-  ./PerseeServer --convert-32bit # enables 32-bit conversion, disabled by default (sends 16-bit)
-  ./PerseeServer --verbose # enables verbose mode, disabled by default
-  ./PerseeServer --fps 30 # configures the framerate (frames/second) to transmit (60 by default, though it's not guaranteed that this framerate is achieved)
+  ./OrbbecPerseeTransmitter --depth-port 4445 # sets port from which depth image is streamed, 4445 by default
+  ./OrbbecPerseeTransmitter --convert-32bit # enables 32-bit conversion, disabled by default (sends 16-bit)
+  ./OrbbecPerseeTransmitter --verbose # enables verbose mode, disabled by default
+  ./OrbbecPerseeTransmitter --fps 30 # configures the framerate (frames/second) to transmit (60 by default, though it's not guaranteed that this framerate is achieved)
 ```
 
 # Color Stream through OpenCV; (Status: Work In Progress)

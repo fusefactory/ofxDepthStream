@@ -1,23 +1,9 @@
-/*****************************************************************************
-*                                                                            *
-*  OpenNI 2.x Alpha                                                          *
-*  Copyright (C) 2012 PrimeSense Ltd.                                        *
-*                                                                            *
-*  This file is part of OpenNI.                                              *
-*                                                                            *
-*  Licensed under the Apache License, Version 2.0 (the "License");           *
-*  you may not use this file except in compliance with the License.          *
-*  You may obtain a copy of the License at                                   *
-*                                                                            *
-*      http://www.apache.org/licenses/LICENSE-2.0                            *
-*                                                                            *
-*  Unless required by applicable law or agreed to in writing, software       *
-*  distributed under the License is distributed on an "AS IS" BASIS,         *
-*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  *
-*  See the License for the specific language governing permissions and       *
-*  limitations under the License.                                            *
-*                                                                            *
-*****************************************************************************/
+// By default this we'll assume APPLE is a development
+// environment without OpenNI and OpenCV.
+#ifndef __APPLE__
+  #define OPENNI_AVAILABLE
+  #define OPENCV_AVAILABLE
+#endif
 
 // stdlib
 #include <iostream>
@@ -27,7 +13,6 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 // local
-#include "config.h"
 #include "../../../libs/DepthStream/src/OniSampleUtilities.h"
 #include "../../../libs/DepthStream/src/CamInterface.h"
 #include "../../../libs/DepthStream/src/Compressor.h"
@@ -41,11 +26,6 @@ using namespace depth;
 struct ClrSrc {
   std::shared_ptr<VideoCapture> capRef;
   Mat frame;
-
-  // ~ClrSrc(){
-  //   cvReleaseImage(&frame);
-  // }
-
 };
 
 std::shared_ptr<ClrSrc> createColorSource() {
@@ -174,6 +154,7 @@ int main(int argc, char** argv) {
     depthStreamTransmitters.push_back(std::make_shared<Transmitter>(depthPort));
   }
 
+  // COLOR STREAM DOESN'T WORK YET
   // if(colorPort > 0){
   //   std::cout << "Starting color transmitter on port " << colorPort << std::endl;
   //   colorStreamTransmitters.push_back(std::make_shared<Transmitter>(colorPort));
