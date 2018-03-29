@@ -1,12 +1,14 @@
 #pragma once
 
+#include <memory>
+
 namespace depth {
   class Compressor;
   typedef std::shared_ptr<Compressor> CompressorRef;
 
   /**
    * \brief Compressed a package (frame) of data using zlib compression
-   */ 
+   */
   class Compressor {
     public:
       bool compress(const void* data, size_t size);

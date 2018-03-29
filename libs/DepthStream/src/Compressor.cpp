@@ -1,6 +1,7 @@
 #include <iostream>
-#include "Compressor.h"
 #include "zlib.h"
+#include "Compressor.h"
+
 
 using namespace depth;
 
