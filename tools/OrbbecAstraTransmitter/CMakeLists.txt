@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.2)
 
+set(CMAKE_CXX_STANDARD 11)
+set (_projname "OrbbecAstraTransmitter")
+
 # if (ANDROID)
 #   set(ASTRA_ANDROID TRUE)
 # elseif (WIN32)
@@ -12,16 +15,12 @@ cmake_minimum_required(VERSION 3.2)
 
 # set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-
 #
 # if(CMAKE_SIZEOF_VOID_P EQUAL 8)
 #   set(ASTRA_64 ON)
 # else()
 #   set(ASTRA_32 ON)
 # endif()
-
-
-set(CMAKE_CXX_STANDARD 11)
 
 function(add_astra_sdk_dependency _targetname)
   if(NOT TARGET ${_targetname})
@@ -33,8 +32,7 @@ function(add_astra_sdk_dependency _targetname)
   endif()
 endfunction()
 
-set (_projname "AstraServer")
-set (_projname "AstraServer")
+
 FILE (GLOB ${_projname}_SOURCES src/*.cpp ../../libs/DepthStream/src/*.cpp)
 add_executable(${_projname} ${${_projname}_SOURCES})
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")

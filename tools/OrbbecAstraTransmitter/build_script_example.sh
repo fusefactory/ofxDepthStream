@@ -11,5 +11,5 @@ export ASTRA_ROOT=$ASTRA_ROOT && cmake ..
 make -j4
 
 echo ""
-echo "AstraServer executable should be in the ./build folder"
+echo "OrbbecAstraTransmitter executable should be in the ./build folder"
 echo ""
