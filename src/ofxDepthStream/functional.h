@@ -13,6 +13,7 @@ namespace ofxDepthStream {
 
   // Depth texture loader methods // // // // //
 
+  /// Options container for the loadDepth* methods
   struct DepthLoaderOpts {
     int minDistance=0;
     int maxDistance=5000;
@@ -35,9 +36,11 @@ namespace ofxDepthStream {
   };
 
   /**
-   * loadEdgeData based on KinectRemote::newData method in the Dokk_OF repo (but converted to 16-bit)
+   * populates the texture instance with 16-bit grayscale depth-image data from the given frame-data. It allocates the texture if necessary.
    */
   void loadDepthTexture16bit(ofTexture& tex, const void* data, size_t size, const DepthLoaderOpts& opts = DepthLoaderOpts()) {
+    // loadEdgeData based on KinectRemote::newData method in the Dokk_OF repo (but converted to 16-bit)
+
     // allocate
     if(!tex.isAllocated()) {
       // ofLogNotice() << "Allocating edge-data texture";
@@ -105,9 +108,11 @@ namespace ofxDepthStream {
   }
 
   /**
-   * loadEdgeData based on KinectRemote::newData method in the Dokk_OF repo
+   * populates the texture instance with 32-bit grayscale depth-image data from the given frame-data. It allocates the texture if necessary.
    */
   void loadDepthTexture32bit(ofTexture& tex, const void* data, size_t size, const DepthLoaderOpts& opts = DepthLoaderOpts()) {
+    // loadEdgeData based on KinectRemote::newData method in the Dokk_OF repo
+
     // allocate
     if(!tex.isAllocated()) {
       // ofLogNotice() << "Allocating edge-data texture";
@@ -179,8 +184,7 @@ namespace ofxDepthStream {
   }
 
   /**
-   * Tries to guess the texture resolution/channel-depth based on frame size
-   * and calls the appropriate converter method
+   * populates the texture instance with grayscale depth-image data from the given frame-data. It allocates the texture if necessary and guesses the bit-depth of the data based on the size of the package.
    */
   void loadDepthTexture(ofTexture& tex, const void* data, size_t size, const DepthLoaderOpts& opts = DepthLoaderOpts()) {
     if (size == FRAME_SIZE_640x480x16BIT) {
@@ -196,6 +200,11 @@ namespace ofxDepthStream {
     ofLogWarning() << "Frame size not supported by ofxDepthStream::loadDepthTexture (bytes): " << size;
   }
 
+  /**
+   * Populates texture with depth data from the buffer's current content and empties the buffer.
+   *
+   * The texture is allocated if necessary, the resolution and bit-depth is guessed based on the size of the buffer's content.
+   */
   void loadDepthTexture(depth::Buffer& buffer, ofTexture& tex, const DepthLoaderOpts& opts = DepthLoaderOpts()) {
     // check if buffer has data
     depth::emptyAndInflateBuffer(buffer, [&tex, &opts](const void* data, size_t size){
@@ -210,6 +219,9 @@ namespace ofxDepthStream {
     MeshLoaderOpts& setDepthFactor(float v) { depthFactor = v; return *this; }
   };
 
+  /**
+   * populates the mesh instance with 16-bit depth-image data. It allocates the texture if necessary.
+   */
   void loadMesh16bit(ofMesh& mesh, const void* data, size_t width, size_t height, const MeshLoaderOpts& opts = MeshLoaderOpts()) {
     const uint16_t* pointData = (const uint16_t*)data;
 
@@ -228,7 +240,9 @@ namespace ofxDepthStream {
     }
   }
 
-  /** UNTESTED */
+  /**
+   * UNTESTED populates the mesh instance with 32-bit depth-image data. It allocates the texture if necessary.
+   */
   void loadMesh32bit(ofMesh& mesh, const void* data, size_t width, size_t height, const MeshLoaderOpts& opts = MeshLoaderOpts()) {
     const uint32_t* pointData = (const uint32_t*)data;
 
@@ -247,6 +261,11 @@ namespace ofxDepthStream {
     }
   }
 
+  /**
+   * populates the mesh instance with depth-image data.
+   *
+   * It allocates the texture if necessary, and guesses the dimensions and bit-depth of the package size
+   */
   void loadMesh(ofMesh& mesh, const void* data, size_t size, const MeshLoaderOpts& opts = MeshLoaderOpts()) {
     if(size == FRAME_SIZE_640x480x16BIT) {
       loadMesh16bit(mesh, data, 640, 480, opts);
@@ -266,6 +285,12 @@ namespace ofxDepthStream {
     ofLogWarning() << "Frame size not supported by ofxDepthStream::loadMesh (bytes): " << size;
   }
 
+  /**
+   * populates the mesh instance with depth-image data taken from the buffer's current content (if any).
+   *
+   * It allocates the texture if necessary, and guesses the dimensions and bit-depth of the package size.
+   * It empties the buffer after using its content.
+   */
   void loadMesh(depth::Buffer& buffer, ofMesh& mesh, const MeshLoaderOpts& opts = MeshLoaderOpts()) {
     // check if buffer has data
     depth::emptyAndInflateBuffer(buffer, [&mesh, &opts](const void* data, size_t size){
@@ -273,71 +298,10 @@ namespace ofxDepthStream {
     });
   }
 
-  // Grayscale texture loader methods deprecated? Use depth loader methods)  // // // // //
-
-  /**
-   * Supported intput frame-sizes:
-   * 640 x 480 x 2=614400 bytes (16-bit)
-   * 640 x 480 x 4=1228800 bytes (32-bit)
-   */
-  void loadGrayscaleTexture(ofTexture& tex, const void* data, size_t size) {
-    ofPixels depthPixels;
-
-    // allocate
-    if(tex.isAllocated()) {
-      depthPixels.allocate(tex.getWidth(), tex.getHeight(), OF_IMAGE_GRAYSCALE);
-    } else {
-      // TODO; infer texture size from receiver frame size?
-      ofLogWarning() << "TODO: infer depth texture resolution from data-size";
-      depthPixels.allocate(640, 480, OF_IMAGE_GRAYSCALE);
-      tex.allocate(depthPixels);
-    }
-
-    // check
-    size_t pixelCount = tex.getWidth() * tex.getHeight();
-    size_t size16bit = pixelCount * 2;
-    size_t size32bit = pixelCount * 4;
-
-    if (size == size16bit) {
-      // returns shared_ptr<depth::Frame> with 1-byte grayscale data
-      depth::convert_16bit_to_8bit(pixelCount, data)
-      // load grayscale data into our ofTexture instance
-      ->template convert<void>([&depthPixels, &tex](const void* data, size_t size){
-        // ofLogNotice() << "buffer to tex onversion update: " << size;
-        depthPixels.setFromPixels((const unsigned char *)data, depthPixels.getWidth(), depthPixels.getHeight(), OF_IMAGE_GRAYSCALE);
-        tex.loadData(depthPixels);
-      });
-
-      return;
-    }
-
-    if (size == size32bit) {
-      // returns shared_ptr<depth::Frame> with 1-byte grayscale data
-      depth::convert_32bit_to_8bit(pixelCount, data)
-      // load grayscale data into our ofTexture instance
-      ->template convert<void>([&depthPixels, &tex](const void* data, size_t size){
-        // ofLogNotice() << "buffer to tex onversion update: " << size;
-        depthPixels.setFromPixels((const unsigned char *)data, depthPixels.getWidth(), depthPixels.getHeight(), OF_IMAGE_GRAYSCALE);
-        tex.loadData(depthPixels);
-      });
-
-      return;
-    }
-
-    ofLogWarning() << "Depth texture size did not match data-size (got: " << size << ", expected: " << size16bit << " or " << size32bit << ")";
-  }
-
-  void loadGrayscaleTexture(depth::Buffer& buf, ofTexture& tex) {
-    // check if buffer has data
-    depth::emptyAndInflateBuffer(buf, [&tex](const void* data, size_t size){
-      loadGrayscaleTexture(tex, data, size);
-    });
-  }
-
   // Color texture loader methods (untested) // // // // //
 
   /**
-   * Load data into ofTexture, assuming the data contains 3-channel color data
+   * UNTESTED populates the texture with color-image data from the given frame-data. It allocates the texture if necessary.
    */
   void loadColorTexture(ofTexture& tex, const void* data, size_t size) {
     ofPixels pixels;
@@ -362,6 +326,12 @@ namespace ofxDepthStream {
     tex.loadData(pixels);
   }
 
+  /**
+   * UNTESTED populates the texture with color-image data taken from the buffer's current content (if any).
+   *
+   * It allocates the texture if necessary, and guesses the dimensions and bit-depth of the package size.
+   * It empties the buffer after using its content.
+   */
   void loadColorTexture(depth::Buffer& buffer, ofTexture& tex) {
     // check if buffer has data
     depth::emptyAndInflateBuffer(buffer, [&tex](const void* data, size_t size){
