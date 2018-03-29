@@ -15,7 +15,14 @@ namespace depth {
   class Receiver;
   typedef std::shared_ptr<Receiver> ReceiverRef;
 
-
+  /**
+   * \brief Network stream receiver class
+   *
+   * The receiver class runs a network client on separate thread, which receives
+   * a (compressed) stream of Frames (probably sent by a Transmitter instance).
+   * The Receiver class inherits from the Buffer class and thus lets you
+   * automatically redirect newly received data using the setOutputTo method.
+   */
   class Receiver : public Buffer {
 
     public: // types, consts and static factory methods
@@ -24,36 +31,56 @@ namespace depth {
 
       typedef std::function<void(const void* data, size_t size)> FrameCallback;
 
+      /// Starts a Receiver instance which tries to connect to a server at the specified address, using the DEFAULT_PORT
       static ReceiverRef createAndStart(const std::string& host) {
         return createAndStart(host, DEFAULT_PORT);
       }
 
+      /// Starts a Receiver instance which tries to connect to a server at the specified address and port
       static ReceiverRef createAndStart(const std::string& host, int port) {
         return std::make_shared<Receiver>(host, port);
       }
 
     public:
-      Receiver() : thread(NULL) {}
+      /// Default constructor; does not start a network client
+      Receiver() {}
 
+      /// This constructor immediately starts the network client in a separate thread
       Receiver(const std::string& host, int port) : thread(NULL) {
         start(host, port);
       }
 
       ~Receiver();
 
+      /// Starts network client, with host and port values provides in the constructor
       void start(){
         this->start(host, port);
       }
 
+      /// Starts network client with the specified host and port values
       void start(const std::string& host, int port);
-      void stop(bool wait=false);
-      char* getData() { return (char*)(buffer + 4); }
-      int getSize() const { return lastPackageSize; }
-      bool hasNew() const { return bHasNew; }
-      void reset(){ bHasNew = false; }
 
+      /**
+       * Stops network client
+       * @param wait When true blocks until the network-client thread has finished. False by default.
+       */
+      void stop(bool wait=false);
+
+      /// Provides a pointer to the incoming data memory block (never returns NULL)
+      char* getData() { return (char*)(buffer + 4); }
+      /// The size (in number of bytes) of the last package that was received (excluding the 4-byte package header)
+      int getSize() const { return lastPackageSize; }
+      /// Whether a new package was received since the last call to reset()
+      bool hasNew() const { return bHasNew; }
+      /// Resets the hasNew flag
+      void reset(){ bHasNew = false; }
+      /// Configures the network client to attempt reconnect at the specified interval
+      /// @param interval interval in milliseconds, default is 5000
       void setConnectAttemptInterval(unsigned int interval) { connectAttemptInterval = interval; }
+      /// Enables/disables verbose logging output
+      /// @param v enable or disables
       void setVerbose(bool v){ bVerbose=v; }
+      /// Registers a custom callback for incoming frame-data DEPRECATED: use the inherited Buffer::setOutputTo method
       void setFrameCallback(FrameCallback func) { frameCallback = func; }
 
     protected:
