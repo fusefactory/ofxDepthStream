@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DepthReaderEventCPP", "cpp-api\DepthReaderEventCPP\DepthReaderEventCPP.vcxproj", "{1187CA1C-0850-3B0B-8B09-C9DE8883F312}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1187CA1C-0850-3B0B-8B09-C9DE8883F312}.Debug|x64.ActiveCfg = Debug|x64
+		{1187CA1C-0850-3B0B-8B09-C9DE8883F312}.Debug|x64.Build.0 = Debug|x64
+		{1187CA1C-0850-3B0B-8B09-C9DE8883F312}.Release|x64.ActiveCfg = Release|x64
+		{1187CA1C-0850-3B0B-8B09-C9DE8883F312}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {35153FF9-5F35-3F87-B5FB-B84BDED1C67E}
+	EndGlobalSection
+EndGlobal
