@@ -80,7 +80,7 @@ Inheritance diagram for depth::Recorder:</div>
  <div class="center">
   <img src="classdepth_1_1_recorder.png" usemap="#depth::Recorder_map" alt=""/>
   <map id="depth::Recorder_map" name="depth::Recorder_map">
-<area href="classdepth_1_1_buffer.html" alt="depth::Buffer" shape="rect" coords="0,0,102,24"/>
+<area href="classdepth_1_1_buffer.html" title="Manages a reference to a Frame instance. " alt="depth::Buffer" shape="rect" coords="0,0,102,24"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -95,6 +95,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4ea54ad6c2efb9eaee08f5cd4a82b03c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_recorder.html#a4ea54ad6c2efb9eaee08f5cd4a82b03c">stop</a> ()</td></tr>
 <tr class="separator:a4ea54ad6c2efb9eaee08f5cd4a82b03c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af23482b61e006151652be01a127ae9e9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_recorder.html#af23482b61e006151652be01a127ae9e9">write</a> (const void *data, size_t size) override</td></tr>
+<tr class="memdesc:af23482b61e006151652be01a127ae9e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the buffer with a new frame (triggers the output callback)  <a href="#af23482b61e006151652be01a127ae9e9">More...</a><br /></td></tr>
 <tr class="separator:af23482b61e006151652be01a127ae9e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83d24498e3d61ef220b781f2c0fe3062"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_recorder.html#a83d24498e3d61ef220b781f2c0fe3062">isRecording</a> ()</td></tr>
 <tr class="separator:a83d24498e3d61ef220b781f2c0fe3062"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -102,10 +103,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a18cbf26f6bc079f942f8ac98d03fae12 inherit pub_methods_classdepth_1_1_buffer"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacedepth.html#aa1fb1dd6bf7b3820cf857d4dd498ecf6">FrameRef</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_buffer.html#a18cbf26f6bc079f942f8ac98d03fae12">getRef</a> ()</td></tr>
 <tr class="separator:a18cbf26f6bc079f942f8ac98d03fae12 inherit pub_methods_classdepth_1_1_buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf1e83d5903dd7d51e6c835defda7c19 inherit pub_methods_classdepth_1_1_buffer"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_buffer.html#aaf1e83d5903dd7d51e6c835defda7c19">write</a> (<a class="el" href="namespacedepth.html#aa1fb1dd6bf7b3820cf857d4dd498ecf6">FrameRef</a> f)</td></tr>
+<tr class="memdesc:aaf1e83d5903dd7d51e6c835defda7c19 inherit pub_methods_classdepth_1_1_buffer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the buffer with a new frame (triggers the output callback)  <a href="classdepth_1_1_buffer.html#aaf1e83d5903dd7d51e6c835defda7c19">More...</a><br /></td></tr>
 <tr class="separator:aaf1e83d5903dd7d51e6c835defda7c19 inherit pub_methods_classdepth_1_1_buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01198c6203539ee7f0b4b2c27f1dde59 inherit pub_methods_classdepth_1_1_buffer"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_buffer.html#a01198c6203539ee7f0b4b2c27f1dde59">clear</a> ()</td></tr>
+<tr class="memdesc:a01198c6203539ee7f0b4b2c27f1dde59 inherit pub_methods_classdepth_1_1_buffer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear the buffer (doesn't trigger the output callback)  <a href="classdepth_1_1_buffer.html#a01198c6203539ee7f0b4b2c27f1dde59">More...</a><br /></td></tr>
 <tr class="separator:a01198c6203539ee7f0b4b2c27f1dde59 inherit pub_methods_classdepth_1_1_buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecffe3cf362528b994baf026e9b989e7 inherit pub_methods_classdepth_1_1_buffer"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_buffer.html#aecffe3cf362528b994baf026e9b989e7">setOutputTo</a> (<a class="el" href="classdepth_1_1_buffer.html">Buffer</a> *b)</td></tr>
+<tr class="memdesc:aecffe3cf362528b994baf026e9b989e7 inherit pub_methods_classdepth_1_1_buffer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers an output callback that updates the given buffer with this buffer's data whenever this buffer is updated.  <a href="classdepth_1_1_buffer.html#aecffe3cf362528b994baf026e9b989e7">More...</a><br /></td></tr>
 <tr class="separator:aecffe3cf362528b994baf026e9b989e7 inherit pub_methods_classdepth_1_1_buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
@@ -117,6 +121,7 @@ Protected Member Functions</h2></td></tr>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_types_classdepth_1_1_buffer"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classdepth_1_1_buffer')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classdepth_1_1_buffer.html">depth::Buffer</a></td></tr>
 <tr class="memitem:ad12557e894682ee682ecd7729fc80027 inherit pub_types_classdepth_1_1_buffer"><td class="memItemLeft" align="right" valign="top">typedef std::function&lt; void(const void *, size_t)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_buffer.html#ad12557e894682ee682ecd7729fc80027">NewDataCallback</a></td></tr>
+<tr class="memdesc:ad12557e894682ee682ecd7729fc80027 inherit pub_types_classdepth_1_1_buffer"><td class="mdescLeft">&#160;</td><td class="mdescRight">A new data callback takes a void pointer to the memory block and a size_t with the number of bytes in the memory block.  <a href="classdepth_1_1_buffer.html#ad12557e894682ee682ecd7729fc80027">More...</a><br /></td></tr>
 <tr class="separator:ad12557e894682ee682ecd7729fc80027 inherit pub_types_classdepth_1_1_buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classdepth_1_1_buffer"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classdepth_1_1_buffer')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classdepth_1_1_buffer.html">depth::Buffer</a></td></tr>
 <tr class="memitem:a134fa2607d5cbd7914ffd10b96944517 inherit pro_attribs_classdepth_1_1_buffer"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdepth_1_1_buffer.html#ad12557e894682ee682ecd7729fc80027">NewDataCallback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_buffer.html#a134fa2607d5cbd7914ffd10b96944517">newDataCallback</a> =nullptr</td></tr>
@@ -294,6 +299,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Updates the buffer with a new frame (triggers the output callback) </p>
 
 <p>Reimplemented from <a class="el" href="classdepth_1_1_buffer.html#ac8abe02a9fe0ddde6e3643f64742314c">depth::Buffer</a>.</p>
 

@@ -73,23 +73,33 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Inflates ("decompresses") a package ("frame") of data compressed using zlib doCompression.  
+ <a href="classdepth_1_1_inflater.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="_inflater_8h_source.html">Inflater.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a5af36bf5919dbc57957007d50f3b72f7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_inflater.html#a5af36bf5919dbc57957007d50f3b72f7">~Inflater</a> ()</td></tr>
+<tr class="memdesc:a5af36bf5919dbc57957007d50f3b72f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deallocates the memory used to store inflated content (will not deallocate the memory that was release using the releaseData method)  <a href="#a5af36bf5919dbc57957007d50f3b72f7">More...</a><br /></td></tr>
 <tr class="separator:a5af36bf5919dbc57957007d50f3b72f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeeb3fd2573d5da78a69d970af81dd73f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_inflater.html#aeeb3fd2573d5da78a69d970af81dd73f">destroy</a> ()</td></tr>
+<tr class="memdesc:aeeb3fd2573d5da78a69d970af81dd73f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deallocates the memory used to store inflated content (will not deallocate the memory that was release using the releaseData method)  <a href="#aeeb3fd2573d5da78a69d970af81dd73f">More...</a><br /></td></tr>
 <tr class="separator:aeeb3fd2573d5da78a69d970af81dd73f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8733a23a004481243334112eb77e82d9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_inflater.html#a8733a23a004481243334112eb77e82d9">inflate</a> (const void *data, size_t size)</td></tr>
+<tr class="memdesc:a8733a23a004481243334112eb77e82d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs decompression on the provided data package.  <a href="#a8733a23a004481243334112eb77e82d9">More...</a><br /></td></tr>
 <tr class="separator:a8733a23a004481243334112eb77e82d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a784b547cc131d74f8b1845289ab45150"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_inflater.html#a784b547cc131d74f8b1845289ab45150">getSize</a> () const</td></tr>
+<tr class="memdesc:a784b547cc131d74f8b1845289ab45150"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the inflated size of the last inflate operation.  <a href="#a784b547cc131d74f8b1845289ab45150">More...</a><br /></td></tr>
 <tr class="separator:a784b547cc131d74f8b1845289ab45150"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4eda3495f1d47ec91546685153f9d37a"><td class="memItemLeft" align="right" valign="top">const void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_inflater.html#a4eda3495f1d47ec91546685153f9d37a">getData</a> () const</td></tr>
+<tr class="memdesc:a4eda3495f1d47ec91546685153f9d37a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pointer to the inflated package data (will be NULL when no inflation is performed or after releaseData is called)  <a href="#a4eda3495f1d47ec91546685153f9d37a">More...</a><br /></td></tr>
 <tr class="separator:a4eda3495f1d47ec91546685153f9d37a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b2756d8c6d5582db680377a77d4b6bf"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_inflater.html#a0b2756d8c6d5582db680377a77d4b6bf">releaseData</a> ()</td></tr>
+<tr class="memdesc:a0b2756d8c6d5582db680377a77d4b6bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">"Releases" (abandons) and returns a pointer to the allocated data for decompression.  <a href="#a0b2756d8c6d5582db680377a77d4b6bf">More...</a><br /></td></tr>
 <tr class="separator:a0b2756d8c6d5582db680377a77d4b6bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add2c39f7eb6a6b774581121102f0f3ff"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_inflater.html#add2c39f7eb6a6b774581121102f0f3ff">getFailCount</a> () const</td></tr>
+<tr class="memdesc:add2c39f7eb6a6b774581121102f0f3ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of times this instance failed to succesfully inflate a package.  <a href="#add2c39f7eb6a6b774581121102f0f3ff">More...</a><br /></td></tr>
 <tr class="separator:add2c39f7eb6a6b774581121102f0f3ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
@@ -103,7 +113,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a620c02f4400a64117840026e656bf52f"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_inflater.html#a620c02f4400a64117840026e656bf52f">cerr</a> ()</td></tr>
 <tr class="separator:a620c02f4400a64117840026e656bf52f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Inflates ("decompresses") a package ("frame") of data compressed using zlib doCompression. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a5af36bf5919dbc57957007d50f3b72f7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5af36bf5919dbc57957007d50f3b72f7">&#9670;&nbsp;</a></span>~Inflater()</h2>
 
@@ -126,6 +138,8 @@ Protected Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Deallocates the memory used to store inflated content (will not deallocate the memory that was release using the releaseData method) </p>
 
 </div>
 </div>
@@ -231,6 +245,8 @@ Protected Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Deallocates the memory used to store inflated content (will not deallocate the memory that was release using the releaseData method) </p>
+
 <p class="reference">Referenced by <a class="el" href="classdepth_1_1_inflater.html#a5af36bf5919dbc57957007d50f3b72f7">~Inflater()</a>.</p>
 
 </div>
@@ -257,6 +273,8 @@ Protected Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns a pointer to the inflated package data (will be NULL when no inflation is performed or after releaseData is called) </p>
 
 <p class="reference">Referenced by <a class="el" href="namespacedepth.html#a6f69e3488a8b99c157b48e4e49a014d9">depth::inflate()</a>.</p>
 
@@ -285,6 +303,8 @@ Protected Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns the number of times this instance failed to succesfully inflate a package. </p>
+
 </div>
 </div>
 <a id="a784b547cc131d74f8b1845289ab45150"></a>
@@ -309,6 +329,8 @@ Protected Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns the inflated size of the last inflate operation. </p>
 
 <p class="reference">Referenced by <a class="el" href="namespacedepth.html#a6f69e3488a8b99c157b48e4e49a014d9">depth::inflate()</a>.</p>
 
@@ -366,6 +388,8 @@ Protected Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Performs decompression on the provided data package. </p>
+
 <p class="reference">Referenced by <a class="el" href="namespacedepth.html#a6f69e3488a8b99c157b48e4e49a014d9">depth::inflate()</a>.</p>
 
 </div>
@@ -392,6 +416,9 @@ Protected Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>"Releases" (abandons) and returns a pointer to the allocated data for decompression. </p>
+<p>When using this method, the caller is responsible for deallocating the returned memory block </p>
 
 </div>
 </div>

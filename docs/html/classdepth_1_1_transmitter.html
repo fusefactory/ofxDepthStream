@@ -73,17 +73,24 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Network stream transmitter class.  
+ <a href="classdepth_1_1_transmitter.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="_transmitter_8h_source.html">Transmitter.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a2c33e5779dcdfc6d90cf9e64c28d7437"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_transmitter.html#a2c33e5779dcdfc6d90cf9e64c28d7437">Transmitter</a> (int port)</td></tr>
+<tr class="memdesc:a2c33e5779dcdfc6d90cf9e64c28d7437"><td class="mdescLeft">&#160;</td><td class="mdescRight">The constructor immediately starts the network server thread.  <a href="#a2c33e5779dcdfc6d90cf9e64c28d7437">More...</a><br /></td></tr>
 <tr class="separator:a2c33e5779dcdfc6d90cf9e64c28d7437"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada371499f4233417e4c49abccaa0e0a3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_transmitter.html#ada371499f4233417e4c49abccaa0e0a3">~Transmitter</a> ()</td></tr>
+<tr class="memdesc:ada371499f4233417e4c49abccaa0e0a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The destructor stops the network-server if it's still running.  <a href="#ada371499f4233417e4c49abccaa0e0a3">More...</a><br /></td></tr>
 <tr class="separator:ada371499f4233417e4c49abccaa0e0a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68e7854e9d028d7e97857acee33dcc7c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_transmitter.html#a68e7854e9d028d7e97857acee33dcc7c">transmit</a> (const void *data, size_t size)</td></tr>
+<tr class="memdesc:a68e7854e9d028d7e97857acee33dcc7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transmits a the given frame-data if the network-server has a connected client.  <a href="#a68e7854e9d028d7e97857acee33dcc7c">More...</a><br /></td></tr>
 <tr class="separator:a68e7854e9d028d7e97857acee33dcc7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a40d0b80b86455e10f449aa9f7239ccfb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_transmitter.html#a40d0b80b86455e10f449aa9f7239ccfb">stop</a> (bool wait=true)</td></tr>
+<tr class="memdesc:a40d0b80b86455e10f449aa9f7239ccfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the network server.  <a href="#a40d0b80b86455e10f449aa9f7239ccfb">More...</a><br /></td></tr>
 <tr class="separator:a40d0b80b86455e10f449aa9f7239ccfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
@@ -99,7 +106,10 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:aa4cd1c248be37f317dcec0b67031021f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_transmitter.html#aa4cd1c248be37f317dcec0b67031021f">transmitRaw</a> (const void *data, size_t size)</td></tr>
 <tr class="separator:aa4cd1c248be37f317dcec0b67031021f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Network stream transmitter class. </p>
+<p>The <a class="el" href="classdepth_1_1_transmitter.html" title="Network stream transmitter class. ">Transmitter</a> class runs a network server on separate thread, which receives incoming connection requests over TCP and starts sending a (compressed) stream of Frames when a connection is established. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a2c33e5779dcdfc6d90cf9e64c28d7437"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2c33e5779dcdfc6d90cf9e64c28d7437">&#9670;&nbsp;</a></span>Transmitter()</h2>
 
@@ -115,6 +125,8 @@ Protected Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>The constructor immediately starts the network server thread. </p>
 
 </div>
 </div>
@@ -132,6 +144,8 @@ Protected Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>The destructor stops the network-server if it's still running. </p>
 
 </div>
 </div>
@@ -234,6 +248,8 @@ Protected Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Stops the network server. </p>
+
 <p class="reference">Referenced by <a class="el" href="classdepth_1_1_transmitter.html#ada371499f4233417e4c49abccaa0e0a3">~Transmitter()</a>.</p>
 
 </div>
@@ -263,6 +279,8 @@ Protected Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Transmits a the given frame-data if the network-server has a connected client. </p>
 
 </div>
 </div>

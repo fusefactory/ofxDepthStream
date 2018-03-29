@@ -76,6 +76,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Network stream receiver class.  
+ <a href="classdepth_1_1_receiver.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="_receiver_8h_source.html">Receiver.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for depth::Receiver:</div>
@@ -83,7 +86,7 @@ Inheritance diagram for depth::Receiver:</div>
  <div class="center">
   <img src="classdepth_1_1_receiver.png" usemap="#depth::Receiver_map" alt=""/>
   <map id="depth::Receiver_map" name="depth::Receiver_map">
-<area href="classdepth_1_1_buffer.html" alt="depth::Buffer" shape="rect" coords="0,0,100,24"/>
+<area href="classdepth_1_1_buffer.html" title="Manages a reference to a Frame instance. " alt="depth::Buffer" shape="rect" coords="0,0,100,24"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -93,53 +96,72 @@ Public Types</h2></td></tr>
 <tr class="separator:ad28e1c6ae2d58b5f31d1eaecc1fb2f60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_classdepth_1_1_buffer"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classdepth_1_1_buffer')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classdepth_1_1_buffer.html">depth::Buffer</a></td></tr>
 <tr class="memitem:ad12557e894682ee682ecd7729fc80027 inherit pub_types_classdepth_1_1_buffer"><td class="memItemLeft" align="right" valign="top">typedef std::function&lt; void(const void *, size_t)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_buffer.html#ad12557e894682ee682ecd7729fc80027">NewDataCallback</a></td></tr>
+<tr class="memdesc:ad12557e894682ee682ecd7729fc80027 inherit pub_types_classdepth_1_1_buffer"><td class="mdescLeft">&#160;</td><td class="mdescRight">A new data callback takes a void pointer to the memory block and a size_t with the number of bytes in the memory block.  <a href="classdepth_1_1_buffer.html#ad12557e894682ee682ecd7729fc80027">More...</a><br /></td></tr>
 <tr class="separator:ad12557e894682ee682ecd7729fc80027 inherit pub_types_classdepth_1_1_buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:abf177729c920d493a9132e672f9dfde0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_receiver.html#abf177729c920d493a9132e672f9dfde0">Receiver</a> ()</td></tr>
+<tr class="memdesc:abf177729c920d493a9132e672f9dfde0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor; does not start a network client.  <a href="#abf177729c920d493a9132e672f9dfde0">More...</a><br /></td></tr>
 <tr class="separator:abf177729c920d493a9132e672f9dfde0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5848497424d676834fe7077e724654bd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_receiver.html#a5848497424d676834fe7077e724654bd">Receiver</a> (const std::string &amp;host, int port)</td></tr>
+<tr class="memdesc:a5848497424d676834fe7077e724654bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">This constructor immediately starts the network client in a separate thread.  <a href="#a5848497424d676834fe7077e724654bd">More...</a><br /></td></tr>
 <tr class="separator:a5848497424d676834fe7077e724654bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ac4a645965e64591fc9bda1c0866a9f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_receiver.html#a4ac4a645965e64591fc9bda1c0866a9f">~Receiver</a> ()</td></tr>
 <tr class="separator:a4ac4a645965e64591fc9bda1c0866a9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f06b39b3c1214418adf6b81f2ea1c7e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_receiver.html#a6f06b39b3c1214418adf6b81f2ea1c7e">start</a> ()</td></tr>
+<tr class="memdesc:a6f06b39b3c1214418adf6b81f2ea1c7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts network client, with host and port values provides in the constructor.  <a href="#a6f06b39b3c1214418adf6b81f2ea1c7e">More...</a><br /></td></tr>
 <tr class="separator:a6f06b39b3c1214418adf6b81f2ea1c7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89a30aadaf8bd074e71fdad459a57e1a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_receiver.html#a89a30aadaf8bd074e71fdad459a57e1a">start</a> (const std::string &amp;host, int port)</td></tr>
+<tr class="memdesc:a89a30aadaf8bd074e71fdad459a57e1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts network client with the specified host and port values.  <a href="#a89a30aadaf8bd074e71fdad459a57e1a">More...</a><br /></td></tr>
 <tr class="separator:a89a30aadaf8bd074e71fdad459a57e1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4a9b25a85e2ae0a89e13000b7735576"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_receiver.html#aa4a9b25a85e2ae0a89e13000b7735576">stop</a> (bool wait=false)</td></tr>
+<tr class="memdesc:aa4a9b25a85e2ae0a89e13000b7735576"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops network client.  <a href="#aa4a9b25a85e2ae0a89e13000b7735576">More...</a><br /></td></tr>
 <tr class="separator:aa4a9b25a85e2ae0a89e13000b7735576"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2803067434f031b0c392f376ed7f3b2a"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_receiver.html#a2803067434f031b0c392f376ed7f3b2a">getData</a> ()</td></tr>
+<tr class="memdesc:a2803067434f031b0c392f376ed7f3b2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a pointer to the incoming data memory block (never returns NULL)  <a href="#a2803067434f031b0c392f376ed7f3b2a">More...</a><br /></td></tr>
 <tr class="separator:a2803067434f031b0c392f376ed7f3b2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecee418b4ef07c4c7aed00e6814e4123"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_receiver.html#aecee418b4ef07c4c7aed00e6814e4123">getSize</a> () const</td></tr>
+<tr class="memdesc:aecee418b4ef07c4c7aed00e6814e4123"><td class="mdescLeft">&#160;</td><td class="mdescRight">The size (in number of bytes) of the last package that was received (excluding the 4-byte package header)  <a href="#aecee418b4ef07c4c7aed00e6814e4123">More...</a><br /></td></tr>
 <tr class="separator:aecee418b4ef07c4c7aed00e6814e4123"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b544bb0856324a155f35d096c31741b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_receiver.html#a2b544bb0856324a155f35d096c31741b">hasNew</a> () const</td></tr>
+<tr class="memdesc:a2b544bb0856324a155f35d096c31741b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether a new package was received since the last call to <a class="el" href="classdepth_1_1_receiver.html#af7205c23cf7a02b477ebd9f670b8f96c" title="Resets the hasNew flag. ">reset()</a>  <a href="#a2b544bb0856324a155f35d096c31741b">More...</a><br /></td></tr>
 <tr class="separator:a2b544bb0856324a155f35d096c31741b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7205c23cf7a02b477ebd9f670b8f96c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_receiver.html#af7205c23cf7a02b477ebd9f670b8f96c">reset</a> ()</td></tr>
+<tr class="memdesc:af7205c23cf7a02b477ebd9f670b8f96c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the hasNew flag.  <a href="#af7205c23cf7a02b477ebd9f670b8f96c">More...</a><br /></td></tr>
 <tr class="separator:af7205c23cf7a02b477ebd9f670b8f96c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9dac11673dbe298a4d478e9410a59a66"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_receiver.html#a9dac11673dbe298a4d478e9410a59a66">setConnectAttemptInterval</a> (unsigned int interval)</td></tr>
+<tr class="memdesc:a9dac11673dbe298a4d478e9410a59a66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the network client to attempt reconnect at the specified interval.  <a href="#a9dac11673dbe298a4d478e9410a59a66">More...</a><br /></td></tr>
 <tr class="separator:a9dac11673dbe298a4d478e9410a59a66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec3d18addf26b80ad14cc6eec8bee6ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_receiver.html#aec3d18addf26b80ad14cc6eec8bee6ea">setVerbose</a> (bool v)</td></tr>
+<tr class="memdesc:aec3d18addf26b80ad14cc6eec8bee6ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables/disables verbose logging output.  <a href="#aec3d18addf26b80ad14cc6eec8bee6ea">More...</a><br /></td></tr>
 <tr class="separator:aec3d18addf26b80ad14cc6eec8bee6ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ebfd76bc53bd25b43eb84b8a4900a95"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_receiver.html#a5ebfd76bc53bd25b43eb84b8a4900a95">setFrameCallback</a> (<a class="el" href="classdepth_1_1_receiver.html#ad28e1c6ae2d58b5f31d1eaecc1fb2f60">FrameCallback</a> func)</td></tr>
+<tr class="memdesc:a5ebfd76bc53bd25b43eb84b8a4900a95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a custom callback for incoming frame-data DEPRECATED: use the inherited <a class="el" href="classdepth_1_1_buffer.html#aecffe3cf362528b994baf026e9b989e7" title="Registers an output callback that updates the given buffer with this buffer&#39;s data whenever this buff...">Buffer::setOutputTo</a> method.  <a href="#a5ebfd76bc53bd25b43eb84b8a4900a95">More...</a><br /></td></tr>
 <tr class="separator:a5ebfd76bc53bd25b43eb84b8a4900a95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classdepth_1_1_buffer"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classdepth_1_1_buffer')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classdepth_1_1_buffer.html">depth::Buffer</a></td></tr>
 <tr class="memitem:a18cbf26f6bc079f942f8ac98d03fae12 inherit pub_methods_classdepth_1_1_buffer"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacedepth.html#aa1fb1dd6bf7b3820cf857d4dd498ecf6">FrameRef</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_buffer.html#a18cbf26f6bc079f942f8ac98d03fae12">getRef</a> ()</td></tr>
 <tr class="separator:a18cbf26f6bc079f942f8ac98d03fae12 inherit pub_methods_classdepth_1_1_buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf1e83d5903dd7d51e6c835defda7c19 inherit pub_methods_classdepth_1_1_buffer"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_buffer.html#aaf1e83d5903dd7d51e6c835defda7c19">write</a> (<a class="el" href="namespacedepth.html#aa1fb1dd6bf7b3820cf857d4dd498ecf6">FrameRef</a> f)</td></tr>
+<tr class="memdesc:aaf1e83d5903dd7d51e6c835defda7c19 inherit pub_methods_classdepth_1_1_buffer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the buffer with a new frame (triggers the output callback)  <a href="classdepth_1_1_buffer.html#aaf1e83d5903dd7d51e6c835defda7c19">More...</a><br /></td></tr>
 <tr class="separator:aaf1e83d5903dd7d51e6c835defda7c19 inherit pub_methods_classdepth_1_1_buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8abe02a9fe0ddde6e3643f64742314c inherit pub_methods_classdepth_1_1_buffer"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_buffer.html#ac8abe02a9fe0ddde6e3643f64742314c">write</a> (const void *data, size_t size)</td></tr>
+<tr class="memdesc:ac8abe02a9fe0ddde6e3643f64742314c inherit pub_methods_classdepth_1_1_buffer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the buffer with a new frame (triggers the output callback)  <a href="classdepth_1_1_buffer.html#ac8abe02a9fe0ddde6e3643f64742314c">More...</a><br /></td></tr>
 <tr class="separator:ac8abe02a9fe0ddde6e3643f64742314c inherit pub_methods_classdepth_1_1_buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01198c6203539ee7f0b4b2c27f1dde59 inherit pub_methods_classdepth_1_1_buffer"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_buffer.html#a01198c6203539ee7f0b4b2c27f1dde59">clear</a> ()</td></tr>
+<tr class="memdesc:a01198c6203539ee7f0b4b2c27f1dde59 inherit pub_methods_classdepth_1_1_buffer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear the buffer (doesn't trigger the output callback)  <a href="classdepth_1_1_buffer.html#a01198c6203539ee7f0b4b2c27f1dde59">More...</a><br /></td></tr>
 <tr class="separator:a01198c6203539ee7f0b4b2c27f1dde59 inherit pub_methods_classdepth_1_1_buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecffe3cf362528b994baf026e9b989e7 inherit pub_methods_classdepth_1_1_buffer"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_buffer.html#aecffe3cf362528b994baf026e9b989e7">setOutputTo</a> (<a class="el" href="classdepth_1_1_buffer.html">Buffer</a> *b)</td></tr>
+<tr class="memdesc:aecffe3cf362528b994baf026e9b989e7 inherit pub_methods_classdepth_1_1_buffer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers an output callback that updates the given buffer with this buffer's data whenever this buffer is updated.  <a href="classdepth_1_1_buffer.html#aecffe3cf362528b994baf026e9b989e7">More...</a><br /></td></tr>
 <tr class="separator:aecffe3cf362528b994baf026e9b989e7 inherit pub_methods_classdepth_1_1_buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ab812b2fe8f6b3d61f7e05fb90ee2e0be"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespacedepth.html#aed87e756488c49c1569000c1f0aca23b">ReceiverRef</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_receiver.html#ab812b2fe8f6b3d61f7e05fb90ee2e0be">createAndStart</a> (const std::string &amp;host)</td></tr>
+<tr class="memdesc:ab812b2fe8f6b3d61f7e05fb90ee2e0be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts a <a class="el" href="classdepth_1_1_receiver.html" title="Network stream receiver class. ">Receiver</a> instance which tries to connect to a server at the specified address, using the DEFAULT_PORT.  <a href="#ab812b2fe8f6b3d61f7e05fb90ee2e0be">More...</a><br /></td></tr>
 <tr class="separator:ab812b2fe8f6b3d61f7e05fb90ee2e0be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af01bae76d307bf2218091aa6b9e49538"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespacedepth.html#aed87e756488c49c1569000c1f0aca23b">ReceiverRef</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_receiver.html#af01bae76d307bf2218091aa6b9e49538">createAndStart</a> (const std::string &amp;host, int port)</td></tr>
+<tr class="memdesc:af01bae76d307bf2218091aa6b9e49538"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts a <a class="el" href="classdepth_1_1_receiver.html" title="Network stream receiver class. ">Receiver</a> instance which tries to connect to a server at the specified address and port.  <a href="#af01bae76d307bf2218091aa6b9e49538">More...</a><br /></td></tr>
 <tr class="separator:af01bae76d307bf2218091aa6b9e49538"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
@@ -178,7 +200,10 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:aa4886d873e8cd1b45d037dfe7ce058ce inherit pro_attribs_classdepth_1_1_buffer"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedepth.html#aa1fb1dd6bf7b3820cf857d4dd498ecf6">FrameRef</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdepth_1_1_buffer.html#aa4886d873e8cd1b45d037dfe7ce058ce">buffered</a> =nullptr</td></tr>
 <tr class="separator:aa4886d873e8cd1b45d037dfe7ce058ce inherit pro_attribs_classdepth_1_1_buffer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Typedef Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Network stream receiver class. </p>
+<p>The receiver class runs a network client on separate thread, which receives a (compressed) stream of Frames (probably sent by a <a class="el" href="classdepth_1_1_transmitter.html" title="Network stream transmitter class. ">Transmitter</a> instance). The <a class="el" href="classdepth_1_1_receiver.html" title="Network stream receiver class. ">Receiver</a> class inherits from the <a class="el" href="classdepth_1_1_buffer.html" title="Manages a reference to a Frame instance. ">Buffer</a> class and thus lets you automatically redirect newly received data using the setOutputTo method. </p>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="ad28e1c6ae2d58b5f31d1eaecc1fb2f60"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad28e1c6ae2d58b5f31d1eaecc1fb2f60">&#9670;&nbsp;</a></span>FrameCallback</h2>
 
@@ -217,6 +242,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Default constructor; does not start a network client. </p>
+
 </div>
 </div>
 <a id="a5848497424d676834fe7077e724654bd"></a>
@@ -252,6 +279,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>This constructor immediately starts the network client in a separate thread. </p>
 
 </div>
 </div>
@@ -387,6 +416,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Starts a <a class="el" href="classdepth_1_1_receiver.html" title="Network stream receiver class. ">Receiver</a> instance which tries to connect to a server at the specified address, using the DEFAULT_PORT. </p>
+
 </div>
 </div>
 <a id="af01bae76d307bf2218091aa6b9e49538"></a>
@@ -422,6 +453,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Starts a <a class="el" href="classdepth_1_1_receiver.html" title="Network stream receiver class. ">Receiver</a> instance which tries to connect to a server at the specified address and port. </p>
 
 </div>
 </div>
@@ -503,6 +536,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Provides a pointer to the incoming data memory block (never returns NULL) </p>
+
 </div>
 </div>
 <a id="aecee418b4ef07c4c7aed00e6814e4123"></a>
@@ -528,6 +563,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>The size (in number of bytes) of the last package that was received (excluding the 4-byte package header) </p>
+
 </div>
 </div>
 <a id="a2b544bb0856324a155f35d096c31741b"></a>
@@ -552,6 +589,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Whether a new package was received since the last call to <a class="el" href="classdepth_1_1_receiver.html#af7205c23cf7a02b477ebd9f670b8f96c" title="Resets the hasNew flag. ">reset()</a> </p>
 
 </div>
 </div>
@@ -670,6 +709,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Resets the hasNew flag. </p>
+
 </div>
 </div>
 <a id="a4bd9a7654df5707cb63fd255f5e821fa"></a>
@@ -722,6 +763,14 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Configures the network client to attempt reconnect at the specified interval. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interval</td><td>interval in milliseconds, default is 5000 </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a5ebfd76bc53bd25b43eb84b8a4900a95"></a>
@@ -747,6 +796,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Registers a custom callback for incoming frame-data DEPRECATED: use the inherited <a class="el" href="classdepth_1_1_buffer.html#aecffe3cf362528b994baf026e9b989e7" title="Registers an output callback that updates the given buffer with this buffer&#39;s data whenever this buff...">Buffer::setOutputTo</a> method. </p>
 
 </div>
 </div>
@@ -774,6 +825,14 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Enables/disables verbose logging output. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v</td><td>enable or disables </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a6f06b39b3c1214418adf6b81f2ea1c7e"></a>
@@ -798,6 +857,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Starts network client, with host and port values provides in the constructor. </p>
 
 <p class="reference">Referenced by <a class="el" href="classdepth_1_1_receiver.html#a5848497424d676834fe7077e724654bd">Receiver()</a>.</p>
 
@@ -829,6 +890,8 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Starts network client with the specified host and port values. </p>
+
 </div>
 </div>
 <a id="aa4a9b25a85e2ae0a89e13000b7735576"></a>
@@ -846,6 +909,14 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Stops network client. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">wait</td><td>When true blocks until the network-client thread has finished. False by default. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="reference">Referenced by <a class="el" href="classdepth_1_1_receiver.html#a89a30aadaf8bd074e71fdad459a57e1a">start()</a>, and <a class="el" href="classdepth_1_1_receiver.html#a4ac4a645965e64591fc9bda1c0866a9f">~Receiver()</a>.</p>
 
