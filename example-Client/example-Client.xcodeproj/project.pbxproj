@@ -9,22 +9,13 @@
 /* Begin PBXBuildFile section */
 		1483752F86DD69D5C3493DAD /* Recorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20B6F3A7B03011215056C7FF /* Recorder.cpp */; };
 		15765FF283120E24A78717E9 /* Receiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB7AE9D08FCA20308AC739B1 /* Receiver.cpp */; };
-		1CD33E884D9E3358252E82A1 /* ofxToggle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907C5B5E104864A2D3A25745 /* ofxToggle.cpp */; };
 		268410A08BE24C05FA652368 /* CamInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60623075D934AA1ADAE24A7A /* CamInterface.cpp */; };
 		34192A62FDCA30B9D4672FFE /* Transmitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A1A34092F7770F860A44C98 /* Transmitter.cpp */; };
-		483908258D00B98B4BE69F07 /* ofxLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78D67A00EB899FAC09430597 /* ofxLabel.cpp */; };
-		5CBB2AB3A60F65431D7B555D /* ofxButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C88333E71C9457E441C33474 /* ofxButton.cpp */; };
 		5DD29DDCF8D373985CAD7C4C /* Playback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B260E723931A9805EE77BAF /* Playback.cpp */; };
-		837220E80EB56CD44AD27F2A /* ofxSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15F2C6477A769C03A56D1401 /* ofxSlider.cpp */; };
 		83CDBD3449AB82458D07819B /* OniSampleUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0937820609522AC97C920D0 /* OniSampleUtilities.cpp */; };
-		856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9604B925D32EE39065747725 /* ofxBaseGui.cpp */; };
-		B266578FC55D23BFEBC042E7 /* ofxGuiGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECF8674C7975F1063C5E30CA /* ofxGuiGroup.cpp */; };
-		B333944A61C5155D697ABEF5 /* ofxHistoryPlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932CAB813CEE8FAAC0E75105 /* ofxHistoryPlot.cpp */; };
-		B56FE57CC35806596D38118C /* ofxSliderGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 802251BAF1B35B1D67B32FD0 /* ofxSliderGroup.cpp */; };
 		DDC40CE403459580BCF7D5C3 /* Compressor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A06C9856C206169F222C9E9E /* Compressor.cpp */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
-		F285EB3169F1566CA3D93C20 /* ofxPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E112B3AEBEA2C091BF2B40AE /* ofxPanel.cpp */; };
 		F659615F03C9FF725AFD84C6 /* Inflater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18608DE3588926D6EC26BD31 /* Inflater.cpp */; };
 /* End PBXBuildFile section */
 
@@ -58,52 +49,33 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0A1DAC09F322AE313A40706D /* ofxToggle.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxToggle.h; path = ../../../addons/ofxGui/src/ofxToggle.h; sourceTree = SOURCE_ROOT; };
 		0E5F3D824A0C5DA7F7FD932C /* Transmitter.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Transmitter.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Transmitter.h; sourceTree = SOURCE_ROOT; };
-		15F2C6477A769C03A56D1401 /* ofxSlider.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxSlider.cpp; path = ../../../addons/ofxGui/src/ofxSlider.cpp; sourceTree = SOURCE_ROOT; };
-		17E65988300FBD9AAA2CD0CA /* ofxGui.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxGui.h; path = ../../../addons/ofxGui/src/ofxGui.h; sourceTree = SOURCE_ROOT; };
 		18608DE3588926D6EC26BD31 /* Inflater.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Inflater.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Inflater.cpp; sourceTree = SOURCE_ROOT; };
-		1C0DA2561397A7DE0246858B /* ofxGuiGroup.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxGuiGroup.h; path = ../../../addons/ofxGui/src/ofxGuiGroup.h; sourceTree = SOURCE_ROOT; };
 		20B6F3A7B03011215056C7FF /* Recorder.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Recorder.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Recorder.cpp; sourceTree = SOURCE_ROOT; };
 		2747391E0ADE73EE9D4400CD /* CamInterface.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = CamInterface.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/CamInterface.h; sourceTree = SOURCE_ROOT; };
-		2834D88A62CD23F3DE2C47D1 /* ofxButton.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxButton.h; path = ../../../addons/ofxGui/src/ofxButton.h; sourceTree = SOURCE_ROOT; };
 		2998ACDC36F3A0DD749B1B3F /* config.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = config.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/config.h; sourceTree = SOURCE_ROOT; };
 		3827E4C6EA139C123F5A5754 /* ofxDepthStream.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxDepthStream.h; path = ../../../addons/ofxDepthStream/src/ofxDepthStream/ofxDepthStream.h; sourceTree = SOURCE_ROOT; };
 		3B260E723931A9805EE77BAF /* Playback.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Playback.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Playback.cpp; sourceTree = SOURCE_ROOT; };
-		4EC6A0E8C8383519E5E10736 /* ofxHistoryPlot.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxHistoryPlot.h; path = ../../../addons/ofxHistoryPlot/src/ofxHistoryPlot.h; sourceTree = SOURCE_ROOT; };
 		4FB9E9D0C6F9108680A1FF94 /* Recorder.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Recorder.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Recorder.h; sourceTree = SOURCE_ROOT; };
-		52AFA1F08C420992CAAAE648 /* ofxSlider.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxSlider.h; path = ../../../addons/ofxGui/src/ofxSlider.h; sourceTree = SOURCE_ROOT; };
 		5A1A34092F7770F860A44C98 /* Transmitter.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Transmitter.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Transmitter.cpp; sourceTree = SOURCE_ROOT; };
 		5ABC557A9D6E227D3381D6ED /* Frame.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Frame.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Frame.h; sourceTree = SOURCE_ROOT; };
 		60623075D934AA1ADAE24A7A /* CamInterface.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = CamInterface.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/CamInterface.cpp; sourceTree = SOURCE_ROOT; };
 		71CFE1722601E8EA973A43E2 /* functional.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = functional.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/functional.h; sourceTree = SOURCE_ROOT; };
-		78D67A00EB899FAC09430597 /* ofxLabel.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxLabel.cpp; path = ../../../addons/ofxGui/src/ofxLabel.cpp; sourceTree = SOURCE_ROOT; };
-		802251BAF1B35B1D67B32FD0 /* ofxSliderGroup.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxSliderGroup.cpp; path = ../../../addons/ofxGui/src/ofxSliderGroup.cpp; sourceTree = SOURCE_ROOT; };
-		87F26B4B24CBD428AD9EEBAA /* ofxBaseGui.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxBaseGui.h; path = ../../../addons/ofxGui/src/ofxBaseGui.h; sourceTree = SOURCE_ROOT; };
-		89449E3044D456F7DE7BEA14 /* ofxPanel.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxPanel.h; path = ../../../addons/ofxGui/src/ofxPanel.h; sourceTree = SOURCE_ROOT; };
-		907C5B5E104864A2D3A25745 /* ofxToggle.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxToggle.cpp; path = ../../../addons/ofxGui/src/ofxToggle.cpp; sourceTree = SOURCE_ROOT; };
-		932CAB813CEE8FAAC0E75105 /* ofxHistoryPlot.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxHistoryPlot.cpp; path = ../../../addons/ofxHistoryPlot/src/ofxHistoryPlot.cpp; sourceTree = SOURCE_ROOT; };
 		95431A0E4C2D4D9FCF0163B7 /* OniSampleUtilities.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OniSampleUtilities.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/OniSampleUtilities.h; sourceTree = SOURCE_ROOT; };
-		9604B925D32EE39065747725 /* ofxBaseGui.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxBaseGui.cpp; path = ../../../addons/ofxGui/src/ofxBaseGui.cpp; sourceTree = SOURCE_ROOT; };
 		96E3B501E4B70A447046A23E /* functional.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = functional.h; path = ../../../addons/ofxDepthStream/src/ofxDepthStream/functional.h; sourceTree = SOURCE_ROOT; };
 		9AAC72FE8F9F70C5CC7FCF94 /* Compressor.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Compressor.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Compressor.h; sourceTree = SOURCE_ROOT; };
 		A06C9856C206169F222C9E9E /* Compressor.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Compressor.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Compressor.cpp; sourceTree = SOURCE_ROOT; };
 		B0937820609522AC97C920D0 /* OniSampleUtilities.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = OniSampleUtilities.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/OniSampleUtilities.cpp; sourceTree = SOURCE_ROOT; };
-		B87C60311EC1FE841C1ECD89 /* ofxLabel.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxLabel.h; path = ../../../addons/ofxGui/src/ofxLabel.h; sourceTree = SOURCE_ROOT; };
-		C70D8946940288799E82131E /* ofxSliderGroup.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxSliderGroup.h; path = ../../../addons/ofxGui/src/ofxSliderGroup.h; sourceTree = SOURCE_ROOT; };
-		C88333E71C9457E441C33474 /* ofxButton.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxButton.cpp; path = ../../../addons/ofxGui/src/ofxButton.cpp; sourceTree = SOURCE_ROOT; };
 		DB7AE9D08FCA20308AC739B1 /* Receiver.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Receiver.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Receiver.cpp; sourceTree = SOURCE_ROOT; };
 		DC3054BFAD27423B866A73F9 /* DepthStream.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = DepthStream.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/DepthStream.h; sourceTree = SOURCE_ROOT; };
 		DCEFF68C7DAC11BB6C96A83F /* Inflater.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Inflater.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Inflater.h; sourceTree = SOURCE_ROOT; };
-		E112B3AEBEA2C091BF2B40AE /* ofxPanel.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxPanel.cpp; path = ../../../addons/ofxGui/src/ofxPanel.cpp; sourceTree = SOURCE_ROOT; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
-		E4B69B5B0A3A1756003C02F2 /* example-DualStreamDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "example-DualStreamDebug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4B69B5B0A3A1756003C02F2 /* example-ClientDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "example-ClientDebug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4B69E1D0A3A1BDC003C02F2 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
 		E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = "openFrameworks-Info.plist"; sourceTree = "<group>"; };
 		E4EB691F138AFCF100A09F29 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		EA7A134A550EA56A341E976F /* Playback.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Playback.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Playback.h; sourceTree = SOURCE_ROOT; };
-		ECF8674C7975F1063C5E30CA /* ofxGuiGroup.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxGuiGroup.cpp; path = ../../../addons/ofxGui/src/ofxGuiGroup.cpp; sourceTree = SOURCE_ROOT; };
 		ED96BEF42695631F16E82ED0 /* Buffer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Buffer.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Buffer.h; sourceTree = SOURCE_ROOT; };
 		FF0DB51B9857D68A507D8304 /* Receiver.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Receiver.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Receiver.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -137,23 +109,6 @@
 			name = DepthStream;
 			sourceTree = "<group>";
 		};
-		3BE9C22C7EBA414788E4F83C /* src */ = {
-			isa = PBXGroup;
-			children = (
-				4EC6A0E8C8383519E5E10736 /* ofxHistoryPlot.h */,
-				932CAB813CEE8FAAC0E75105 /* ofxHistoryPlot.cpp */,
-			);
-			name = src;
-			sourceTree = "<group>";
-		};
-		480A780D8D0308AE4A368801 /* ofxGui */ = {
-			isa = PBXGroup;
-			children = (
-				A763ED608B35AE3310251DEE /* src */,
-			);
-			name = ofxGui;
-			sourceTree = "<group>";
-		};
 		6948EE371B920CB800B5AC1A /* local_addons */ = {
 			isa = PBXGroup;
 			children = (
@@ -178,30 +133,6 @@
 			name = ofxDepthStream;
 			sourceTree = "<group>";
 		};
-		A763ED608B35AE3310251DEE /* src */ = {
-			isa = PBXGroup;
-			children = (
-				1C0DA2561397A7DE0246858B /* ofxGuiGroup.h */,
-				9604B925D32EE39065747725 /* ofxBaseGui.cpp */,
-				802251BAF1B35B1D67B32FD0 /* ofxSliderGroup.cpp */,
-				907C5B5E104864A2D3A25745 /* ofxToggle.cpp */,
-				C88333E71C9457E441C33474 /* ofxButton.cpp */,
-				ECF8674C7975F1063C5E30CA /* ofxGuiGroup.cpp */,
-				0A1DAC09F322AE313A40706D /* ofxToggle.h */,
-				78D67A00EB899FAC09430597 /* ofxLabel.cpp */,
-				52AFA1F08C420992CAAAE648 /* ofxSlider.h */,
-				17E65988300FBD9AAA2CD0CA /* ofxGui.h */,
-				87F26B4B24CBD428AD9EEBAA /* ofxBaseGui.h */,
-				2834D88A62CD23F3DE2C47D1 /* ofxButton.h */,
-				B87C60311EC1FE841C1ECD89 /* ofxLabel.h */,
-				C70D8946940288799E82131E /* ofxSliderGroup.h */,
-				E112B3AEBEA2C091BF2B40AE /* ofxPanel.cpp */,
-				15F2C6477A769C03A56D1401 /* ofxSlider.cpp */,
-				89449E3044D456F7DE7BEA14 /* ofxPanel.h */,
-			);
-			name = src;
-			sourceTree = "<group>";
-		};
 		B1E33CFDD98D21C2B986824F /* src */ = {
 			isa = PBXGroup;
 			children = (
@@ -214,18 +145,8 @@
 			isa = PBXGroup;
 			children = (
 				19F628E63D447C75735253DA /* ofxDepthStream */,
-				C65E01A63772FC3E5D61CE7F /* ofxHistoryPlot */,
-				480A780D8D0308AE4A368801 /* ofxGui */,
 			);
 			name = addons;
-			sourceTree = "<group>";
-		};
-		C65E01A63772FC3E5D61CE7F /* ofxHistoryPlot */ = {
-			isa = PBXGroup;
-			children = (
-				3BE9C22C7EBA414788E4F83C /* src */,
-			);
-			name = ofxHistoryPlot;
 			sourceTree = "<group>";
 		};
 		D10BBAB569ED51080AEF8072 /* src */ = {
@@ -273,7 +194,7 @@
 				E4EEC9E9138DF44700A80321 /* openFrameworks */,
 				BB4B014C10F69532006C3DED /* addons */,
 				6948EE371B920CB800B5AC1A /* local_addons */,
-				E4B69B5B0A3A1756003C02F2 /* example-DualStreamDebug.app */,
+				E4B69B5B0A3A1756003C02F2 /* example-ClientDebug.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -297,9 +218,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E4B69B5A0A3A1756003C02F2 /* example-DualStream */ = {
+		E4B69B5A0A3A1756003C02F2 /* example-Client */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "example-DualStream" */;
+			buildConfigurationList = E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "example-Client" */;
 			buildPhases = (
 				E4B69B580A3A1756003C02F2 /* Sources */,
 				E4B69B590A3A1756003C02F2 /* Frameworks */,
@@ -311,9 +232,9 @@
 			dependencies = (
 				E4EEB9AC138B136A00A80321 /* PBXTargetDependency */,
 			);
-			name = "example-DualStream";
+			name = "example-Client";
 			productName = myOFApp;
-			productReference = E4B69B5B0A3A1756003C02F2 /* example-DualStreamDebug.app */;
+			productReference = E4B69B5B0A3A1756003C02F2 /* example-ClientDebug.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -324,7 +245,7 @@
 			attributes = {
 				LastUpgradeCheck = 0600;
 			};
-			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "example-DualStream" */;
+			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "example-Client" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -345,7 +266,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				E4B69B5A0A3A1756003C02F2 /* example-DualStream */,
+				E4B69B5A0A3A1756003C02F2 /* example-Client */,
 			);
 		};
 /* End PBXProject section */
@@ -390,15 +311,6 @@
 				DDC40CE403459580BCF7D5C3 /* Compressor.cpp in Sources */,
 				15765FF283120E24A78717E9 /* Receiver.cpp in Sources */,
 				1483752F86DD69D5C3493DAD /* Recorder.cpp in Sources */,
-				B333944A61C5155D697ABEF5 /* ofxHistoryPlot.cpp in Sources */,
-				856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */,
-				B56FE57CC35806596D38118C /* ofxSliderGroup.cpp in Sources */,
-				1CD33E884D9E3358252E82A1 /* ofxToggle.cpp in Sources */,
-				5CBB2AB3A60F65431D7B555D /* ofxButton.cpp in Sources */,
-				B266578FC55D23BFEBC042E7 /* ofxGuiGroup.cpp in Sources */,
-				483908258D00B98B4BE69F07 /* ofxLabel.cpp in Sources */,
-				F285EB3169F1566CA3D93C20 /* ofxPanel.cpp in Sources */,
-				837220E80EB56CD44AD27F2A /* ofxSlider.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -440,8 +352,6 @@
 					../../../addons/ofxDepthStream/libs/DepthStream/src,
 					../../../addons/ofxDepthStream/src,
 					../../../addons/ofxDepthStream/src/ofxDepthStream,
-					../../../addons/ofxHistoryPlot/src,
-					../../../addons/ofxGui/src,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
@@ -481,8 +391,6 @@
 					../../../addons/ofxDepthStream/libs/DepthStream/src,
 					../../../addons/ofxDepthStream/src,
 					../../../addons/ofxDepthStream/src/ofxDepthStream,
-					../../../addons/ofxHistoryPlot/src,
-					../../../addons/ofxGui/src,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -515,8 +423,6 @@
 					../../../addons/ofxDepthStream/libs/DepthStream/src,
 					../../../addons/ofxDepthStream/src,
 					../../../addons/ofxDepthStream/src/ofxDepthStream,
-					../../../addons/ofxHistoryPlot/src,
-					../../../addons/ofxGui/src,
 				);
 				ICON = "$(ICON_NAME_DEBUG)";
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
@@ -549,8 +455,6 @@
 					../../../addons/ofxDepthStream/libs/DepthStream/src,
 					../../../addons/ofxDepthStream/src,
 					../../../addons/ofxDepthStream/src/ofxDepthStream,
-					../../../addons/ofxHistoryPlot/src,
-					../../../addons/ofxGui/src,
 				);
 				ICON = "$(ICON_NAME_RELEASE)";
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
@@ -566,7 +470,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "example-DualStream" */ = {
+		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "example-Client" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B4E0A3A1720003C02F2 /* Debug */,
@@ -575,7 +479,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "example-DualStream" */ = {
+		E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "example-Client" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B600A3A1757003C02F2 /* Debug */,
