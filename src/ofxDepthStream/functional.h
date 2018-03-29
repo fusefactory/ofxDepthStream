@@ -1,3 +1,6 @@
+/**
+ * \file This file provides a functional-programming interface to this addon's OpenFrameworks-specific API
+ */
 #pragma once
 
 // OF
@@ -5,6 +8,9 @@
 // local
 #include "DepthStream.h"
 
+/**
+ * \namespace OpenFrameworks-specific for working with (mostly converting) DepthStream data
+ */
 namespace ofxDepthStream {
 
   static const size_t FRAME_SIZE_640x480x16BIT = (640*480*2); // orbbec
