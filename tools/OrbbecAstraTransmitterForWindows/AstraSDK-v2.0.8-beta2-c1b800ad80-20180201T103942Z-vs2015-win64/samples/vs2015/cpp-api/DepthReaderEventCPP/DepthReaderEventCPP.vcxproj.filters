@@ -28,6 +28,9 @@
     <ClCompile Include="..\..\..\..\..\..\..\libs\DepthStream\src\Transmitter.cpp">
       <Filter>DepthStream</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\libs\DepthStream\src\Windowsstuff.cpp">
+      <Filter>DepthStream</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(SolutionDir)../common/key_handler.h">
@@ -70,6 +73,9 @@
       <Filter>DepthStream\Include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\Transmitter.h">
+      <Filter>DepthStream\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\Windowsstuff.h">
       <Filter>DepthStream\Include</Filter>
     </ClInclude>
   </ItemGroup>

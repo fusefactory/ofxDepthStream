@@ -152,6 +152,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\libs\DepthStream\src\Receiver.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\libs\DepthStream\src\Recorder.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\libs\DepthStream\src\Transmitter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\libs\DepthStream\src\Windowsstuff.cpp" />
     <ClInclude Include="$(SolutionDir)../common/key_handler.h" />
     <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\Buffer.h" />
     <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\CamInterface.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\Receiver.h" />
     <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\Recorder.h" />
     <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\Transmitter.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\Windowsstuff.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

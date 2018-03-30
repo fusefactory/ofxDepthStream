@@ -7,6 +7,7 @@
 #include <string.h>
 #ifdef _WIN32
 	#pragma comment(lib, "ws2_32.lib")
+	#include "Windowsstuff.h"
 #else
 	#include <unistd.h>
 	#include <netinet/in.h>
@@ -22,11 +23,6 @@
 using namespace depth;
 
 Transmitter::Transmitter(int port) : port(port) {
-#ifdef _WIN32
-	WSADATA wsaData;
-	WORD wsaVersionReq = MAKEWORD(2, 2);
-	WSAStartup(wsaVersionReq, &wsaData);
-#endif
   bRunning=true;
   this->thread = new std::thread(std::bind(&Transmitter::serverThread, this));
 }
@@ -86,6 +82,10 @@ bool Transmitter::transmitRaw(const void* data, size_t size){
 }
 
 bool Transmitter::bind() {
+#ifdef _WIN32
+  makeSureWindowSocketsAreInitialized();
+#endif
+
   struct sockaddr_in serv_addr;
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
