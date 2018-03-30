@@ -1,6 +1,6 @@
 #pragma once
 
-#ifndef __APPLE__
+#if !defined(__APPLE__) && !defined(WIN32)
   #define OPENNI_AVAILABLE
 #endif
 

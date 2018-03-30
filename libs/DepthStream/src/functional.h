@@ -1,3 +1,7 @@
+/**
+ * \file This file provides the functional-programming interface to the DepthStream API
+ */
+
 #pragma once
 
 #include "Frame.h"
@@ -5,6 +9,12 @@
 #include "Inflater.h"
 #include "Compressor.h"
 
+/**
+ * \namespace depth contains all classes and functions of the DepthStream library.
+ *
+ * The DepthStream library provides tool for streaming (transmitteing and receiving)
+ * compressed image-data of a network.
+ */
 namespace depth {
 
   // compress methods

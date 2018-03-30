@@ -16,9 +16,13 @@ OpenNI provides a uniform API for working with various depth sensors and is used
 
 ## Instructions
 
+#### Build and run a remote Server
+See the ```./tools``` folder for various server (transmitter) applications for various platforms/sensors.
+Each tool has its own README.md.
 
-#### Build and Run the Client on your dev machine
-Currently there are only _make_ build-files for the clients (no xcode or visual studio).
+#### Build and run a local Client
+This OpenFrameworks addon tailors only to streaming _clients_ (receivers), try
+any of the example applications:
 
 ```cd``` into one of the example application's folders and run:
 ```bash

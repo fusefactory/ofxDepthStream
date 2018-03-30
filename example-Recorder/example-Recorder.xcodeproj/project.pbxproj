@@ -1,0 +1,494 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1483752F86DD69D5C3493DAD /* Recorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20B6F3A7B03011215056C7FF /* Recorder.cpp */; };
+		15765FF283120E24A78717E9 /* Receiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB7AE9D08FCA20308AC739B1 /* Receiver.cpp */; };
+		268410A08BE24C05FA652368 /* CamInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60623075D934AA1ADAE24A7A /* CamInterface.cpp */; };
+		34192A62FDCA30B9D4672FFE /* Transmitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A1A34092F7770F860A44C98 /* Transmitter.cpp */; };
+		5DD29DDCF8D373985CAD7C4C /* Playback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B260E723931A9805EE77BAF /* Playback.cpp */; };
+		83CDBD3449AB82458D07819B /* OniSampleUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0937820609522AC97C920D0 /* OniSampleUtilities.cpp */; };
+		DDC40CE403459580BCF7D5C3 /* Compressor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A06C9856C206169F222C9E9E /* Compressor.cpp */; };
+		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
+		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
+		F659615F03C9FF725AFD84C6 /* Inflater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18608DE3588926D6EC26BD31 /* Inflater.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E4328147138ABC890047C5CB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E4B27C1510CBEB8E00536013;
+			remoteInfo = openFrameworks;
+		};
+		E4EEB9AB138B136A00A80321 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = E4B27C1410CBEB8E00536013;
+			remoteInfo = openFrameworks;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E4C2427710CC5ABF004149E2 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0E5F3D824A0C5DA7F7FD932C /* Transmitter.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Transmitter.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Transmitter.h; sourceTree = SOURCE_ROOT; };
+		18608DE3588926D6EC26BD31 /* Inflater.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Inflater.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Inflater.cpp; sourceTree = SOURCE_ROOT; };
+		20B6F3A7B03011215056C7FF /* Recorder.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Recorder.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Recorder.cpp; sourceTree = SOURCE_ROOT; };
+		2747391E0ADE73EE9D4400CD /* CamInterface.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = CamInterface.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/CamInterface.h; sourceTree = SOURCE_ROOT; };
+		2998ACDC36F3A0DD749B1B3F /* config.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = config.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/config.h; sourceTree = SOURCE_ROOT; };
+		3827E4C6EA139C123F5A5754 /* ofxDepthStream.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxDepthStream.h; path = ../../../addons/ofxDepthStream/src/ofxDepthStream/ofxDepthStream.h; sourceTree = SOURCE_ROOT; };
+		3B260E723931A9805EE77BAF /* Playback.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Playback.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Playback.cpp; sourceTree = SOURCE_ROOT; };
+		4FB9E9D0C6F9108680A1FF94 /* Recorder.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Recorder.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Recorder.h; sourceTree = SOURCE_ROOT; };
+		5A1A34092F7770F860A44C98 /* Transmitter.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Transmitter.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Transmitter.cpp; sourceTree = SOURCE_ROOT; };
+		5ABC557A9D6E227D3381D6ED /* Frame.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Frame.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Frame.h; sourceTree = SOURCE_ROOT; };
+		60623075D934AA1ADAE24A7A /* CamInterface.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = CamInterface.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/CamInterface.cpp; sourceTree = SOURCE_ROOT; };
+		71CFE1722601E8EA973A43E2 /* functional.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = functional.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/functional.h; sourceTree = SOURCE_ROOT; };
+		95431A0E4C2D4D9FCF0163B7 /* OniSampleUtilities.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OniSampleUtilities.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/OniSampleUtilities.h; sourceTree = SOURCE_ROOT; };
+		96E3B501E4B70A447046A23E /* functional.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = functional.h; path = ../../../addons/ofxDepthStream/src/ofxDepthStream/functional.h; sourceTree = SOURCE_ROOT; };
+		9AAC72FE8F9F70C5CC7FCF94 /* Compressor.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Compressor.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Compressor.h; sourceTree = SOURCE_ROOT; };
+		A06C9856C206169F222C9E9E /* Compressor.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Compressor.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Compressor.cpp; sourceTree = SOURCE_ROOT; };
+		B0937820609522AC97C920D0 /* OniSampleUtilities.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = OniSampleUtilities.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/OniSampleUtilities.cpp; sourceTree = SOURCE_ROOT; };
+		DB7AE9D08FCA20308AC739B1 /* Receiver.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Receiver.cpp; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Receiver.cpp; sourceTree = SOURCE_ROOT; };
+		DC3054BFAD27423B866A73F9 /* DepthStream.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = DepthStream.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/DepthStream.h; sourceTree = SOURCE_ROOT; };
+		DCEFF68C7DAC11BB6C96A83F /* Inflater.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Inflater.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Inflater.h; sourceTree = SOURCE_ROOT; };
+		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
+		E4B69B5B0A3A1756003C02F2 /* example-RecorderDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "example-RecorderDebug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4B69E1D0A3A1BDC003C02F2 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
+		E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = "openFrameworks-Info.plist"; sourceTree = "<group>"; };
+		E4EB691F138AFCF100A09F29 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
+		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
+		EA7A134A550EA56A341E976F /* Playback.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Playback.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Playback.h; sourceTree = SOURCE_ROOT; };
+		ED96BEF42695631F16E82ED0 /* Buffer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Buffer.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Buffer.h; sourceTree = SOURCE_ROOT; };
+		FF0DB51B9857D68A507D8304 /* Receiver.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Receiver.h; path = ../../../addons/ofxDepthStream/libs/DepthStream/src/Receiver.h; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E4B69B590A3A1756003C02F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		19F628E63D447C75735253DA /* ofxDepthStream */ = {
+			isa = PBXGroup;
+			children = (
+				B1E33CFDD98D21C2B986824F /* src */,
+				6E0BE994B7D0A2BDE4C3B39C /* libs */,
+			);
+			name = ofxDepthStream;
+			sourceTree = "<group>";
+		};
+		26924DCB94B1CC80BBCE06EF /* DepthStream */ = {
+			isa = PBXGroup;
+			children = (
+				D10BBAB569ED51080AEF8072 /* src */,
+			);
+			name = DepthStream;
+			sourceTree = "<group>";
+		};
+		6948EE371B920CB800B5AC1A /* local_addons */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = local_addons;
+			sourceTree = "<group>";
+		};
+		6E0BE994B7D0A2BDE4C3B39C /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				26924DCB94B1CC80BBCE06EF /* DepthStream */,
+			);
+			name = libs;
+			sourceTree = "<group>";
+		};
+		8C0066CDDC3E1E84A0260C5B /* ofxDepthStream */ = {
+			isa = PBXGroup;
+			children = (
+				3827E4C6EA139C123F5A5754 /* ofxDepthStream.h */,
+				96E3B501E4B70A447046A23E /* functional.h */,
+			);
+			name = ofxDepthStream;
+			sourceTree = "<group>";
+		};
+		B1E33CFDD98D21C2B986824F /* src */ = {
+			isa = PBXGroup;
+			children = (
+				8C0066CDDC3E1E84A0260C5B /* ofxDepthStream */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		BB4B014C10F69532006C3DED /* addons */ = {
+			isa = PBXGroup;
+			children = (
+				19F628E63D447C75735253DA /* ofxDepthStream */,
+			);
+			name = addons;
+			sourceTree = "<group>";
+		};
+		D10BBAB569ED51080AEF8072 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				2747391E0ADE73EE9D4400CD /* CamInterface.h */,
+				EA7A134A550EA56A341E976F /* Playback.h */,
+				2998ACDC36F3A0DD749B1B3F /* config.h */,
+				18608DE3588926D6EC26BD31 /* Inflater.cpp */,
+				5A1A34092F7770F860A44C98 /* Transmitter.cpp */,
+				B0937820609522AC97C920D0 /* OniSampleUtilities.cpp */,
+				5ABC557A9D6E227D3381D6ED /* Frame.h */,
+				60623075D934AA1ADAE24A7A /* CamInterface.cpp */,
+				3B260E723931A9805EE77BAF /* Playback.cpp */,
+				71CFE1722601E8EA973A43E2 /* functional.h */,
+				A06C9856C206169F222C9E9E /* Compressor.cpp */,
+				4FB9E9D0C6F9108680A1FF94 /* Recorder.h */,
+				DB7AE9D08FCA20308AC739B1 /* Receiver.cpp */,
+				ED96BEF42695631F16E82ED0 /* Buffer.h */,
+				0E5F3D824A0C5DA7F7FD932C /* Transmitter.h */,
+				FF0DB51B9857D68A507D8304 /* Receiver.h */,
+				DCEFF68C7DAC11BB6C96A83F /* Inflater.h */,
+				DC3054BFAD27423B866A73F9 /* DepthStream.h */,
+				9AAC72FE8F9F70C5CC7FCF94 /* Compressor.h */,
+				95431A0E4C2D4D9FCF0163B7 /* OniSampleUtilities.h */,
+				20B6F3A7B03011215056C7FF /* Recorder.cpp */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		E4328144138ABC890047C5CB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E4328148138ABC890047C5CB /* openFrameworksDebug.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E4B69B4A0A3A1720003C02F2 = {
+			isa = PBXGroup;
+			children = (
+				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
+				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
+				E4B69E1C0A3A1BDC003C02F2 /* src */,
+				E4EEC9E9138DF44700A80321 /* openFrameworks */,
+				BB4B014C10F69532006C3DED /* addons */,
+				6948EE371B920CB800B5AC1A /* local_addons */,
+				E4B69B5B0A3A1756003C02F2 /* example-RecorderDebug.app */,
+			);
+			sourceTree = "<group>";
+		};
+		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
+			);
+			path = src;
+			sourceTree = SOURCE_ROOT;
+		};
+		E4EEC9E9138DF44700A80321 /* openFrameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E4EB691F138AFCF100A09F29 /* CoreOF.xcconfig */,
+				E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */,
+			);
+			name = openFrameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E4B69B5A0A3A1756003C02F2 /* example-Recorder */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "example-Recorder" */;
+			buildPhases = (
+				E4B69B580A3A1756003C02F2 /* Sources */,
+				E4B69B590A3A1756003C02F2 /* Frameworks */,
+				E4B6FFFD0C3F9AB9008CF71C /* ShellScript */,
+				E4C2427710CC5ABF004149E2 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E4EEB9AC138B136A00A80321 /* PBXTargetDependency */,
+			);
+			name = "example-Recorder";
+			productName = myOFApp;
+			productReference = E4B69B5B0A3A1756003C02F2 /* example-RecorderDebug.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E4B69B4C0A3A1720003C02F2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0600;
+			};
+			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "example-Recorder" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = E4B69B4A0A3A1720003C02F2;
+			productRefGroup = E4B69B4A0A3A1720003C02F2;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = E4328144138ABC890047C5CB /* Products */;
+					ProjectRef = E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				E4B69B5A0A3A1756003C02F2 /* example-Recorder */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		E4328148138ABC890047C5CB /* openFrameworksDebug.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = openFrameworksDebug.a;
+			remoteRef = E4328147138ABC890047C5CB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		E4B6FFFD0C3F9AB9008CF71C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "mkdir -p \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\n# Copy default icon file into App/Resources\nrsync -aved \"$ICON_FILE\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\n# Copy libfmod and change install directory for fmod to run\nrsync -aved ../../../libs/fmodex/lib/osx/libfmodex.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Frameworks/\";\ninstall_name_tool -change @executable_path/libfmodex.dylib @executable_path/../Frameworks/libfmodex.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\";\n# Copy GLUT framework (must remove for AppStore submissions)\nrsync -aved ../../../libs/glut/lib/osx/GLUT.framework \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Frameworks/\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E4B69B580A3A1756003C02F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
+				F659615F03C9FF725AFD84C6 /* Inflater.cpp in Sources */,
+				34192A62FDCA30B9D4672FFE /* Transmitter.cpp in Sources */,
+				83CDBD3449AB82458D07819B /* OniSampleUtilities.cpp in Sources */,
+				268410A08BE24C05FA652368 /* CamInterface.cpp in Sources */,
+				5DD29DDCF8D373985CAD7C4C /* Playback.cpp in Sources */,
+				DDC40CE403459580BCF7D5C3 /* Compressor.cpp in Sources */,
+				15765FF283120E24A78717E9 /* Receiver.cpp in Sources */,
+				1483752F86DD69D5C3493DAD /* Recorder.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E4EEB9AC138B136A00A80321 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = openFrameworks;
+			targetProxy = E4EEB9AB138B136A00A80321 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		E4B69B4E0A3A1720003C02F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E4EB6923138AFD0F00A09F29 /* Project.xcconfig */;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/bin/";
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
+				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
+				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(OF_CORE_HEADERS)",
+					src,
+					../../../addons/ofxDepthStream/libs,
+					../../../addons/ofxDepthStream/libs/DepthStream,
+					../../../addons/ofxDepthStream/libs/DepthStream/src,
+					../../../addons/ofxDepthStream/src,
+					../../../addons/ofxDepthStream/src/ofxDepthStream,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-D__MACOSX_CORE__",
+					"-mtune=native",
+				);
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		E4B69B4F0A3A1720003C02F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E4EB6923138AFD0F00A09F29 /* Project.xcconfig */;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/bin/";
+				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = YES;
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
+				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_UNROLL_LOOPS = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
+				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(OF_CORE_HEADERS)",
+					src,
+					../../../addons/ofxDepthStream/libs,
+					../../../addons/ofxDepthStream/libs/DepthStream,
+					../../../addons/ofxDepthStream/libs/DepthStream/src,
+					../../../addons/ofxDepthStream/src,
+					../../../addons/ofxDepthStream/src/ofxDepthStream,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-D__MACOSX_CORE__",
+					"-mtune=native",
+				);
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		E4B69B600A3A1757003C02F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E4EB6923138AFD0F00A09F29 /* Project.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = NONE;
+				HEADER_SEARCH_PATHS = (
+					"$(OF_CORE_HEADERS)",
+					src,
+					../../../addons/ofxDepthStream/libs,
+					../../../addons/ofxDepthStream/libs/DepthStream,
+					../../../addons/ofxDepthStream/libs/DepthStream/src,
+					../../../addons/ofxDepthStream/src,
+					../../../addons/ofxDepthStream/src/ofxDepthStream,
+				);
+				ICON = "$(ICON_NAME_DEBUG)";
+				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
+				INFOPLIST_FILE = "openFrameworks-Info.plist";
+				INSTALL_PATH = /Applications;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = "$(TARGET_NAME)Debug";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		E4B69B610A3A1757003C02F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E4EB6923138AFD0F00A09F29 /* Project.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = NONE;
+				HEADER_SEARCH_PATHS = (
+					"$(OF_CORE_HEADERS)",
+					src,
+					../../../addons/ofxDepthStream/libs,
+					../../../addons/ofxDepthStream/libs/DepthStream,
+					../../../addons/ofxDepthStream/libs/DepthStream/src,
+					../../../addons/ofxDepthStream/src,
+					../../../addons/ofxDepthStream/src/ofxDepthStream,
+				);
+				ICON = "$(ICON_NAME_RELEASE)";
+				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
+				INFOPLIST_FILE = "openFrameworks-Info.plist";
+				INSTALL_PATH = /Applications;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+				baseConfigurationReference = E4EB6923138AFD0F00A09F29;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "example-Recorder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E4B69B4E0A3A1720003C02F2 /* Debug */,
+				E4B69B4F0A3A1720003C02F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "example-Recorder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E4B69B600A3A1757003C02F2 /* Debug */,
+				E4B69B610A3A1757003C02F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E4B69B4C0A3A1720003C02F2 /* Project object */;
+}
