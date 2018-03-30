@@ -4,9 +4,14 @@
 #include <thread>
 #include <iostream>
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h> //inet_addr
+#ifdef _WIN32
+	#include "winsock.h"
+#else
+	#include <sys/socket.h>
+	#include <netinet/in.h>
+	#include <arpa/inet.h> //inet_addr
+#endif
+
 // local
 #include "Buffer.h"
 

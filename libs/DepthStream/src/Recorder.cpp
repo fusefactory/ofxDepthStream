@@ -1,7 +1,9 @@
+#include <string>
 #include <iostream>
 #include <fstream>
 #include "Recorder.h"
 
+using namespace std;
 using namespace depth;
 
 Recorder::~Recorder() {

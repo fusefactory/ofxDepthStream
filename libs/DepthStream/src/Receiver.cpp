@@ -5,11 +5,14 @@
 #include <chrono>
 
 #include <string.h>
-#include <unistd.h>
-#include <netinet/in.h>
-#include <arpa/inet.h> //inet_addr
+#ifdef _WIN32
+#else
+	#include <unistd.h>
+	#include <netinet/in.h>
+	#include <arpa/inet.h> //inet_addr
+	#include<netdb.h> //hostent
+#endif
 
-#include<netdb.h> //hostent
 #include <functional>
 #include <math.h>
 #include "zlib.h"
@@ -183,7 +186,11 @@ bool Receiver::connectToServer(const std::string& address, int port) {
 }
 
 void Receiver::disconnect(){
+#ifdef _WIN32
+  closesocket(sock);
+#else
   close(sock);
+#endif
 
   if(bConnected) {
     bConnected=false;

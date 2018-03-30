@@ -1,11 +1,18 @@
 #include <string.h>
-#include <unistd.h>
+#ifdef _WIN32
+	#include <io.h>
+
+	//#include "zlibdll/include/zlib.h"
+	// #pragma comment(lib, "zlibdll/lib/zdll.lib")
+	#include "zlib.h"
+#else
+	#include <unistd.h>
+	#include "zlib.h"
+#endif
 #include <stdio.h>
 #include <iostream>
 #include <sstream> // std::stringstream
 #include <chrono>
-
-#include "zlib.h"
 #include "Inflater.h"
 
 #define BUF_SIZE (2024*2024*4)
