@@ -39,13 +39,13 @@
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)bin/Debug/</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">obj/Debug/</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DepthReaderEventCPP</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">OrbbecAstraTransmitter</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)bin/Release/</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">obj/Release/</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DepthReaderEventCPP</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">OrbbecAstraTransmitter</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
@@ -70,10 +70,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>$(SolutionDir)../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -86,8 +86,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>$(SolutionDir)lib/Debug/DepthReaderEventCPP.lib</ImportLibrary>
-      <ProgramDataBaseFile>$(SolutionDir)bin/Debug/DepthReaderEventCPP.pdb</ProgramDataBaseFile>
+      <ImportLibrary>$(SolutionDir)lib/Debug/OrbbecAstraTransmitter.lib</ImportLibrary>
+      <ProgramDataBaseFile>$(SolutionDir)bin/Debug/OrbbecAstraTransmitter.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
       <Version>
       </Version>
@@ -95,6 +95,12 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <PostBuildEvent>
+      <Command>xcopy /Y /e "$(SolutionDir)copy_to_bin64_dir" "$(TargetDir)"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy Astra SDK runtime libs and drivers</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -116,10 +122,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>$(SolutionDir)../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -132,8 +138,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>$(SolutionDir)lib/Release/DepthReaderEventCPP.lib</ImportLibrary>
-      <ProgramDataBaseFile>$(SolutionDir)bin/Release/DepthReaderEventCPP.pdb</ProgramDataBaseFile>
+      <ImportLibrary>$(SolutionDir)lib/Release/OrbbecAstraTransmitter.lib</ImportLibrary>
+      <ProgramDataBaseFile>$(SolutionDir)bin/Release/OrbbecAstraTransmitter.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
       <Version>
       </Version>
@@ -141,32 +147,38 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <PostBuildEvent>
+      <Command>xcopy /Y /e "$(SolutionDir)copy_to_bin64_dir" "$(TargetDir)"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy Astra SDK runtime libs and drivers</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="$(SolutionDir)../src/main.cpp" />
-    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\CamInterface.cpp" />
-    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Compressor.cpp" />
-    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Inflater.cpp" />
-    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\OniSampleUtilities.cpp" />
-    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Playback.cpp" />
-    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Receiver.cpp" />
-    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Recorder.cpp" />
-    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Transmitter.cpp" />
-    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Windowsstuff.cpp" />
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Buffer.h" />
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\CamInterface.h" />
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Compressor.h" />
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\config.h" />
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\DepthStream.h" />
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Frame.h" />
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\functional.h" />
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Inflater.h" />
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\OniSampleUtilities.h" />
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Playback.h" />
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Receiver.h" />
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Recorder.h" />
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Transmitter.h" />
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Windowsstuff.h" />
+    <ClCompile Include="..\..\..\libs\DepthStream\src\CamInterface.cpp" />
+    <ClCompile Include="..\..\..\libs\DepthStream\src\Compressor.cpp" />
+    <ClCompile Include="..\..\..\libs\DepthStream\src\Inflater.cpp" />
+    <ClCompile Include="..\..\..\libs\DepthStream\src\OniSampleUtilities.cpp" />
+    <ClCompile Include="..\..\..\libs\DepthStream\src\Playback.cpp" />
+    <ClCompile Include="..\..\..\libs\DepthStream\src\Receiver.cpp" />
+    <ClCompile Include="..\..\..\libs\DepthStream\src\Recorder.cpp" />
+    <ClCompile Include="..\..\..\libs\DepthStream\src\Transmitter.cpp" />
+    <ClCompile Include="..\..\..\libs\DepthStream\src\Windowsstuff.cpp" />
+    <ClInclude Include="..\..\..\libs\DepthStream\src\Buffer.h" />
+    <ClInclude Include="..\..\..\libs\DepthStream\src\CamInterface.h" />
+    <ClInclude Include="..\..\..\libs\DepthStream\src\Compressor.h" />
+    <ClInclude Include="..\..\..\libs\DepthStream\src\config.h" />
+    <ClInclude Include="..\..\..\libs\DepthStream\src\DepthStream.h" />
+    <ClInclude Include="..\..\..\libs\DepthStream\src\Frame.h" />
+    <ClInclude Include="..\..\..\libs\DepthStream\src\functional.h" />
+    <ClInclude Include="..\..\..\libs\DepthStream\src\Inflater.h" />
+    <ClInclude Include="..\..\..\libs\DepthStream\src\OniSampleUtilities.h" />
+    <ClInclude Include="..\..\..\libs\DepthStream\src\Playback.h" />
+    <ClInclude Include="..\..\..\libs\DepthStream\src\Receiver.h" />
+    <ClInclude Include="..\..\..\libs\DepthStream\src\Recorder.h" />
+    <ClInclude Include="..\..\..\libs\DepthStream\src\Transmitter.h" />
+    <ClInclude Include="..\..\..\libs\DepthStream\src\Windowsstuff.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

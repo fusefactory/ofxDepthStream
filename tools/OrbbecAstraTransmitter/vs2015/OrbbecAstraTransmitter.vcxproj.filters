@@ -1,31 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\CamInterface.cpp">
+    <ClCompile Include="..\..\..\libs\DepthStream\src\CamInterface.cpp">
       <Filter>DepthStream</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Compressor.cpp">
+    <ClCompile Include="..\..\..\libs\DepthStream\src\Compressor.cpp">
       <Filter>DepthStream</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Inflater.cpp">
+    <ClCompile Include="..\..\..\libs\DepthStream\src\Inflater.cpp">
       <Filter>DepthStream</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\OniSampleUtilities.cpp">
+    <ClCompile Include="..\..\..\libs\DepthStream\src\OniSampleUtilities.cpp">
       <Filter>DepthStream</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Playback.cpp">
+    <ClCompile Include="..\..\..\libs\DepthStream\src\Playback.cpp">
       <Filter>DepthStream</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Receiver.cpp">
+    <ClCompile Include="..\..\..\libs\DepthStream\src\Receiver.cpp">
       <Filter>DepthStream</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Recorder.cpp">
+    <ClCompile Include="..\..\..\libs\DepthStream\src\Recorder.cpp">
       <Filter>DepthStream</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Transmitter.cpp">
+    <ClCompile Include="..\..\..\libs\DepthStream\src\Transmitter.cpp">
       <Filter>DepthStream</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Windowsstuff.cpp">
+    <ClCompile Include="..\..\..\libs\DepthStream\src\Windowsstuff.cpp">
       <Filter>DepthStream</Filter>
     </ClCompile>
     <ClCompile Include="$(SolutionDir)../src/main.cpp">
@@ -33,46 +33,46 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Buffer.h">
+    <ClInclude Include="..\..\..\libs\DepthStream\src\Buffer.h">
       <Filter>DepthStream\Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\CamInterface.h">
+    <ClInclude Include="..\..\..\libs\DepthStream\src\CamInterface.h">
       <Filter>DepthStream\Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Compressor.h">
+    <ClInclude Include="..\..\..\libs\DepthStream\src\Compressor.h">
       <Filter>DepthStream\Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\config.h">
+    <ClInclude Include="..\..\..\libs\DepthStream\src\config.h">
       <Filter>DepthStream\Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\DepthStream.h">
+    <ClInclude Include="..\..\..\libs\DepthStream\src\DepthStream.h">
       <Filter>DepthStream\Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Frame.h">
+    <ClInclude Include="..\..\..\libs\DepthStream\src\Frame.h">
       <Filter>DepthStream\Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\functional.h">
+    <ClInclude Include="..\..\..\libs\DepthStream\src\functional.h">
       <Filter>DepthStream\Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Inflater.h">
+    <ClInclude Include="..\..\..\libs\DepthStream\src\Inflater.h">
       <Filter>DepthStream\Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\OniSampleUtilities.h">
+    <ClInclude Include="..\..\..\libs\DepthStream\src\OniSampleUtilities.h">
       <Filter>DepthStream\Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Playback.h">
+    <ClInclude Include="..\..\..\libs\DepthStream\src\Playback.h">
       <Filter>DepthStream\Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Receiver.h">
+    <ClInclude Include="..\..\..\libs\DepthStream\src\Receiver.h">
       <Filter>DepthStream\Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Recorder.h">
+    <ClInclude Include="..\..\..\libs\DepthStream\src\Recorder.h">
       <Filter>DepthStream\Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Transmitter.h">
+    <ClInclude Include="..\..\..\libs\DepthStream\src\Transmitter.h">
       <Filter>DepthStream\Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Windowsstuff.h">
+    <ClInclude Include="..\..\..\libs\DepthStream\src\Windowsstuff.h">
       <Filter>DepthStream\Include</Filter>
     </ClInclude>
   </ItemGroup>

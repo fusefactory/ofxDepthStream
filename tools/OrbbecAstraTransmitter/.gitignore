@@ -2,6 +2,7 @@ build
 profile_*.txt
 astra.log
 
+.vs
 *.VC.db
 *.VC.opendb
 vs2015/bin
