@@ -6,6 +6,7 @@
 
 #include <string.h>
 #ifdef _WIN32
+	#pragma comment(lib, "ws2_32.lib")
 #else
 	#include <unistd.h>
 	#include <netinet/in.h>
@@ -21,6 +22,11 @@
 using namespace depth;
 
 Transmitter::Transmitter(int port) : port(port) {
+#ifdef _WIN32
+	WSADATA wsaData;
+	WORD wsaVersionReq = MAKEWORD(2, 2);
+	WSAStartup(wsaVersionReq, &wsaData);
+#endif
   bRunning=true;
   this->thread = new std::thread(std::bind(&Transmitter::serverThread, this));
 }
@@ -87,7 +93,11 @@ bool Transmitter::bind() {
   setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char*)&option, sizeof(option));
 
   if (sockfd < 0) {
+#ifdef _WIN32
+	  std::cerr << "ERROR opening socket, WSAGetLastError gives: " << WSAGetLastError() << std::endl;
+#else
      error("ERROR opening socket");
+#endif
      return false;
    }
 
