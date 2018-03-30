@@ -5,11 +5,16 @@
 #include <chrono>
 
 #include <string.h>
-#include <unistd.h>
-#include <netinet/in.h>
-#include <arpa/inet.h> //inet_addr
+#ifdef _WIN32
+	#pragma comment(lib, "ws2_32.lib")
+	#include "Windowsstuff.h"
+#else
+	#include <unistd.h>
+	#include <netinet/in.h>
+	#include <arpa/inet.h> //inet_addr
+	#include<netdb.h> //hostent
+#endif
 
-#include<netdb.h> //hostent
 #include <functional>
 #include <math.h>
 #include "zlib.h"
@@ -81,14 +86,14 @@ void Receiver::threadFunc() {
     if(bConnected) {
       // if(bVerbose) this->cout() << "receive header..." << std::endl;
       // get 4-byte header
-      
+
       if(this->receiveInt(packageSize)) {
         if(bSuperVerbose) this->cout() << "got header for " << packageSize << " bytes" << std::endl;
       } else {
         this->disconnect();
       }
     }
-    
+
     // read body
     if(bConnected && packageSize > 0) {
       // get X-byte package
@@ -106,15 +111,19 @@ void Receiver::threadFunc() {
           frameCallback((const void*)(this->buffer), packageSize);
       }
     }
-    
+
     // this->cout() << "Sleeping... " << cycleSleep << std::endl;
     Sleep(cycleSleep);
   }
-  
+
   if(bVerbose) this->cout() << "Thread end... " << std::endl;
 }
 
 bool Receiver::connectToServer(const std::string& address, int port) {
+#ifdef _WIN32
+  makeSureWindowSocketsAreInitialized();
+#endif
+
   //create socket if it is not already created
   // if(sock == -1)
   // {
@@ -183,7 +192,11 @@ bool Receiver::connectToServer(const std::string& address, int port) {
 }
 
 void Receiver::disconnect(){
+#ifdef _WIN32
+  closesocket(sock);
+#else
   close(sock);
+#endif
 
   if(bConnected) {
     bConnected=false;

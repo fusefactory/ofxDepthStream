@@ -5,11 +5,15 @@
 #include <chrono>
 
 #include <string.h>
-#include <unistd.h>
-#include <netinet/in.h>
-#include <arpa/inet.h> //inet_addr
-
-#include <netdb.h> //hostent
+#ifdef _WIN32
+	#pragma comment(lib, "ws2_32.lib")
+	#include "Windowsstuff.h"
+#else
+	#include <unistd.h>
+	#include <netinet/in.h>
+	#include <arpa/inet.h> //inet_addr
+	#include <netdb.h> //hostent
+#endif
 #include <functional>
 #include <math.h>
 
@@ -58,10 +62,19 @@ bool Transmitter::transmitRaw(const void* data, size_t size){
     return false;
   }
 
-  auto n = write(clientsocket, data, size);
+  #ifdef _WIN32
+	auto n = send(clientsocket, (char*)data, size, 0);
+  #else
+	auto n = write(clientsocket, data, size);
+  #endif
+
   if(n < 0) {
     bConnected=false;
-    close(clientsocket);
+	#ifdef _WIN32
+		closesocket(clientsocket);
+	#else
+		close(clientsocket);
+	#endif
     return false;
   }
 
@@ -69,18 +82,28 @@ bool Transmitter::transmitRaw(const void* data, size_t size){
 }
 
 bool Transmitter::bind() {
+#ifdef _WIN32
+  makeSureWindowSocketsAreInitialized();
+#endif
+
   struct sockaddr_in serv_addr;
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
   int option=1;
-  setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option));
+  setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char*)&option, sizeof(option));
 
   if (sockfd < 0) {
+#ifdef _WIN32
+	  std::cerr << "ERROR opening socket, WSAGetLastError gives: " << WSAGetLastError() << std::endl;
+#else
      error("ERROR opening socket");
+#endif
      return false;
    }
 
-  bzero((char *) &serv_addr, sizeof(serv_addr));
+  // bzero((char *) &serv_addr, sizeof(serv_addr));
+  memset((char *)&serv_addr, 0, sizeof(serv_addr));
+
   portno = this->port;//atoi(argv[1]);
   serv_addr.sin_family = AF_INET;
   serv_addr.sin_addr.s_addr = INADDR_ANY;
@@ -96,13 +119,17 @@ bool Transmitter::bind() {
 }
 
 void Transmitter::unbind() {
+#ifdef _WIN32
+  closesocket(sockfd);
+  closesocket(clientsocket);
+#else
   close(sockfd);
   close(clientsocket);
+#endif
 }
 
 void Transmitter::serverThread() {
   struct sockaddr_in cli_addr;
-  socklen_t clilen;
   int n;
 
   while(bRunning) {
@@ -111,9 +138,8 @@ void Transmitter::serverThread() {
     }
 
     if(bBound) {
-      clilen = sizeof(cli_addr);
-
       if(!bConnected) {
+		int clilen = sizeof(cli_addr);
         clientsocket = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
         if (clientsocket < 0) {
           error("ERROR on accept");
@@ -127,14 +153,17 @@ void Transmitter::serverThread() {
       if(bConnected) {
         n=recv(clientsocket,packet,1,0);
 
-        if(n < 1){
-          close(clientsocket);
-          bConnected=false;
-        } else {
+        if(n > 0){
           std::cerr << "TODO: handle incoming data in depth::Transmitter, disconnecting for now" << std::endl;
-          close(clientsocket);
-          bConnected=false;
         }
+
+#ifdef _WIN32
+		closesocket(clientsocket);
+#else
+		close(clientsocket);
+#endif
+
+
       }
     }
 

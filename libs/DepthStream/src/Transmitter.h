@@ -3,8 +3,13 @@
 #include <stdlib.h>
 #include <vector>
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h> //hostent
+#ifdef _WIN32
+	#include <winsock.h>
+#else
+	#include <sys/socket.h>
+	#include <netdb.h> //hostent
+#endif
+
 #include <thread>
 
 namespace depth {

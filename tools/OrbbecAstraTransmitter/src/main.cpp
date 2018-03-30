@@ -201,7 +201,11 @@ int main(int argc, char** argv)
 
     do
     {
-        astra_temp_update();
+		#ifdef _WIN32
+			astra_update();
+		#else
+			astra_temp_update();
+		#endif
     } while (shouldContinue);
 
     reader.remove_listener(listener);
