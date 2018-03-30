@@ -52,7 +52,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(SolutionDir)..\common;$(SolutionDir)..\include\zlib;$(SolutionDir)..\..\..\..\..\libs\DepthStream\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)include\zlib;$(SolutionDir)..\..\..\libs\DepthStream\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>Debug/</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <CompileAs>CompileAsCpp</CompileAs>
@@ -70,10 +70,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)../../include;$(SolutionDir)../common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>$(SolutionDir)../../include;$(SolutionDir)../common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -81,7 +81,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>$(SolutionDir)../../lib/astra_core.lib;$(SolutionDir)../../lib/astra_core_api.lib;$(SolutionDir)../../lib/astra.lib;$(SolutionDir)../lib/zlibstat.lib;$(SolutionDir)../lib/zlibwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;ws2_32.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)lib\astra_core.lib;$(SolutionDir)lib\astra_core_api.lib;$(SolutionDir)lib\astra.lib;$(SolutionDir)lib\zlibstat.lib;$(SolutionDir)lib\zlibwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;ws2_32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -98,7 +98,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\include;$(SolutionDir)..\common;$(SolutionDir)..\include\zlib;$(SolutionDir)..\..\..\..\..\libs\DepthStream\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)include\zlib;$(SolutionDir)..\..\..\libs\DepthStream\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>Release/</AssemblerListingLocation>
       <CompileAs>CompileAsCpp</CompileAs>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -116,10 +116,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)../../include;$(SolutionDir)../common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>$(SolutionDir)../../include;$(SolutionDir)../common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -127,7 +127,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>$(SolutionDir)../../lib/astra_core.lib;$(SolutionDir)../../lib/astra_core_api.lib;$(SolutionDir)../../lib/astra.lib;$(SolutionDir)../lib/zlibstat.lib;$(SolutionDir)../lib/zlibwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;ws2_32.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)lib\astra_core.lib;$(SolutionDir)lib\astra_core_api.lib;$(SolutionDir)lib\astra.lib;$(SolutionDir)lib\zlibstat.lib;$(SolutionDir)lib\zlibwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;ws2_32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -143,31 +143,30 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="$(SolutionDir)../cpp-api/DepthReaderEventCPP/main.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\libs\DepthStream\src\CamInterface.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\libs\DepthStream\src\Compressor.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\libs\DepthStream\src\Inflater.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\libs\DepthStream\src\OniSampleUtilities.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\libs\DepthStream\src\Playback.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\libs\DepthStream\src\Receiver.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\libs\DepthStream\src\Recorder.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\libs\DepthStream\src\Transmitter.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\libs\DepthStream\src\Windowsstuff.cpp" />
-    <ClInclude Include="$(SolutionDir)../common/key_handler.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\Buffer.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\CamInterface.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\Compressor.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\config.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\DepthStream.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\Frame.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\functional.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\Inflater.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\OniSampleUtilities.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\Playback.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\Receiver.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\Recorder.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\Transmitter.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\libs\DepthStream\src\Windowsstuff.h" />
+    <ClCompile Include="$(SolutionDir)../src/main.cpp" />
+    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\CamInterface.cpp" />
+    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Compressor.cpp" />
+    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Inflater.cpp" />
+    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\OniSampleUtilities.cpp" />
+    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Playback.cpp" />
+    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Receiver.cpp" />
+    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Recorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Transmitter.cpp" />
+    <ClCompile Include="..\..\..\..\..\libs\DepthStream\src\Windowsstuff.cpp" />
+    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Buffer.h" />
+    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\CamInterface.h" />
+    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Compressor.h" />
+    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\config.h" />
+    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\DepthStream.h" />
+    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Frame.h" />
+    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\functional.h" />
+    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Inflater.h" />
+    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\OniSampleUtilities.h" />
+    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Playback.h" />
+    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Receiver.h" />
+    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Recorder.h" />
+    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Transmitter.h" />
+    <ClInclude Include="..\..\..\..\..\libs\DepthStream\src\Windowsstuff.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
