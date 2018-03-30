@@ -139,7 +139,11 @@ void Transmitter::serverThread() {
 
     if(bBound) {
       if(!bConnected) {
-		int clilen = sizeof(cli_addr);
+#ifdef _WIN32
+        int clilen = sizeof(cli_addr);
+#else
+        socklen_t clilen = sizeof(cli_addr);
+#endif
         clientsocket = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
         if (clientsocket < 0) {
           error("ERROR on accept");
