@@ -1,3 +1,20 @@
+//
+//  This file is part of the ofxDepthStream [https://github.com/fusefactory/ofxDepthStream]
+//  Copyright (C) 2018 Fuse srl
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 package fuse.kinectstreaming;
 
 
@@ -14,7 +31,7 @@ import java.util.zip.Inflater;
 public class KinectStreamReceiver
 {
 	private final int attemptTime = 5; // in seconds
-	
+
 	private boolean running;
 	private String address;
 	private int port;
@@ -22,24 +39,24 @@ public class KinectStreamReceiver
 	private boolean connected;
 	private List<KinectStreamListener> listeners;
 	private boolean restartKinect;
-	
+
 	public KinectStreamReceiver(String address, int port)
 	{
 		this.address = address;
 		this.port = port;
-		
+
 		listeners = new CopyOnWriteArrayList<>();
 	}
-	
+
 	public boolean running()
 	{
 		return running;
 	}
-	
+
 	public void start()
 	{
 		running = true;
-		
+
 		new Thread(new Runnable()
 		{
 			@Override
@@ -59,12 +76,12 @@ public class KinectStreamReceiver
 						{
 							connected = false;
 							System.out.println(Calendar.getInstance().getTime().toString() + " - KinectStreamReceiver: cannot connect to " + address + ":" + port);
-							
+
 							long wait = System.currentTimeMillis();
 							while (System.currentTimeMillis() - wait < attemptTime * 1000) { };
 						}
 					}
-					
+
 					try
 					{
 						while (true)
@@ -77,10 +94,10 @@ public class KinectStreamReceiver
 							{
 								read += inputStream.read(data, read, length - read);
 							}
-							
+
 							byte[] decompressed = decompress(data);
 							for (KinectStreamListener listener : listeners) listener.newData(decompressed);
-							
+
 							if (restartKinect)
 							{
 								BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -101,7 +118,7 @@ public class KinectStreamReceiver
 			}
 		}).start();
 	}
-	
+
 	private byte[] decompress(final byte[] data)
 	{
 		if (data == null || data.length == 0) return new byte[0];
@@ -127,19 +144,19 @@ public class KinectStreamReceiver
 			return data;
 		}
 	}
-	
+
 	public void stop()
 	{
 		running = false;
 		close();
 		connected = false;
 	}
-	
+
 	public void addListener(KinectStreamListener listener)
 	{
 		listeners.add(listener);
 	}
-	
+
 	/**
 	 * Send restart command to KinectStreamTransmitter.
 	 */
@@ -147,7 +164,7 @@ public class KinectStreamReceiver
 	{
 		restartKinect = true;
 	}
-	
+
 	private void close()
 	{
 		try

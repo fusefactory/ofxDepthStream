@@ -1,3 +1,20 @@
+//
+//  This file is part of the ofxDepthStream [https://github.com/fusefactory/ofxDepthStream]
+//  Copyright (C) 2018 Fuse srl
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 package fuse.kinectforwindows2;
 
 import java.util.ArrayList;
@@ -12,11 +29,11 @@ public class KinectV2
     public final int colorWidth = 1920;
     public final int colorHeight = 1080;
     public final int bodyCount = 6;
-    
+
     private Device device;
-    
+
     private List<Skeleton> skeletons;
-    
+
 	public KinectV2()
 	{
 		device = new Device();
@@ -30,7 +47,7 @@ public class KinectV2
 		boolean initialized = device.jniInit();
 		if (!initialized) System.err.println("Kinect device not initialized!");
 	}
-	
+
 	/**
 	 * Interrompe la periferica.
 	 */
@@ -38,22 +55,22 @@ public class KinectV2
 	{
 		device.jniStopDevice();
 	}
-	
+
 	public void enableDepth()
 	{
 		device.jniEnableDepthFrame(true);
 	}
-	
+
 	public int[] depthData()
 	{
 		return device.jniGetDepth256Data();
 	}
-	
+
 	public int[] depthMap()
 	{
 		return device.jniGetRawDepth16Data();
 	}
-	
+
 	public void enableSkeleton3D()
 	{
 		device.jniEnableSkeleton3D(true);
@@ -78,7 +95,7 @@ public class KinectV2
 		}
 		return trackedSkeletons;
 	}
-	
+
 	private void updateSkeleton(Skeleton skeleton, float[] rawData, int index)
 	{
 		int jointOffset = index * (JointType.values().length + 1) * 9;
@@ -87,7 +104,7 @@ public class KinectV2
 			int jointIndex = i * 9;
 			int state = (int)rawData[jointOffset + jointIndex + 7];
 			int type = (int)rawData[jointOffset + jointIndex + 8];
-			
+
 			JointType jointType = JointType.values()[type];
 			SkeletonJoint joint = skeleton.getJoint(jointType);
 

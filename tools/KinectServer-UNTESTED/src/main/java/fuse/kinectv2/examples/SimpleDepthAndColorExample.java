@@ -1,3 +1,20 @@
+//
+//  This file is part of the ofxDepthStream [https://github.com/fusefactory/ofxDepthStream]
+//  Copyright (C) 2018 Fuse srl
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 package fuse.kinectv2.examples;
 
 import java.nio.FloatBuffer;
@@ -26,37 +43,37 @@ public class SimpleDepthAndColorExample implements GLEventListener, KeyListener
 	{
 		GLProfile profile = GLProfile.getDefault();
 		GLCapabilities caps = new GLCapabilities(profile);
-		
+
 		Display display = NewtFactory.createDisplay(null);
 		Screen screen = NewtFactory.createScreen(display, 0);
 		screen.addReference();
-		
+
 		GLWindow glWindow = GLWindow.create(caps);
 		FPSAnimator animator = new FPSAnimator(glWindow, 60, true);
-		
+
 		SimpleDepthAndColorExample renderer = new SimpleDepthAndColorExample(animator);
 		glWindow.addGLEventListener(renderer);
         glWindow.addKeyListener(renderer);
         glWindow.setSize(512 + (int)(1920 / 1080f * 424) + 512, 424);
         glWindow.setVisible(true);
         glWindow.setSurfaceScale(new float [] { ScalableSurface.IDENTITY_PIXELSCALE, ScalableSurface.IDENTITY_PIXELSCALE });
-        
+
         animator.setUpdateFPSFrames(10, null);
         animator.start();
 	}
-	
+
 	private FPSAnimator animator;
 	private int depthID, rgbID, registeredID;
 	private KinectV2 kinect;
 	private FloatBuffer depthBuffer;
 	private FloatBuffer rgbBuffer;
 	private FloatBuffer registeredBuffer;
-	
-	public SimpleDepthAndColorExample(FPSAnimator animator) 
+
+	public SimpleDepthAndColorExample(FPSAnimator animator)
 	{
 		this.animator = animator;
 	}
-	
+
 	@Override
 	public void init(GLAutoDrawable drawable)
 	{
@@ -66,19 +83,19 @@ public class SimpleDepthAndColorExample implements GLEventListener, KeyListener
 		gl.glEnable(GL2.GL_LINE_SMOOTH);
 		gl.glHint(GL2.GL_LINE_SMOOTH_HINT, GL2.GL_DONT_CARE);
 		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
-		
+
 		int[] buffer = new int[3];
-		gl.glGenTextures(3, buffer, 0); 
+		gl.glGenTextures(3, buffer, 0);
 		depthID = buffer[0];
 		rgbID = buffer[1];
 		registeredID = buffer[2];
-		
+
 		kinect = new KinectV2();
 		kinect.enableDepth();
 		kinect.enableRgb();
 		kinect.enableRegistered();
 		kinect.start();
-		
+
 		depthBuffer = Buffers.newDirectFloatBuffer(kinect.depthWidth * kinect.depthHeight * 4);
 		rgbBuffer = Buffers.newDirectFloatBuffer(kinect.colorWidth * kinect.colorHeight * 4);
 		registeredBuffer = Buffers.newDirectFloatBuffer(kinect.depthWidth * kinect.depthHeight * 4);
@@ -105,7 +122,7 @@ public class SimpleDepthAndColorExample implements GLEventListener, KeyListener
 			}
 		}
 		depthBuffer.rewind();
-		
+
 		IntBuffer color = kinect.rgbImage();
 		for (int y = 0; y < kinect.colorHeight; y++)
 		{
@@ -124,7 +141,7 @@ public class SimpleDepthAndColorExample implements GLEventListener, KeyListener
 			}
 		}
 		rgbBuffer.rewind();
-		
+
 		IntBuffer registered = kinect.registeredImage();
 		for (int y = 0; y < kinect.depthHeight; y++)
 		{
@@ -143,11 +160,11 @@ public class SimpleDepthAndColorExample implements GLEventListener, KeyListener
 			}
 		}
 		registeredBuffer.rewind();
-		
+
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glClearColor(0f, 0f, 0f, 0f);
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-		
+
 		gl.glBindTexture(GL2.GL_TEXTURE_2D, depthID);
         gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
     	gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
@@ -161,7 +178,7 @@ public class SimpleDepthAndColorExample implements GLEventListener, KeyListener
     	gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
         gl.glTexImage2D(GL2.GL_TEXTURE_2D, 0, GL2.GL_RGBA, kinect.depthWidth, kinect.depthHeight, 0, GL2.GL_RGBA, GL2.GL_FLOAT, registeredBuffer);
         gl.glBindTexture(GL2.GL_TEXTURE_2D, 0);
-        
+
  		gl.glColor3f(1, 1, 1);
  		gl.glEnable(GL2.GL_TEXTURE_2D);
  		gl.glBindTexture(GL2.GL_TEXTURE_2D, depthID);
@@ -175,7 +192,7 @@ public class SimpleDepthAndColorExample implements GLEventListener, KeyListener
  		gl.glTexCoord2d(0, 1);
  		gl.glVertex2d(0.0, kinect.depthHeight);
  		gl.glEnd();
- 		
+
  		gl.glBindTexture(GL2.GL_TEXTURE_2D, rgbID);
  		gl.glBegin(GL2.GL_QUADS);
  		gl.glTexCoord2d(0, 0);
@@ -188,7 +205,7 @@ public class SimpleDepthAndColorExample implements GLEventListener, KeyListener
  		gl.glVertex2d(kinect.depthWidth, kinect.depthHeight);
  		gl.glEnd();
  		gl.glBindTexture(GL2.GL_TEXTURE_2D, 0);
- 		
+
  		gl.glDisable(GL2.GL_TEXTURE_2D);
  		gl.glColor3f(1, 1, 1);
  		gl.glEnable(GL2.GL_TEXTURE_2D);
@@ -211,13 +228,13 @@ public class SimpleDepthAndColorExample implements GLEventListener, KeyListener
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
-        
+
         gl.glOrtho(0, width, height, 0, -1, 1);
-        
+
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
 	}
-	
+
 	@Override
 	public void dispose(GLAutoDrawable drawable)
 	{
@@ -227,7 +244,7 @@ public class SimpleDepthAndColorExample implements GLEventListener, KeyListener
 	public void keyPressed(KeyEvent event)
 	{
 		short key = event.getKeyCode();
-		
+
 		if (key == KeyEvent.VK_ESCAPE)
 		{
 			if (animator.isStarted())
