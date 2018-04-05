@@ -6,5 +6,4 @@ astra.log
 *.VC.db
 *.VC.opendb
 vs2015/bin
-vs2015/copy_to_bin64_dir
 vs2015/lib
