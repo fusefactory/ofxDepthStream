@@ -1,5 +1,22 @@
-// By default this we'll assume APPLE is a development
-// environment without OpenNI and OpenCV.
+//
+//  This file is part of the ofxDepthStream [https://github.com/fusefactory/ofxDepthStream]
+//  Copyright (C) 2018 Fuse srl
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
+// By default this we'll assume APPLE is a development environment
+// without OpenNI and OpenCV.
 #ifndef __APPLE__
   #define OPENNI_AVAILABLE
   #define OPENCV_AVAILABLE
@@ -9,9 +26,6 @@
 #include <iostream>
 #include <vector>
 #include <chrono>
-// opencv2
-#include "opencv2/imgproc/imgproc.hpp"
-#include "opencv2/highgui/highgui.hpp"
 // local
 #include "../../../libs/DepthStream/src/OniSampleUtilities.h"
 #include "../../../libs/DepthStream/src/CamInterface.h"
@@ -20,80 +34,53 @@
 
 using namespace std;
 using namespace std::chrono;
-using namespace cv;
 using namespace depth;
 
-struct ClrSrc {
-  std::shared_ptr<VideoCapture> capRef;
-  Mat frame;
-};
-
-std::shared_ptr<ClrSrc> createColorSource() {
-  #ifndef OPENCV_AVAILABLE
-    return nullptr;
-  #else
-    auto capRef = std::make_shared<VideoCapture>(CAP_OPENNI2); // open default camera
-
-    if(!capRef->isOpened()) {
-      std::cerr << "Could not open cv::VideoCapture device for color stream" << std::endl;
-      // return nullptr;
-    }
-
-    auto ref = std::make_shared<ClrSrc>();
-    ref->capRef = capRef;
-    return ref;
-  #endif
-}
-
 class Converter16to32bit {
-public:
-  bool convert(const void* data, size_t size) {
-    if((size * 2) > BUF_SIZE){
-      std::cerr << "Convert: " << size << " bytes is too big for our buffer" << std::endl;
-      return false;
+  public:
+    bool convert(const void* data, size_t size) {
+      if((size * 2) > BUF_SIZE){
+        std::cerr << "Convert: " << size << " bytes is too big for our buffer" << std::endl;
+        return false;
+      }
+
+      memset(buffer, 0, BUF_SIZE);
+
+      size_t index=0;
+      size_t ttl = size/2;
+      while(index < ttl) {
+        uint16_t val = ((uint16_t*)data)[index];
+
+        // std::cout << "convert iteration: " << index << "," << ttl << "siz2: " << sizeof(uint32_t) << std::endl;
+        ((unsigned char*)buffer)[index * 4 + 0] = 0;
+        ((unsigned char*)buffer)[index * 4 + 1] = 0;
+        ((unsigned char*)buffer)[index * 4 + 2] = (unsigned char)(val >> 8 & 0xFF);
+        ((unsigned char*)buffer)[index * 4 + 3] = (unsigned char)(val & 0xFF);
+
+        index += 1;
+
+        // ((uint32_t*)this->buffer)[index*2] = ((uint16_t*)data)[index];
+        // ((uint16_t*)this->buffer)[index*2+1] = 0;
+        // index += 1;
+      }
+
+      lastSize = size * 2; //destCursor;
+      // std::cout << "Converting done, original size: " << size << ", ttl: " << ttl << ", last size: " << lastSize << std::endl;
+      return true;
     }
 
-    memset(buffer, 0, BUF_SIZE);
+    const void* getData(){ return (void*)buffer; }
+    size_t getSize(){ return lastSize; }
 
-    size_t index=0;
-    size_t ttl = size/2;
-    while(index < ttl) {
-      uint16_t val = ((uint16_t*)data)[index];
-
-      // std::cout << "convert iteration: " << index << "," << ttl << "siz2: " << sizeof(uint32_t) << std::endl;
-      ((unsigned char*)buffer)[index * 4 + 0] = 0;
-      ((unsigned char*)buffer)[index * 4 + 1] = 0;
-      ((unsigned char*)buffer)[index * 4 + 2] = (unsigned char)(val >> 8 & 0xFF);
-      ((unsigned char*)buffer)[index * 4 + 3] = (unsigned char)(val & 0xFF);
-
-      index += 1;
-
-      // ((uint32_t*)this->buffer)[index*2] = ((uint16_t*)data)[index];
-      // ((uint16_t*)this->buffer)[index*2+1] = 0;
-      // index += 1;
-    }
-
-    lastSize = size * 2; //destCursor;
-    // std::cout << "Converting done, original size: " << size << ", ttl: " << ttl << ", last size: " << lastSize << std::endl;
-    return true;
-  }
-
-  const void* getData(){ return (void*)buffer; }
-  size_t getSize(){ return lastSize; }
-
-  private:
-    static const size_t BUF_SIZE = (1280*720*4);
-    unsigned char buffer[BUF_SIZE];
-    size_t lastSize=0;
+    private:
+      static const size_t BUF_SIZE = (1280*720*4);
+      unsigned char buffer[BUF_SIZE];
+      size_t lastSize=0;
 };
 
 int main(int argc, char** argv) {
-  // configurables
-  // bool bResendFrames = false;
-
   unsigned int sleepTime = 5; // ms
   int depthPort = 4445;
-  // int colorPort = 4446;
   int fps = 60;
   bool bVerbose=false;
   std::shared_ptr<Converter16to32bit> converterRef = nullptr;
@@ -145,20 +132,12 @@ int main(int argc, char** argv) {
   // setup camera feed
   depth::CamInterface camInt;
   depth = camInt.getDepthStream();
-  // color = camInt.getColorStream();
-  auto clrSrc = createColorSource();
 
   // setup streamers
   if(depthPort > 0) {
     std::cout << "Starting depth transmitter on port " << depthPort << std::endl;
     depthStreamTransmitters.push_back(std::make_shared<Transmitter>(depthPort));
   }
-
-  // COLOR STREAM DOESN'T WORK YET
-  // if(colorPort > 0){
-  //   std::cout << "Starting color transmitter on port " << colorPort << std::endl;
-  //   colorStreamTransmitters.push_back(std::make_shared<Transmitter>(colorPort));
-  // }
 
   // config timing
   auto nextFrameTime = steady_clock::now();
@@ -222,13 +201,6 @@ int main(int argc, char** argv) {
             }
           }
         }
-      }
-
-      // clrSrc is not working yet, just some dev-only logging
-      if(clrSrc) {
-        (*clrSrc->capRef) >> clrSrc->frame;
-        if(bVerbose)
-          std::cout << "Color frame size: " << clrSrc->frame.total() << " with " << clrSrc->frame.channels() << " channels and size: " << clrSrc->frame.size() << std::endl;
       }
     }
 

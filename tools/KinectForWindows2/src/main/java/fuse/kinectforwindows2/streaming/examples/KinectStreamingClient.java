@@ -1,3 +1,20 @@
+//
+//  This file is part of the ofxDepthStream [https://github.com/fusefactory/ofxDepthStream]
+//  Copyright (C) 2018 Fuse srl
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 package fuse.kinectforwindows2.streaming.examples;
 
 import java.awt.Font;
@@ -31,10 +48,10 @@ public class KinectStreamingClient implements GLEventListener, KeyListener, Kine
 	{
 		GLProfile profile = GLProfile.get(GLProfile.GL2);
 		GLCapabilities caps = new GLCapabilities(profile);
-		
+
 		GLWindow glMainWindow = GLWindow.create(caps);
 		final FPSAnimator animator = new FPSAnimator(glMainWindow, 60, true);
-		
+
 		KinectStreamingClient test = new KinectStreamingClient(animator);
 		glMainWindow.addGLEventListener(test);
         glMainWindow.addKeyListener(test);
@@ -42,7 +59,7 @@ public class KinectStreamingClient implements GLEventListener, KeyListener, Kine
         glMainWindow.setTitle("KINECT STREAMING");
         glMainWindow.setVisible(true);
         glMainWindow.setSurfaceScale(new float [] { ScalableSurface.IDENTITY_PIXELSCALE, ScalableSurface.IDENTITY_PIXELSCALE });
-		
+
 		glMainWindow.addWindowListener(new WindowAdapter()
 		{
         	@Override
@@ -52,7 +69,7 @@ public class KinectStreamingClient implements GLEventListener, KeyListener, Kine
                 System.exit(0);
             }
 		});
-		
+
 		animator.setUpdateFPSFrames(5, null);
 		animator.start();
 	}
@@ -65,7 +82,7 @@ public class KinectStreamingClient implements GLEventListener, KeyListener, Kine
 	private ByteBuffer kinectBuffer;
 	private int textureID;
 	private TextRenderer textRenderer;
-	
+
 	public KinectStreamingClient(FPSAnimator animator)
 	{
 		this.animator = animator;
@@ -73,26 +90,26 @@ public class KinectStreamingClient implements GLEventListener, KeyListener, Kine
 		frameTime = System.currentTimeMillis();
 		maxFrameTime = 0;
 	}
-	
+
 	@Override
 	public void init(GLAutoDrawable drawable)
 	{
 		GL2 gl = drawable.getGL().getGL2();
-		
+
 		int[] buffer = new int[1];
 		gl.glGenTextures(buffer.length, buffer, 0);
 		textureID = buffer[0];
-		
+
         kinectBuffer = Buffers.newDirectByteBuffer(512 * 424 * 4);
         kinectImage = Buffers.newDirectFloatBuffer(512 * 424 * 4);
         kinectReicever = new KinectStreamReceiver("192.168.1.76", 4444);
 //        kinectReicever = new KinectStreamReceiver("127.0.0.1", 4444);
         kinectReicever.addListener(this);
         kinectReicever.start();
-        
+
         skeletonReceiver = new KinectSkeletonReceiver("192.168.1.77", 4445);
         skeletonReceiver.start();
-        
+
         try
 		{
         	Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("kinectstreaming/data/Gotham-Black.otf")).deriveFont(Font.PLAIN, 16);
@@ -113,7 +130,7 @@ public class KinectStreamingClient implements GLEventListener, KeyListener, Kine
 		gl.glMatrixMode(GL2.GL_PROJECTION );
         gl.glLoadIdentity();
         gl.glOrthof(0, width, 0, height, -1, 1);
-        
+
         gl.glMatrixMode(GL2.GL_MODELVIEW );
         gl.glLoadIdentity();
 	}
@@ -124,15 +141,15 @@ public class KinectStreamingClient implements GLEventListener, KeyListener, Kine
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glClearColor(0f, 0f, 0f, 1f);
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-		
+
 		kinectBuffer.rewind();
-		
+
 		// depth Image
 //		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureID);
 //		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
 //    	gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
 //    	gl.glTexImage2D(GL2.GL_TEXTURE_2D, 0, GL2.GL_RGBA, 512, 424, 0, GL2.GL_RGBA, GL2.GL_UNSIGNED_BYTE, kinectBuffer);
-		
+
 		// edge image
 		for (int i = 0; i < kinectBuffer.capacity(); i += 4)
 		{
@@ -157,12 +174,12 @@ public class KinectStreamingClient implements GLEventListener, KeyListener, Kine
 			}
 		}
 		kinectImage.rewind();
-		
+
 		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureID);
 		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
 		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
 		gl.glTexImage2D(GL2.GL_TEXTURE_2D, 0, GL2.GL_RGBA, 512, 424, 0, GL2.GL_RGBA, GL2.GL_FLOAT, kinectImage);
- 		
+
         gl.glColor3f(1, 1, 1);
 		gl.glEnable(GL2.GL_TEXTURE_2D);
 		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureID);
@@ -178,7 +195,7 @@ public class KinectStreamingClient implements GLEventListener, KeyListener, Kine
 		gl.glEnd();
 		gl.glBindTexture(GL2.GL_TEXTURE_2D, 0);
 		gl.glDisable(GL2.GL_TEXTURE_2D);
-		
+
 		int count = 0;
 		for (Skeleton skeleton : skeletonReceiver.skeletons().keySet())
 		{
@@ -188,10 +205,10 @@ public class KinectStreamingClient implements GLEventListener, KeyListener, Kine
 				count++;
 			}
 		}
-		
+
 		long refreshTime = System.currentTimeMillis() - frameTime;
 		if (refreshTime > maxFrameTime) maxFrameTime = refreshTime;
-		
+
 		if (count > 0) textRenderer.setColor(0, 1, 0, 1);
 		else textRenderer.setColor(1, 0, 0, 1);
 		textRenderer.begin3DRendering();

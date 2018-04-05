@@ -14,6 +14,9 @@
 // limitations under the License.
 //
 // Be excellent to each other.
+
+// Modifications copyright (C) 2018 Fuse srl
+
 #include <astra/astra.hpp>
 #include <cstdio>
 #include <chrono>

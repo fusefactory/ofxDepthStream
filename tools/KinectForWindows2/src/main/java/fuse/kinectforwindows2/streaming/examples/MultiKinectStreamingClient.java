@@ -1,3 +1,37 @@
+//
+//  This file is part of the ofxDepthStream [https://github.com/fusefactory/ofxDepthStream]
+//  Copyright (C) 2018 Fuse srl
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
+//
+//  This file is part of the ofxDepthStream [https://github.com/fusefactory/ofxDepthStream]
+//  Copyright (C) 2018 Fuse srl
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 package fuse.kinectforwindows2.streaming.examples;
 
 import java.awt.Font;
@@ -22,27 +56,27 @@ import com.jogamp.opengl.util.awt.TextRenderer;
 public class MultiKinectStreamingClient implements GLEventListener, KeyListener
 {
 	private static final int DEVICES = 3;
-	
+
 	public class KinectConfig
 	{
 		public String ip;
 		public int port;
-		
+
 		public KinectConfig(String ip, int port)
 		{
 			this.ip = ip;
 			this.port = port;
 		}
 	}
-	
+
 	public static void main(String[] args)
 	{
 		GLProfile profile = GLProfile.get(GLProfile.GL2);
 		GLCapabilities caps = new GLCapabilities(profile);
-		
+
 		GLWindow glMainWindow = GLWindow.create(caps);
 		final FPSAnimator animator = new FPSAnimator(glMainWindow, 60, true);
-		
+
 		MultiKinectStreamingClient test = new MultiKinectStreamingClient(animator);
 		glMainWindow.addGLEventListener(test);
         glMainWindow.addKeyListener(test);
@@ -50,7 +84,7 @@ public class MultiKinectStreamingClient implements GLEventListener, KeyListener
         glMainWindow.setTitle("KINECT STREAMING");
         glMainWindow.setVisible(true);
         glMainWindow.setSurfaceScale(new float [] { ScalableSurface.IDENTITY_PIXELSCALE, ScalableSurface.IDENTITY_PIXELSCALE });
-		
+
 		glMainWindow.addWindowListener(new WindowAdapter()
 		{
         	@Override
@@ -60,7 +94,7 @@ public class MultiKinectStreamingClient implements GLEventListener, KeyListener
                 System.exit(0);
             }
 		});
-		
+
 		animator.setUpdateFPSFrames(5, null);
 		animator.start();
 	}
@@ -68,25 +102,25 @@ public class MultiKinectStreamingClient implements GLEventListener, KeyListener
 	private FPSAnimator animator;
 	private List<KinectClient> kinectClients;
 	private TextRenderer textRenderer;
-	
+
 	private KinectConfig[] kinectConfigs = new KinectConfig[] {
 			new KinectConfig("192.168.1.76", 4444),
 			new KinectConfig("192.168.1.75", 4444),
 			new KinectConfig("192.168.1.74", 4444),
 	};
-	
+
 	public MultiKinectStreamingClient(FPSAnimator animator)
 	{
 		this.animator = animator;
 	}
-	
+
 	@Override
 	public void init(GLAutoDrawable drawable)
 	{
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glEnable(GL2.GL_BLEND);
 		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-		
+
 		kinectClients = new ArrayList<>();
 		for (int i = 0; i < DEVICES; i++)
 		{
@@ -96,7 +130,7 @@ public class MultiKinectStreamingClient implements GLEventListener, KeyListener
 			kinectClient.start();
 			kinectClients.add(kinectClient);
 		}
-        
+
         try
 		{
         	Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("kinectstreaming/data/Gotham-Black.otf")).deriveFont(Font.PLAIN, 16);
@@ -117,7 +151,7 @@ public class MultiKinectStreamingClient implements GLEventListener, KeyListener
 		gl.glMatrixMode(GL2.GL_PROJECTION );
         gl.glLoadIdentity();
         gl.glOrthof(0, width, 0, height, -1, 1);
-        
+
         gl.glMatrixMode(GL2.GL_MODELVIEW );
         gl.glLoadIdentity();
 	}
@@ -128,12 +162,12 @@ public class MultiKinectStreamingClient implements GLEventListener, KeyListener
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glClearColor(0f, 0f, 0f, 1f);
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-		
+
 		for (int i = 0; i < kinectClients.size(); i++)
 		{
 			KinectClient kinectClient = kinectClients.get(i);
 			kinectClient.update(gl);
-			
+
 			gl.glColor3f(1, 1, 1);
 			gl.glEnable(GL2.GL_TEXTURE_2D);
 			gl.glBindTexture(GL2.GL_TEXTURE_2D, kinectClient.textureID());
@@ -149,7 +183,7 @@ public class MultiKinectStreamingClient implements GLEventListener, KeyListener
 			gl.glEnd();
 			gl.glBindTexture(GL2.GL_TEXTURE_2D, 0);
 			gl.glDisable(GL2.GL_TEXTURE_2D);
-			
+
 			if (!kinectClient.running())
 			{
 				gl.glColor4f(1, 0, 0, 0.5f);
@@ -160,7 +194,7 @@ public class MultiKinectStreamingClient implements GLEventListener, KeyListener
 				gl.glVertex2f(KinectClient.DEPTH_WIDTH * i, KinectClient.DEPTH_HEIGHT);
 				gl.glEnd();
 			}
-			
+
 			textRenderer.begin3DRendering();
 			textRenderer.setColor(0, 0, 1, 1);
 			textRenderer.draw("REFRESH TIME: " + kinectClient.refreshTime() + " MILLIS", KinectClient.DEPTH_WIDTH * i + 10, 30);
