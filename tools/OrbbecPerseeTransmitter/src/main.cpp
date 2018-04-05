@@ -34,7 +34,6 @@
 
 using namespace std;
 using namespace std::chrono;
-using namespace cv;
 using namespace depth;
 
 class Converter16to32bit {
