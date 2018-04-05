@@ -62,7 +62,7 @@ Command-line arguments:
 
 ### Run OrbbecPerseeTransmitter at startup
 Our prefered method is to create a startup.sh script in our user's home folder, and call that from /etc/rc.local,
-so it's easier to change the startup script (without needing to use SUDO after the initial setup) and it's more "visible" that there is a startup routine. The instructions below assume you are using the default ```ubuntu``` user account.
+so it's easy to change the startup script (without needing to use SUDO after the initial setup). The instructions below assume you are using the default ```ubuntu``` user account.
 
 ##### create a startup.sh script in your user's home folder
 Create a file at ```/home/ubuntu/startup.sh``` with the below content. This is the script we'll configure to be executed at startup. It will run in the backgorund and log the application's output to a log file in the ```/var/log/``` system folder.
@@ -71,7 +71,7 @@ cd /home/ubuntu/ofxDepthStream/tools/OrbbecPerseeTransmitter/Bin/Arm-Release && 
 ```
 
 ##### register startup.sh to run at startup
-Add the content below to the file ```/etc/rc.local``` on the persee. You'll have to use ```sudo``` to edit the file. Make sure to add these lines **BEFORE** the ```exit 0``` line at then end of the file. Note that these lines will first check if the startup.sh script exists, so if it (accidentally?) get (re-)moved, this will not cause any startup issues.
+Add the content below to the file ```/etc/rc.local``` on the persee. You'll have to use ```sudo``` to edit the file. Make sure to add these lines **BEFORE** the ```exit 0``` line at then end of the file. Note that this script will first check if the startup.sh script exists, so if it (accidentally?) gets (re-)moved, this will not cause any startup issues.
 ```bash
 if [ -f /home/ubuntu/startup.sh ]; then
   /home/ubuntu/startup.sh &
