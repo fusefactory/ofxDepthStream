@@ -33,7 +33,7 @@ make RunDebug # to run the last development-build
 ```
 
 ## SDK Usage
-See also the [API (doxygen) documentation](docs/html/hierarchy.html)
+See also the [API (doxygen) documentation](https://fusefactory.github.io/ofxDepthStream/docs/html/hierarchy.html)
 
 #### Basic Usage
 See also the example applications
