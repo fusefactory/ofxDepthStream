@@ -1,7 +1,6 @@
 # ofxDepthStream
 
-OpenFrameworks addon with _heavily opiniated_ tools for working with remote Depth Sensors of a network.
-
+OpenFrameworks addon with _heavily opiniated_ tools for working with remote Depth Sensor streams.
 
 ## What?
 
@@ -18,7 +17,10 @@ OpenNI provides a uniform API for working with various depth sensors and is used
 
 #### Build and run a remote Server
 See the ```./tools``` folder for various server (transmitter) applications for various platforms/sensors.
-Each tool has its own README.md.
+Each tool has its own README;
+ * [KinectForWindows2](tools/KinectForWindows2/README.md)
+ * [OrbbecAstraTransmitter](tools/OrbbecAstraTransmitter/README.md)
+ * [OrbbecPerseeTransmitter](tools/OrbbecPerseeTransmitter/README.md)
 
 #### Build and run a local Client
 This OpenFrameworks addon tailors only to streaming _clients_ (receivers), try
