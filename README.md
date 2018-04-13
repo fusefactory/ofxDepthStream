@@ -33,7 +33,7 @@ make RunDebug # to run the last development-build
 ```
 
 ## SDK Usage
-API (doxygen) documentation: [docs/html/index.html](./docs/html/index.html)
+See also the [API (doxygen) documentation](docs/html/hierarchy.html)
 
 #### Basic Usage
 See also the example applications
