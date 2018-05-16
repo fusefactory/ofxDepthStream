@@ -66,21 +66,23 @@ void DepthStreamListener::onExit(const Controller& controller) {
 void DepthStreamListener::onFrame(const Controller& controller) {
   // Get the most recent frame and report some basic information
   const Frame frame = controller.frame();
-  if (bVerbose) std::cout << "Frame id: " << frame.id()
-            << ", timestamp: " << frame.timestamp()
-            // << ", hands: " << frame.hands().count()
-            // << ", extended fingers: " << frame.fingers().extended().count()
-            // << ", tools: " << frame.tools().count()
-            // << ", gestures: " << frame.gestures().count()
-            << ", images: " << frame.images().count()
-            << std::endl;
+  // if (bVerbose) std::cout << "Frame id: " << frame.id()
+  //           << ", timestamp: " << frame.timestamp()
+  //           // << ", hands: " << frame.hands().count()
+  //           // << ", extended fingers: " << frame.fingers().extended().count()
+  //           // << ", tools: " << frame.tools().count()
+  //           // << ", gestures: " << frame.gestures().count()
+  //           << ", images: " << frame.images().count()
+  //           << std::endl;
 
   if (this->transmitterAgent) {
     if (frame.images().count() > 0) {
       auto image = frame.images()[0];
       int size = image.width() * image.height() * image.bytesPerPixel();
-      if (bVerbose) std::cout << "Image dimensions: " << image.width() << "x" << image.height() << "(" << size << " bytes)" << std::endl;
-      this->transmitterAgent->submit(image.data(), size);
+      
+      if (this->transmitterAgent->submit(image.data(), size)) {
+        if (bVerbose) std::cout << "Transmitted image: " << image.width() << "x" << image.height() << "(" << size << " bytes)" << std::endl;
+      }
     }
   }
 

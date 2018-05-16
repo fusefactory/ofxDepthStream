@@ -28,3 +28,5 @@
 *.app
 
 obj
+
+*/.vscode/*.db*
