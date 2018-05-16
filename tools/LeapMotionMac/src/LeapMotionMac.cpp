@@ -78,7 +78,9 @@ void DepthStreamListener::onFrame(const Controller& controller) {
   if (this->transmitterAgent) {
     if (frame.images().count() > 0) {
       auto image = frame.images()[0];
-      this->transmitterAgent->submit(image.data(), image.width() * image.height() * image.bytesPerPixel());
+      int size = image.width() * image.height() * image.bytesPerPixel();
+      if (bVerbose) std::cout << "Image dimensions: " << image.width() << "x" << image.height() << "(" << size << " bytes)" << std::endl;
+      this->transmitterAgent->submit(image.data(), size);
     }
   }
 
