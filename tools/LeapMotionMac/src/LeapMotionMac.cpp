@@ -25,7 +25,10 @@ class SampleListener : public Listener {
     virtual void onServiceConnect(const Controller&);
     virtual void onServiceDisconnect(const Controller&);
 
+    void setVerbose(bool v=true) { bVerbose = v; }
+
   private:
+    bool bVerbose=false;
 };
 
 const std::string fingerNames[] = {"Thumb", "Index", "Middle", "Ring", "Pinky"};
@@ -33,11 +36,11 @@ const std::string boneNames[] = {"Metacarpal", "Proximal", "Middle", "Distal"};
 const std::string stateNames[] = {"STATE_INVALID", "STATE_START", "STATE_UPDATE", "STATE_END"};
 
 void SampleListener::onInit(const Controller& controller) {
-  std::cout << "Initialized" << std::endl;
+  if (bVerbose) std::cout << "Initialized" << std::endl;
 }
 
 void SampleListener::onConnect(const Controller& controller) {
-  std::cout << "Connected" << std::endl;
+  if (bVerbose) std::cout << "Connected" << std::endl;
   controller.enableGesture(Gesture::TYPE_CIRCLE);
   controller.enableGesture(Gesture::TYPE_KEY_TAP);
   controller.enableGesture(Gesture::TYPE_SCREEN_TAP);
@@ -46,17 +49,17 @@ void SampleListener::onConnect(const Controller& controller) {
 
 void SampleListener::onDisconnect(const Controller& controller) {
   // Note: not dispatched when running in a debugger.
-  std::cout << "Disconnected" << std::endl;
+  if (bVerbose) std::cout << "Disconnected" << std::endl;
 }
 
 void SampleListener::onExit(const Controller& controller) {
-  std::cout << "Exited" << std::endl;
+  if (bVerbose) std::cout << "Exited" << std::endl;
 }
 
 void SampleListener::onFrame(const Controller& controller) {
   // Get the most recent frame and report some basic information
   const Frame frame = controller.frame();
-  std::cout << "Frame id: " << frame.id()
+  if (bVerbose) std::cout << "Frame id: " << frame.id()
             << ", timestamp: " << frame.timestamp()
             << ", hands: " << frame.hands().count()
             << ", extended fingers: " << frame.fingers().extended().count()
@@ -70,20 +73,20 @@ void SampleListener::onFrame(const Controller& controller) {
     // Get the first hand
     const Hand hand = *hl;
     std::string handType = hand.isLeft() ? "Left hand" : "Right hand";
-    std::cout << std::string(2, ' ') << handType << ", id: " << hand.id()
+    if (bVerbose) std::cout << std::string(2, ' ') << handType << ", id: " << hand.id()
               << ", palm position: " << hand.palmPosition() << std::endl;
     // Get the hand's normal vector and direction
     const Vector normal = hand.palmNormal();
     const Vector direction = hand.direction();
 
     // Calculate the hand's pitch, roll, and yaw angles
-    std::cout << std::string(2, ' ') <<  "pitch: " << direction.pitch() * RAD_TO_DEG << " degrees, "
+    if (bVerbose) std::cout << std::string(2, ' ') <<  "pitch: " << direction.pitch() * RAD_TO_DEG << " degrees, "
               << "roll: " << normal.roll() * RAD_TO_DEG << " degrees, "
               << "yaw: " << direction.yaw() * RAD_TO_DEG << " degrees" << std::endl;
 
     // Get the Arm bone
     Arm arm = hand.arm();
-    std::cout << std::string(2, ' ') <<  "Arm direction: " << arm.direction()
+    if (bVerbose) std::cout << std::string(2, ' ') <<  "Arm direction: " << arm.direction()
               << " wrist position: " << arm.wristPosition()
               << " elbow position: " << arm.elbowPosition() << std::endl;
 
@@ -91,7 +94,7 @@ void SampleListener::onFrame(const Controller& controller) {
     const FingerList fingers = hand.fingers();
     for (FingerList::const_iterator fl = fingers.begin(); fl != fingers.end(); ++fl) {
       const Finger finger = *fl;
-      std::cout << std::string(4, ' ') <<  fingerNames[finger.type()]
+      if (bVerbose) std::cout << std::string(4, ' ') <<  fingerNames[finger.type()]
                 << " finger, id: " << finger.id()
                 << ", length: " << finger.length()
                 << "mm, width: " << finger.width() << std::endl;
@@ -100,7 +103,7 @@ void SampleListener::onFrame(const Controller& controller) {
       for (int b = 0; b < 4; ++b) {
         Bone::Type boneType = static_cast<Bone::Type>(b);
         Bone bone = finger.bone(boneType);
-        std::cout << std::string(6, ' ') <<  boneNames[boneType]
+        if (bVerbose) std::cout << std::string(6, ' ') <<  boneNames[boneType]
                   << " bone, start: " << bone.prevJoint()
                   << ", end: " << bone.nextJoint()
                   << ", direction: " << bone.direction() << std::endl;
@@ -112,7 +115,7 @@ void SampleListener::onFrame(const Controller& controller) {
   const ToolList tools = frame.tools();
   for (ToolList::const_iterator tl = tools.begin(); tl != tools.end(); ++tl) {
     const Tool tool = *tl;
-    std::cout << std::string(2, ' ') <<  "Tool, id: " << tool.id()
+    if (bVerbose) std::cout << std::string(2, ' ') <<  "Tool, id: " << tool.id()
               << ", position: " << tool.tipPosition()
               << ", direction: " << tool.direction() << std::endl;
   }
@@ -140,7 +143,7 @@ void SampleListener::onFrame(const Controller& controller) {
           CircleGesture previousUpdate = CircleGesture(controller.frame(1).gesture(circle.id()));
           sweptAngle = (circle.progress() - previousUpdate.progress()) * 2 * PI;
         }
-        std::cout << std::string(2, ' ')
+        if (bVerbose) std::cout << std::string(2, ' ')
                   << "Circle id: " << gesture.id()
                   << ", state: " << stateNames[gesture.state()]
                   << ", progress: " << circle.progress()
@@ -152,7 +155,7 @@ void SampleListener::onFrame(const Controller& controller) {
       case Gesture::TYPE_SWIPE:
       {
         SwipeGesture swipe = gesture;
-        std::cout << std::string(2, ' ')
+        if (bVerbose) std::cout << std::string(2, ' ')
           << "Swipe id: " << gesture.id()
           << ", state: " << stateNames[gesture.state()]
           << ", direction: " << swipe.direction()
@@ -162,7 +165,7 @@ void SampleListener::onFrame(const Controller& controller) {
       case Gesture::TYPE_KEY_TAP:
       {
         KeyTapGesture tap = gesture;
-        std::cout << std::string(2, ' ')
+        if (bVerbose) std::cout << std::string(2, ' ')
           << "Key Tap id: " << gesture.id()
           << ", state: " << stateNames[gesture.state()]
           << ", position: " << tap.position()
@@ -172,7 +175,7 @@ void SampleListener::onFrame(const Controller& controller) {
       case Gesture::TYPE_SCREEN_TAP:
       {
         ScreenTapGesture screentap = gesture;
-        std::cout << std::string(2, ' ')
+        if (bVerbose) std::cout << std::string(2, ' ')
           << "Screen Tap id: " << gesture.id()
           << ", state: " << stateNames[gesture.state()]
           << ", position: " << screentap.position()
@@ -180,54 +183,54 @@ void SampleListener::onFrame(const Controller& controller) {
         break;
       }
       default:
-        std::cout << std::string(2, ' ')  << "Unknown gesture type." << std::endl;
+        if (bVerbose) std::cout << std::string(2, ' ')  << "Unknown gesture type." << std::endl;
         break;
     }
   }
 
   if (!frame.hands().isEmpty() || !gestures.isEmpty()) {
-    std::cout << std::endl;
+    if (bVerbose) std::cout << std::endl;
   }
 
 }
 
 void SampleListener::onFocusGained(const Controller& controller) {
-  std::cout << "Focus Gained" << std::endl;
+  if (bVerbose) std::cout << "Focus Gained" << std::endl;
 }
 
 void SampleListener::onFocusLost(const Controller& controller) {
-  std::cout << "Focus Lost" << std::endl;
+  if (bVerbose) std::cout << "Focus Lost" << std::endl;
 }
 
 void SampleListener::onDeviceChange(const Controller& controller) {
-  std::cout << "Device Changed" << std::endl;
+  if (bVerbose) std::cout << "Device Changed" << std::endl;
   const DeviceList devices = controller.devices();
 
   for (int i = 0; i < devices.count(); ++i) {
-    std::cout << "id: " << devices[i].toString() << std::endl;
-    std::cout << "  isStreaming: " << (devices[i].isStreaming() ? "true" : "false") << std::endl;
+    if (bVerbose) std::cout << "id: " << devices[i].toString() << std::endl;
+    if (bVerbose) std::cout << "  isStreaming: " << (devices[i].isStreaming() ? "true" : "false") << std::endl;
   }
 }
 
 void SampleListener::onServiceConnect(const Controller& controller) {
-  std::cout << "Service Connected" << std::endl;
+  if (bVerbose) std::cout << "Service Connected" << std::endl;
 }
 
 void SampleListener::onServiceDisconnect(const Controller& controller) {
-  std::cout << "Service Disconnected" << std::endl;
+  if (bVerbose) std::cout << "Service Disconnected" << std::endl;
 }
 
 int main(int argc, char** argv) {
   // Create a sample listener and controller
   SampleListener listener;
   Controller controller;
-
-  // Have the sample listener receive events from the controller
+  controller.setPolicy(Leap::Controller::POLICY_IMAGES);
   controller.addListener(listener);
 
   for (int i=1; i<argc; i++) {
-    if (strcmp(argv[i], "--bg") == 0) controller.setPolicy(Leap::Controller::POLICY_BACKGROUND_FRAMES);  
-    if (strcmp(argv[i], "--img") == 0) controller.setPolicy(Leap::Controller::POLICY_IMAGES);  
+    // if (strcmp(argv[i], "--bg") == 0) controller.setPolicy(Leap::Controller::POLICY_BACKGROUND_FRAMES);
+    // if (strcmp(argv[i], "--img") == 0) controller.setPolicy(Leap::Controller::POLICY_IMAGES);
+    if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--verbose") == 0) listener.setVerbose();
   }
  
   // Keep this process running until Enter is pressed
