@@ -33,6 +33,7 @@ namespace ofxDepthStream {
   static const size_t FRAME_SIZE_640x480x16BIT = (640*480*2); // orbbec
   static const size_t FRAME_SIZE_640x480x32BIT = (640*480*4);
   static const size_t FRAME_SIZE_512x424x32BIT = (512*424*4); // kinect
+  static const size_t FRAME_SIZE_640x240x08BIT = (640*240*1); // leap motion
 
   // Depth texture loader methods // // // // //
 
@@ -61,12 +62,80 @@ namespace ofxDepthStream {
   /**
    * populates the texture instance with 16-bit grayscale depth-image data from the given frame-data. It allocates the texture if necessary.
    */
-  void loadDepthTexture16bit(ofTexture& tex, const void* data, size_t size, const DepthLoaderOpts& opts = DepthLoaderOpts()) {
-    // loadEdgeData based on KinectRemote::newData method in the Dokk_OF repo (but converted to 16-bit)
-
+  void loadDepthTexture8bit(ofTexture& tex, const void* data, size_t size, const DepthLoaderOpts& opts = DepthLoaderOpts()) {
     // allocate
     if(!tex.isAllocated()) {
-      // ofLogNotice() << "Allocating edge-data texture";
+      // ofLogNotice() << "Allocating depth texture";
+      if(size == FRAME_SIZE_640x240x08BIT) {
+        tex.allocate(640, 240, GL_RGB);
+      } else {
+        ofLogWarning() << "Frame-size not supported by ofxDepthStream::loadDepthTexture8bit: " << size;
+        return;
+      }
+    }
+
+    // // check
+    // size_t expectedSize = tex.getWidth() * tex.getHeight() * 2;
+    // if(expectedSize != size) {
+    //   ofLogWarning() << "Edge-data texture size did not match data-size (got: " << size << ", expected: " << expectedSize << ")";
+    //   return;
+    // }
+
+    // 3-channel data buffer
+    float raw[(int)tex.getWidth() * (int)tex.getHeight() * 3];
+
+    for (int y = 0.0; y < tex.getHeight(); y++) {
+      for (int x = 0.0; x < tex.getWidth(); x++) {
+        // keystone
+        int posX = x + ((y - tex.getHeight() / 2.0) / (tex.getHeight() / 2.0)) * opts.keystone * (x - tex.getWidth() / 2.0);
+
+        // convert multi-byte into single depth value
+        int srcIndex = int((posX + y * tex.getWidth()));
+        // unsigned int byte0 = ((unsigned char*)data)[srcIndex + 0];
+        // unsigned int byte1 = ((unsigned char*)data)[srcIndex + 1];
+        // unsigned int depth = ((byte0 & 0xFF) << (8 + opts.shift1)) | ((byte1 & 0xFF) << opts.shift2);
+        unsigned char depth = ((unsigned char*)data)[srcIndex];
+        int dstIndex = (x + y * tex.getWidth());
+        bool valid = false;
+
+        if (
+          // top margin
+          y >= opts.margins[0]
+          // left margin
+          && posX >= opts.margins[3]
+          // right margin
+          && posX <= tex.getWidth() - opts.margins[1]
+          // bottom margin
+          && y <= tex.getHeight() - opts.margins[2])
+        {
+          int correctMaxDistance = std::min(opts.maxDistance, 255) * (1.0 - opts.vertCorrection * (std::cos(M_PI / 3.0 * (tex.getHeight() - y) / tex.getHeight()) - 0.5));
+          if (depth >= opts.minDistance && depth <= correctMaxDistance) {
+            float intensity = (depth - opts.minDistance) / (float)(correctMaxDistance - opts.minDistance);
+            raw[dstIndex * 3 + 0] = 1 - intensity;
+            raw[dstIndex * 3 + 1] = 1 - intensity;
+            raw[dstIndex * 3 + 2] = 1 - intensity;
+            valid = true;
+          }
+        }
+        if (!valid) {
+          raw[dstIndex * 3 + 0] = 0.0;
+          raw[dstIndex * 3 + 1] = 0.0;
+          raw[dstIndex * 3 + 2] = 0.0;
+        }
+      }
+    }
+
+    tex.loadData((float*)raw, tex.getWidth(), tex.getHeight(), GL_RGB);
+    // ofLogNotice() << "loaded edge data texture";//: maxFoundDist: " << maxFoundDist;
+  }
+
+  /**
+   * populates the texture instance with 16-bit grayscale depth-image data from the given frame-data. It allocates the texture if necessary.
+   */
+  void loadDepthTexture16bit(ofTexture& tex, const void* data, size_t size, const DepthLoaderOpts& opts = DepthLoaderOpts()) {
+    // allocate
+    if(!tex.isAllocated()) {
+      // ofLogNotice() << "Allocating depth texture";
       if(size == FRAME_SIZE_640x480x16BIT) {
         tex.allocate(640, 480, GL_RGB);
       } else {
@@ -83,7 +152,7 @@ namespace ofxDepthStream {
     // }
 
     // 3-channel data buffer
-    float edgeData[(int)tex.getWidth() * (int)tex.getHeight() * 3];
+    float raw[(int)tex.getWidth() * (int)tex.getHeight() * 3];
 
     for (int y = 0.0; y < tex.getHeight(); y++) {
       for (int x = 0.0; x < tex.getWidth(); x++) {
@@ -91,12 +160,12 @@ namespace ofxDepthStream {
         int posX = x + ((y - tex.getHeight() / 2.0) / (tex.getHeight() / 2.0)) * opts.keystone * (x - tex.getWidth() / 2.0);
 
         // convert multi-byte into single depth value
-        int depthIndex = int((posX + y * tex.getWidth()) * 2);
-        // unsigned int byte0 = ((unsigned char*)data)[depthIndex + 0];
-        // unsigned int byte1 = ((unsigned char*)data)[depthIndex + 1];
+        int srcIndex = int((posX + y * tex.getWidth()) * 2);
+        // unsigned int byte0 = ((unsigned char*)data)[srcIndex + 0];
+        // unsigned int byte1 = ((unsigned char*)data)[srcIndex + 1];
         // unsigned int depth = ((byte0 & 0xFF) << (8 + opts.shift1)) | ((byte1 & 0xFF) << opts.shift2);
-        uint16_t depth = *((uint16_t*)(&((char*)data)[depthIndex]));
-        int edgeIndex = (x + y * tex.getWidth());
+        uint16_t depth = *((uint16_t*)(&((char*)data)[srcIndex]));
+        int dstIndex = (x + y * tex.getWidth());
         bool valid = false;
 
         if (
@@ -112,21 +181,21 @@ namespace ofxDepthStream {
           int correctMaxDistance = opts.maxDistance * (1.0 - opts.vertCorrection * (std::cos(M_PI / 3.0 * (tex.getHeight() - y) / tex.getHeight()) - 0.5));
           if (depth >= opts.minDistance && depth <= correctMaxDistance) {
             float intensity = (depth - opts.minDistance) / (float)(correctMaxDistance - opts.minDistance);
-            edgeData[edgeIndex * 3 + 0] = 1 - intensity;
-            edgeData[edgeIndex * 3 + 1] = 1 - intensity;
-            edgeData[edgeIndex * 3 + 2] = 1 - intensity;
+            raw[dstIndex * 3 + 0] = 1 - intensity;
+            raw[dstIndex * 3 + 1] = 1 - intensity;
+            raw[dstIndex * 3 + 2] = 1 - intensity;
             valid = true;
           }
         }
         if (!valid) {
-          edgeData[edgeIndex * 3 + 0] = 0.0;
-          edgeData[edgeIndex * 3 + 1] = 0.0;
-          edgeData[edgeIndex * 3 + 2] = 0.0;
+          raw[dstIndex * 3 + 0] = 0.0;
+          raw[dstIndex * 3 + 1] = 0.0;
+          raw[dstIndex * 3 + 2] = 0.0;
         }
       }
     }
 
-    tex.loadData((float*)edgeData, tex.getWidth(), tex.getHeight(), GL_RGB);
+    tex.loadData((float*)raw, tex.getWidth(), tex.getHeight(), GL_RGB);
     // ofLogNotice() << "loaded edge data texture";//: maxFoundDist: " << maxFoundDist;
   }
 
@@ -134,11 +203,9 @@ namespace ofxDepthStream {
    * populates the texture instance with 32-bit grayscale depth-image data from the given frame-data. It allocates the texture if necessary.
    */
   void loadDepthTexture32bit(ofTexture& tex, const void* data, size_t size, const DepthLoaderOpts& opts = DepthLoaderOpts()) {
-    // loadEdgeData based on KinectRemote::newData method in the Dokk_OF repo
-
     // allocate
     if(!tex.isAllocated()) {
-      // ofLogNotice() << "Allocating edge-data texture";
+      // ofLogNotice() << "Allocating depth texture";
       if(size == FRAME_SIZE_640x480x32BIT) {
         tex.allocate(640, 480, GL_RGB);
       } else if(size == FRAME_SIZE_512x424x32BIT){
@@ -157,7 +224,7 @@ namespace ofxDepthStream {
     // }
 
     // 3-channel data buffer
-    float edgeData[(int)tex.getWidth() * (int)tex.getHeight() * 3];
+    float raw[(int)tex.getWidth() * (int)tex.getHeight() * 3];
 
     for (int y = 0.0; y < tex.getHeight(); y++) {
       for (int x = 0.0; x < tex.getWidth(); x++) {
@@ -165,14 +232,14 @@ namespace ofxDepthStream {
         int posX = x + ((y - tex.getHeight() / 2.0) / (tex.getHeight() / 2.0)) * opts.keystone * (x - tex.getWidth() / 2.0);
 
         // convert multi-byte into single depth value
-        int depthIndex = int((posX + y * tex.getWidth()) * 4);
-        int byte0 = ((unsigned char*)data)[depthIndex + 0];
-        int byte1 = ((unsigned char*)data)[depthIndex + 1];
-        int byte2 = ((unsigned char*)data)[depthIndex + 2];
-        int byte3 = ((unsigned char*)data)[depthIndex + 3];
+        int srcIndex = int((posX + y * tex.getWidth()) * 4);
+        int byte0 = ((unsigned char*)data)[srcIndex + 0];
+        int byte1 = ((unsigned char*)data)[srcIndex + 1];
+        int byte2 = ((unsigned char*)data)[srcIndex + 2];
+        int byte3 = ((unsigned char*)data)[srcIndex + 3];
         int depth = byte0 << 24 | (byte1 & 0xFF) << 16 | (byte2 & 0xFF) << 8 | (byte3 & 0xFF);
 
-        int edgeIndex = (x + y * tex.getWidth());
+        int dstIndex = (x + y * tex.getWidth());
         bool valid = false;
 
         if (
@@ -188,21 +255,21 @@ namespace ofxDepthStream {
           int correctMaxDistance = opts.maxDistance * (1.0 - opts.vertCorrection * (std::cos(M_PI / 3.0 * (tex.getHeight() - y) / tex.getHeight()) - 0.5));
           if (depth >= opts.minDistance && depth <= correctMaxDistance) {
             float intensity = (depth - opts.minDistance) / (float)(correctMaxDistance - opts.minDistance);
-            edgeData[edgeIndex * 3 + 0] = 1 - intensity;
-            edgeData[edgeIndex * 3 + 1] = 1 - intensity;
-            edgeData[edgeIndex * 3 + 2] = 1 - intensity;
+            raw[dstIndex * 3 + 0] = 1 - intensity;
+            raw[dstIndex * 3 + 1] = 1 - intensity;
+            raw[dstIndex * 3 + 2] = 1 - intensity;
             valid = true;
           }
         }
         if (!valid) {
-          edgeData[edgeIndex * 3 + 0] = 0.0;
-          edgeData[edgeIndex * 3 + 1] = 0.0;
-          edgeData[edgeIndex * 3 + 2] = 0.0;
+          raw[dstIndex * 3 + 0] = 0.0;
+          raw[dstIndex * 3 + 1] = 0.0;
+          raw[dstIndex * 3 + 2] = 0.0;
         }
       }
     }
 
-    tex.loadData((float*)edgeData, tex.getWidth(), tex.getHeight(), GL_RGB);
+    tex.loadData((float*)raw, tex.getWidth(), tex.getHeight(), GL_RGB);
     // ofLogNotice() << "loaded edge data texture";//: maxFoundDist: " << maxFoundDist;
   }
 
@@ -217,6 +284,11 @@ namespace ofxDepthStream {
 
     if (size == FRAME_SIZE_640x480x32BIT || size == FRAME_SIZE_512x424x32BIT) {
       loadDepthTexture32bit(tex, data, size, opts);
+      return;
+    }
+
+    if (size == FRAME_SIZE_640x240x08BIT) {
+      loadDepthTexture8bit(tex, data, size, opts);
       return;
     }
 
