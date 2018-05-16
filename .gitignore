@@ -30,3 +30,4 @@
 obj
 
 */.vscode/*.db*
+*/.vscode/settings.json

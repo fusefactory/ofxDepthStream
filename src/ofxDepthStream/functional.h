@@ -94,7 +94,7 @@ namespace ofxDepthStream {
         // unsigned int byte0 = ((unsigned char*)data)[srcIndex + 0];
         // unsigned int byte1 = ((unsigned char*)data)[srcIndex + 1];
         // unsigned int depth = ((byte0 & 0xFF) << (8 + opts.shift1)) | ((byte1 & 0xFF) << opts.shift2);
-        uint8_t depth = *((uint8_t*)(&((char*)data)[srcIndex]));
+        unsigned char depth = ((unsigned char*)data)[srcIndex];
         int dstIndex = (x + y * tex.getWidth());
         bool valid = false;
 
@@ -108,7 +108,7 @@ namespace ofxDepthStream {
           // bottom margin
           && y <= tex.getHeight() - opts.margins[2])
         {
-          int correctMaxDistance = opts.maxDistance * (1.0 - opts.vertCorrection * (std::cos(M_PI / 3.0 * (tex.getHeight() - y) / tex.getHeight()) - 0.5));
+          int correctMaxDistance = std::min(opts.maxDistance, 255) * (1.0 - opts.vertCorrection * (std::cos(M_PI / 3.0 * (tex.getHeight() - y) / tex.getHeight()) - 0.5));
           if (depth >= opts.minDistance && depth <= correctMaxDistance) {
             float intensity = (depth - opts.minDistance) / (float)(correctMaxDistance - opts.minDistance);
             raw[dstIndex * 3 + 0] = 1 - intensity;

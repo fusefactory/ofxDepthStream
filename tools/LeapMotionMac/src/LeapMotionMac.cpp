@@ -36,6 +36,8 @@ class DepthStreamListener : public Listener {
   private:
     bool bVerbose=false;
     TransmitterAgent* transmitterAgent;
+    const static size_t bufSize = 640 * 240;
+    unsigned char buffer[640*240];
 };
 
 // const std::string fingerNames[] = {"Thumb", "Index", "Middle", "Ring", "Pinky"};
@@ -78,9 +80,20 @@ void DepthStreamListener::onFrame(const Controller& controller) {
   if (this->transmitterAgent) {
     if (frame.images().count() > 0) {
       auto image = frame.images()[0];
+
       int size = image.width() * image.height() * image.bytesPerPixel();
+      const unsigned char* raw = image.data();
       
-      if (this->transmitterAgent->submit(image.data(), size)) {
+      if (image.bytesPerPixel() != 1 || size > 640*240) {
+        std::cerr << "Only support 8-bit 640x240 images (for now), got " << image.width() << "x" << image.height() << " at " << image.bytesPerPixel() << " bytes-per-pixel";
+        return;
+      }
+
+      for(int i=0; i<bufSize; i++) {
+        buffer[i] = 255 - raw[i];
+      }
+
+      if (this->transmitterAgent->submit(buffer, size)) {
         if (bVerbose) std::cout << "Transmitted image: " << image.width() << "x" << image.height() << "(" << size << " bytes)" << std::endl;
       }
     }
@@ -239,6 +252,7 @@ void DepthStreamListener::onServiceDisconnect(const Controller& controller) {
 
 int main(int argc, char** argv) {
   Controller controller;
+  controller.setPolicy(Leap::Controller::POLICY_BACKGROUND_FRAMES);
   controller.setPolicy(Leap::Controller::POLICY_IMAGES);
 
   TransmitterAgent agent(argc, argv);
