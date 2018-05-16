@@ -13,7 +13,7 @@ else
 endif
 
 LeapMotionMac: ./src/LeapMotionMac.cpp
-	$(CXX) -Wall -g -std=c++11 -I./include ./src/LeapMotionMac.cpp -o LeapMotionMac $(LEAP_LIBRARY)
+	$(CXX) -Wall -g -std=c++11 -lz -I./include ./src/LeapMotionMac.cpp ../../libs/DepthStream/src/*.cpp -o LeapMotionMac $(LEAP_LIBRARY)
 ifeq ($(OS), Darwin)
 	install_name_tool -change @loader_path/libLeap.dylib ./lib/libLeap.dylib LeapMotionMac
 endif

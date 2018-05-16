@@ -147,7 +147,6 @@ int main(int argc, char** argv)
 {
     bool verbose=false;
     unsigned int depthPort=4445;
-    bool convert16to32bit=false;
     unsigned int fps=60.0f;
     std::shared_ptr<Converter16to32bit> converterRef=nullptr;
 
