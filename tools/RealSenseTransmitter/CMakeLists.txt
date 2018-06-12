@@ -18,6 +18,7 @@ endif()
 add_executable(RealSenseTransmitter src/RealSenseTransmitter.cpp)
 target_link_libraries(RealSenseTransmitter ${DEPENDENCIES})
 # include_directories(rs-capture ../ ../../third-party/tclap/include)
+include_directories(RealSenseTransmitter include)
 
 # set_target_properties (rs-capture PROPERTIES
 # FOLDER "Examples"

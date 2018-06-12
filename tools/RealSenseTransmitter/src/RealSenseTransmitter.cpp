@@ -11,7 +11,7 @@
 int main(int argc, char * argv[]) try
 {
     // Create a simple OpenGL window for rendering:
-    // window app(1280, 720, "RealSense Capture Example");
+    window app(1280, 720, "RealSense Capture Example");
     // Declare two textures on the GPU, one for color and one for depth
     texture depth_image, color_image;
 
