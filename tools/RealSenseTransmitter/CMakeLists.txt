@@ -3,9 +3,6 @@ cmake_minimum_required(VERSION 3.1.0)
 
 project(RealSenseTransmitter)
 
-# Save the command line compile commands in the build output
-set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
-
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
 CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
@@ -16,24 +13,34 @@ elseif(COMPILER_SUPPORTS_CXX0X)
 endif()
 
 
-SET(CMAKE_INSTALL_NAME_DIR @executable_path)
-SET(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
+## RPATH STUFF TAKEN FROM:
+## https://gitlab.kitware.com/cmake/community/wikis/doc/cmake/RPATH-handling
+
+# use, i.e. don't skip the full RPATH for the build tree
+SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+
+# when building, don't use the install RPATH already
+# (but later on when installing)
+SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+
+SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+
+# add the automatically determined parts of the RPATH
+# which point to directories outside the build tree to the install RPATH
+# SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+
+# the RPATH to be used when installing, but only if it's not a system directory
+LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+IF("${isSystemDir}" STREQUAL "-1")
+   SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+ENDIF("${isSystemDir}" STREQUAL "-1")
+
 
 
 file(GLOB DEPTH_STREAM_SOURCES "../../libs/DepthStream/src/*.cpp")
-file(GLOB LIBRARIES "lib/*.dylib")
+find_package(realsense2 REQUIRED)
 find_package(ZLIB)
 
 add_executable(RealSenseTransmitter src/RealSenseTransmitter.cpp ${DEPTH_STREAM_SOURCES})
-include_directories(RealSenseTransmitter include)
-target_link_libraries(RealSenseTransmitter ${DEPENDENCIES} ${ZLIB_LIBRARIES})
-
-target_link_libraries(RealSenseTransmitter ${LIBRARIES})
-
-install(
-    TARGETS
-    RealSenseTransmitter
-
-    RUNTIME DESTINATION
-    ${CMAKE_INSTALL_PREFIX}/bin
-)
+target_link_libraries(RealSenseTransmitter PUBLIC ${ZLIB_LIBRARIES} PRIVATE realsense2::realsense2)
