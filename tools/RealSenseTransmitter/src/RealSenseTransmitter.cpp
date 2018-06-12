@@ -12,6 +12,7 @@
 int main(int argc, char * argv[]) try
 {
   DepthStream::TransmitterAgent agent(argc, argv);
+  bool verbose = agent.getVerbose();
 
   // Declare depth colorizer for pretty visualization of depth data
   // rs2::colorizer color_map;
@@ -34,6 +35,7 @@ int main(int argc, char * argv[]) try
 
     if (format == RS2_FORMAT_Z16) {
       agent.submit(frame.get_data(), width*height*2);
+      // if (verbose) std::cout << "Submitted " << width <<"x" << height << " RS2_FORMAT_Z16 frame to TransmitterAgent" << std::endl;
       continue;
     }
 
