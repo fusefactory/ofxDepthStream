@@ -16,18 +16,9 @@ elseif(COMPILER_SUPPORTS_CXX0X)
 endif()
 
 add_executable(RealSenseTransmitter src/RealSenseTransmitter.cpp)
-target_link_libraries(RealSenseTransmitter ${DEPENDENCIES})
-# include_directories(rs-capture ../ ../../third-party/tclap/include)
 include_directories(RealSenseTransmitter include)
+target_link_libraries(RealSenseTransmitter ${DEPENDENCIES})
 
-# set_target_properties (rs-capture PROPERTIES
-# FOLDER "Examples"
-# )
 
-install(
-    TARGETS
-    RealSenseTransmitter
-
-    RUNTIME DESTINATION
-    ${CMAKE_INSTALL_PREFIX}/bin
-)
+file(GLOB LIBRARIES "lib/*.dylib")
+target_link_libraries(RealSenseTransmitter ${LIBRARIES})
