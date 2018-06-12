@@ -15,10 +15,25 @@ elseif(COMPILER_SUPPORTS_CXX0X)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 endif()
 
-add_executable(RealSenseTransmitter src/RealSenseTransmitter.cpp)
-include_directories(RealSenseTransmitter include)
-target_link_libraries(RealSenseTransmitter ${DEPENDENCIES})
+
+SET(CMAKE_INSTALL_NAME_DIR @executable_path)
+SET(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
 
 
+file(GLOB DEPTH_STREAM_SOURCES "../../libs/DepthStream/src/*.cpp")
 file(GLOB LIBRARIES "lib/*.dylib")
+find_package(ZLIB)
+
+add_executable(RealSenseTransmitter src/RealSenseTransmitter.cpp ${DEPTH_STREAM_SOURCES})
+include_directories(RealSenseTransmitter include)
+target_link_libraries(RealSenseTransmitter ${DEPENDENCIES} ${ZLIB_LIBRARIES})
+
 target_link_libraries(RealSenseTransmitter ${LIBRARIES})
+
+install(
+    TARGETS
+    RealSenseTransmitter
+
+    RUNTIME DESTINATION
+    ${CMAKE_INSTALL_PREFIX}/bin
+)

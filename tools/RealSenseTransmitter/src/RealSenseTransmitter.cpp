@@ -5,38 +5,42 @@
 // #include "example.hpp"          // Include short list of convenience functions for rendering
 
 #include "../../../libs/DepthStream/src/TransmitterAgent.h"
+#include "key_handler.h"
 
 // Capture Example demonstrates how to
 // capture depth and color video streams and render them to the screen
 int main(int argc, char * argv[]) try
 {
-    // Create a simple OpenGL window for rendering:
-    // window app(1280, 720, "RealSense Capture Example");
-    // Declare two textures on the GPU, one for color and one for depth
-    // texture depth_image, color_image;
+  DepthStream::TransmitterAgent agent(argc, argv);
 
-    // Declare depth colorizer for pretty visualization of depth data
-    // rs2::colorizer color_map;
+  // Declare depth colorizer for pretty visualization of depth data
+  // rs2::colorizer color_map;
 
-    // Declare RealSense pipeline, encapsulating the actual device and sensors
-    rs2::pipeline pipe;
-    // Start streaming with default recommended configuration
-    pipe.start();
+  // Declare RealSense pipeline, encapsulating the actual device and sensors
+  rs2::pipeline pipe;
+  // Start streaming with default recommended configuration
+  pipe.start();
 
-    // while(app) // Application still alive?
-    // {
-        rs2::frameset data = pipe.wait_for_frames(); // Wait for next set of frames from the camera
+  while(shouldContinue) { // Application still alive?
+    rs2::frameset data = pipe.wait_for_frames(); // Wait for next set of frames from the camera
+    auto frame = (rs2::video_frame)data.get_depth_frame(); // Find and colorize the depth data
+    // rs2::frame colorizedDepth = color_map(depth);
 
-        // rs2::frame depth = color_map(data.get_depth_frame()); // Find and colorize the depth data
-        rs2::frame depth = data.get_depth_frame(); // Find and colorize the depth data
-        rs2::frame color = data.get_color_frame();            // Find the color data
+    auto format = frame.get_profile().format();
+    auto width = frame.get_width();
+    auto height = frame.get_height();
+    // auto stream = frame.get_profile().stream_type();
 
-        // Render depth on to the first half of the screen and color on to the second
-        // depth_image.render(depth, { 0,               0, app.width() / 2, app.height() });
-        // color_image.render(color, { app.width() / 2, 0, app.width() / 2, app.height() });
-    // }
 
-    return EXIT_SUCCESS;
+    if (format == RS2_FORMAT_Z16) {
+      agent.submit(frame.get_data(), width*height*2);
+      continue;
+    }
+
+    std::cout << "Frame format not supported " << rs2_format_to_string(format) << std::endl;
+  }
+
+  return EXIT_SUCCESS;
 }
 catch (const rs2::error & e)
 {
