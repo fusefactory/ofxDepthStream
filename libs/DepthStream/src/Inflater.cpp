@@ -32,7 +32,7 @@
 #include <chrono>
 #include "Inflater.h"
 
-#define BUF_SIZE (2024*2024*4)
+#define DEFAULT_BUF_SIZE (1280*720*4)
 
 using namespace std;
 using namespace depth;
@@ -51,8 +51,10 @@ bool Inflater::inflate(const void* data, size_t size) {
 
 void Inflater::growTo(size_t to) {
   char* tmp = (char *) calloc( sizeof(char), to);
-  memcpy(tmp, (char*)decompressed, currentBufferSize);
-  destroy();
+	if (this->decompressed) {
+  	memcpy(tmp, (char*)decompressed, currentBufferSize);
+    destroy();
+  }
   decompressed = tmp;
   currentBufferSize = to;
   if(bVerbose) this->cout() << "grown to " << currentBufferSize << " bytes" << std::endl;
@@ -67,13 +69,12 @@ const void* Inflater::decompress(const void* compressedBytes, unsigned int lengt
     // destroy();
     if (!decompressed) {
       if(bVerbose) this->cout() << "allocating first-time inflation buffer" << std::endl;
-      decompressed = (char *) calloc(sizeof(char), BUF_SIZE);
-      currentBufferSize = BUF_SIZE;
+      this->growTo(DEFAULT_BUF_SIZE);
     }
 
     z_stream strm;
     strm.next_in = (Bytef *)compressedBytes;
-    strm.avail_in = length ;
+    strm.avail_in = length;
     strm.total_out = 0;
     strm.zalloc = Z_NULL;
     strm.zfree = Z_NULL;
