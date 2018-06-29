@@ -144,10 +144,7 @@ namespace depth {
 
   void emptyAndInflateBuffer(Buffer& buf, Frame::InputFunc func, const Opts& opts = Opts()) {
     emptyBuffer(buf, [&opts, func](const void* data, size_t size){
-      if (opts.inflaterRef) {
-        ofLogNotice() << "using provided inflater";
-      }
-      // inf.inflate(data, size)
+      // get frame of inflated data; either using a provided inflater or the functional inflate interface
       auto inflatedFrameRef =
         // use provided inflater
         (opts.inflaterRef)
@@ -159,13 +156,9 @@ namespace depth {
           // use our functional inflate interface
           : inflate(data, size);
 
-      if(!inflatedFrameRef) {
-        // std::cerr << "Could not inflate " << size << "-byte buffer data" << std::endl;
-        return;
+      if(inflatedFrameRef) {
+        func(inflatedFrameRef->data(), inflatedFrameRef->size());
       }
-
-      func(inflatedFrameRef->data(), inflatedFrameRef->size());
     });
   }
-
 }
