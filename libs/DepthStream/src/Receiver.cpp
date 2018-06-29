@@ -128,9 +128,6 @@ void Receiver::threadFunc() {
           frameCallback((const void*)(this->buffer), packageSize);
       }
     }
-
-    // this->cout() << "Sleeping... " << cycleSleep << std::endl;
-    Sleep(cycleSleep);
   }
 
   if(bVerbose) this->cout() << "Thread end... " << std::endl;
