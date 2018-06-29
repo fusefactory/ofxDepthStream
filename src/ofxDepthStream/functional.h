@@ -39,7 +39,7 @@ namespace ofxDepthStream {
   // Depth texture loader methods // // // // //
 
   /// Options container for the loadDepth* methods
-  struct DepthLoaderOpts {
+  struct DepthLoaderOpts : depth::Opts {
     int minDistance=0;
     int maxDistance=5000;
     int vertCorrection=0; // 1?
@@ -58,6 +58,8 @@ namespace ofxDepthStream {
     DepthLoaderOpts& setKeystone(float v) { keystone = v; return *this; }
     DepthLoaderOpts& setShift1(int v) { shift1 = v; return *this; }
     DepthLoaderOpts& setShift2(int v) { shift2 = v; return *this; }
+
+    DepthLoaderOpts& useInflater(depth::InflaterRef inflaterRef) { depth::Opts::useInflater(inflaterRef); return *this; }
   };
 
   /**
@@ -312,7 +314,7 @@ namespace ofxDepthStream {
     // check if buffer has data
     depth::emptyAndInflateBuffer(buffer, [&tex, &opts](const void* data, size_t size){
       loadDepthTexture(tex, data, size, opts);
-    });
+    }, opts);
   }
 
   // Mesh Loader methods // // // // //

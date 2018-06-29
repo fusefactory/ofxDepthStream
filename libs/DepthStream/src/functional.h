@@ -34,6 +34,11 @@
  */
 namespace depth {
 
+  struct Opts {
+    InflaterRef inflaterRef=nullptr;
+    Opts& useInflater(InflaterRef inflaterRef) { this->inflaterRef = inflaterRef; return *this; }
+  };
+
   // compress methods
 
   FrameRef compress(const void* data, size_t size) {
@@ -46,7 +51,7 @@ namespace depth {
   FrameRef compress(FrameRef ref) { return compress(ref->data(), ref->size()); }
 
 
-  FrameRef inflate(const void* data, size_t size) {
+  FrameRef inflate(const void* data, size_t size, InflaterRef reusableInflater=nullptr) {
     Inflater inf;
     if(!inf.inflate(data, size)) return nullptr;
     return Frame::refToExternalData(inf.getData(), inf.getSize());
@@ -137,9 +142,22 @@ namespace depth {
     }
   }
 
-  void emptyAndInflateBuffer(Buffer& buf, Frame::InputFunc func) {
-    emptyBuffer(buf, [func](const void* data, size_t size){
-      auto inflatedFrameRef = inflate(data, size);
+  void emptyAndInflateBuffer(Buffer& buf, Frame::InputFunc func, const Opts& opts = Opts()) {
+    emptyBuffer(buf, [&opts, func](const void* data, size_t size){
+      if (opts.inflaterRef) {
+        ofLogNotice() << "using provided inflater";
+      }
+      // inf.inflate(data, size)
+      auto inflatedFrameRef =
+        // use provided inflater
+        (opts.inflaterRef)
+          // try to inflate using provided inflater
+          ? (opts.inflaterRef->inflate(data, size)
+            // put inflated data into a frame instance
+            ? Frame::refToExternalData(opts.inflaterRef->getData(), opts.inflaterRef->getSize())
+            : nullptr)
+          // use our functional inflate interface
+          : inflate(data, size);
 
       if(!inflatedFrameRef) {
         // std::cerr << "Could not inflate " << size << "-byte buffer data" << std::endl;
