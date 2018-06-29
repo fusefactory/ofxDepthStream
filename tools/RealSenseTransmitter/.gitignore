@@ -1,0 +1,8 @@
+build
+profile_*.txt
+
+.vs
+*.VC.db
+*.VC.opendb
+vs2015/bin
+vs2015/lib

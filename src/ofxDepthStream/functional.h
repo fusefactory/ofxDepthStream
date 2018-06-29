@@ -34,6 +34,7 @@ namespace ofxDepthStream {
   static const size_t FRAME_SIZE_640x480x32BIT = (640*480*4);
   static const size_t FRAME_SIZE_512x424x32BIT = (512*424*4); // kinect
   static const size_t FRAME_SIZE_640x240x08BIT = (640*240*1); // leap motion
+  static const size_t FRAME_SIZE_1280x720x16BIT = (1280*720*2); // Intel RealSense D435
 
   // Depth texture loader methods // // // // //
 
@@ -138,6 +139,8 @@ namespace ofxDepthStream {
       // ofLogNotice() << "Allocating depth texture";
       if(size == FRAME_SIZE_640x480x16BIT) {
         tex.allocate(640, 480, GL_RGB);
+      } else if (size == FRAME_SIZE_1280x720x16BIT) {
+        tex.allocate(1280, 720, GL_RGB);
       } else {
         ofLogWarning() << "Frame-size not supported by ofxDepthStream::loadDepthTexture16bit: " << size;
         return;
@@ -292,6 +295,11 @@ namespace ofxDepthStream {
       return;
     }
 
+    if (size == FRAME_SIZE_1280x720x16BIT) {
+      loadDepthTexture16bit(tex, data, size, opts);
+      return;
+    }
+
     ofLogWarning() << "Frame size not supported by ofxDepthStream::loadDepthTexture (bytes): " << size;
   }
 
@@ -374,6 +382,11 @@ namespace ofxDepthStream {
 
     if(size == FRAME_SIZE_512x424x32BIT){
       loadMesh32bit(mesh, data, 512, 424, opts);
+      return;
+    }
+
+    if(size == FRAME_SIZE_1280x720x16BIT){
+      loadMesh16bit(mesh, data, 1280, 720, opts);
       return;
     }
 
