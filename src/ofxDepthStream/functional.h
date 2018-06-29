@@ -33,13 +33,14 @@ namespace ofxDepthStream {
   static const size_t FRAME_SIZE_640x480x16BIT = (640*480*2); // orbbec
   static const size_t FRAME_SIZE_640x480x32BIT = (640*480*4);
   static const size_t FRAME_SIZE_512x424x32BIT = (512*424*4); // kinect
+  static const size_t FRAME_SIZE_512x424x16BIT = (512*424*2); // kinect
   static const size_t FRAME_SIZE_640x240x08BIT = (640*240*1); // leap motion
   static const size_t FRAME_SIZE_1280x720x16BIT = (1280*720*2); // Intel RealSense D435
 
   // Depth texture loader methods // // // // //
 
   /// Options container for the loadDepth* methods
-  struct DepthLoaderOpts {
+  struct DepthLoaderOpts : depth::Opts {
     int minDistance=0;
     int maxDistance=5000;
     int vertCorrection=0; // 1?
@@ -58,6 +59,8 @@ namespace ofxDepthStream {
     DepthLoaderOpts& setKeystone(float v) { keystone = v; return *this; }
     DepthLoaderOpts& setShift1(int v) { shift1 = v; return *this; }
     DepthLoaderOpts& setShift2(int v) { shift2 = v; return *this; }
+
+    DepthLoaderOpts& useInflater(depth::InflaterRef inflaterRef) { depth::Opts::useInflater(inflaterRef); return *this; }
   };
 
   /**
@@ -141,6 +144,8 @@ namespace ofxDepthStream {
         tex.allocate(640, 480, GL_RGB);
       } else if (size == FRAME_SIZE_1280x720x16BIT) {
         tex.allocate(1280, 720, GL_RGB);
+      } else if(size == FRAME_SIZE_512x424x16BIT){
+        tex.allocate(512, 424, GL_RGB);
       } else {
         ofLogWarning() << "Frame-size not supported by ofxDepthStream::loadDepthTexture16bit: " << size;
         return;
@@ -280,7 +285,7 @@ namespace ofxDepthStream {
    * populates the texture instance with grayscale depth-image data from the given frame-data. It allocates the texture if necessary and guesses the bit-depth of the data based on the size of the package.
    */
   void loadDepthTexture(ofTexture& tex, const void* data, size_t size, const DepthLoaderOpts& opts = DepthLoaderOpts()) {
-    if (size == FRAME_SIZE_640x480x16BIT) {
+    if (size == FRAME_SIZE_640x480x16BIT || size == FRAME_SIZE_512x424x16BIT) {
       loadDepthTexture16bit(tex, data, size, opts);
       return;
     }
@@ -312,7 +317,7 @@ namespace ofxDepthStream {
     // check if buffer has data
     depth::emptyAndInflateBuffer(buffer, [&tex, &opts](const void* data, size_t size){
       loadDepthTexture(tex, data, size, opts);
-    });
+    }, opts);
   }
 
   // Mesh Loader methods // // // // //
@@ -377,6 +382,11 @@ namespace ofxDepthStream {
 
     if(size == FRAME_SIZE_640x480x32BIT) {
       loadMesh32bit(mesh, data, 640, 480, opts);
+      return;
+    }
+
+    if(size == FRAME_SIZE_512x424x16BIT){
+      loadMesh16bit(mesh, data, 512, 424, opts);
       return;
     }
 

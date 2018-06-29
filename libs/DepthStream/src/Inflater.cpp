@@ -32,7 +32,7 @@
 #include <chrono>
 #include "Inflater.h"
 
-#define BUF_SIZE (2024*2024*4)
+#define DEFAULT_BUF_SIZE (1280*720*4)
 
 using namespace std;
 using namespace depth;
@@ -51,8 +51,10 @@ bool Inflater::inflate(const void* data, size_t size) {
 
 void Inflater::growTo(size_t to) {
   char* tmp = (char *) calloc( sizeof(char), to);
-  memcpy(tmp, (char*)decompressed, currentBufferSize);
-  destroy();
+	if (this->decompressed) {
+  	memcpy(tmp, (char*)decompressed, currentBufferSize);
+    destroy();
+  }
   decompressed = tmp;
   currentBufferSize = to;
   if(bVerbose) this->cout() << "grown to " << currentBufferSize << " bytes" << std::endl;
@@ -67,47 +69,49 @@ const void* Inflater::decompress(const void* compressedBytes, unsigned int lengt
     // destroy();
     if (!decompressed) {
       if(bVerbose) this->cout() << "allocating first-time inflation buffer" << std::endl;
-      decompressed = (char *) calloc(sizeof(char), BUF_SIZE);
-      currentBufferSize = BUF_SIZE;
+      this->growTo(DEFAULT_BUF_SIZE);
     }
 
     z_stream strm;
     strm.next_in = (Bytef *)compressedBytes;
-    strm.avail_in = length ;
+    strm.avail_in = length;
     strm.total_out = 0;
     strm.zalloc = Z_NULL;
     strm.zfree = Z_NULL;
+    strm.opaque = Z_NULL;
 
     bool done = false ;
 
-    if (inflateInit2(&strm, MAX_WBITS) != Z_OK) {
+    if (inflateInit(&strm) != Z_OK) {
         this->cerr() << "inflator init failed" << std::endl;
         failCount++;
         return NULL;
     }
 
     while (!done) {
-        // if our output buffer is too small
-        if (strm.total_out >= currentBufferSize ) {
-          this->growTo(currentBufferSize+length);
-        }
 
-        strm.next_out = (Bytef *) (decompressed + strm.total_out);
-        strm.avail_out = currentBufferSize - strm.total_out;
+      // if our output buffer is too small
+      if (strm.total_out >= currentBufferSize ) {
+        this->growTo(currentBufferSize+length);
+      }
 
-        // inflate another chunk
-        int err = ::inflate (& strm, Z_SYNC_FLUSH);
-        if (err == Z_STREAM_END) {
-          done = true;
-          // this->cout() << "inflated packet to: " << strm.total_out << " bytes" << std::endl;
-        }
-        else if (err != Z_OK)  {
-          if(bVerbose) this->cerr() << "Inflation failed; unknown error" << std::endl;
-          failCount++;
-          // perror("perror");
-          return NULL;
-          // break;
-        }
+      strm.next_out = (Bytef *) (decompressed + strm.total_out);
+      strm.avail_out = currentBufferSize - strm.total_out;
+
+      // inflate another chunk
+      int err = ::inflate (& strm, Z_SYNC_FLUSH);
+      if (err == Z_STREAM_END) {
+        done = true;
+        // this->cout() << "inflated packet to: " << strm.total_out << " bytes" << std::endl;
+      }
+      else if (err != Z_OK)  {
+        if(bVerbose) this->cerr() << "Inflation failed; unknown error" << std::endl;
+        failCount++;
+        // perror("perror");
+        // return NULL;
+        break;
+        // break;
+      }
     }
 
     if (inflateEnd (& strm) != Z_OK) {

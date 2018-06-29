@@ -29,6 +29,9 @@ namespace depth {
   class Inflater {
     public:
 
+      Inflater() {}
+      Inflater(size_t initialBufferSize) { this->growTo(initialBufferSize); }
+
       /// Deallocates the memory used to store inflated content (will not deallocate the memory that was release using the releaseData method)
       ~Inflater(){
         destroy();
@@ -52,6 +55,8 @@ namespace depth {
 
       /// Returns the number of times this instance failed to succesfully inflate a package
       size_t getFailCount() const { return failCount; }
+
+      void setVerbose(bool verbose) { bVerbose = verbose; }
 
     protected:
 
